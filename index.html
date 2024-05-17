@@ -60,6 +60,24 @@
             color: #dfdfdf;
             text-align: center;
         }
+        /* Style for the back to top link */
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #c71111;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none; /* Remove default underline */
+            display: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* Smooth transition */
+        }
+
+        .back-to-top:hover {
+            background-color: #e0ac00; /* Gold color on hover */
+        }
     </style>
     
 </head>
@@ -131,7 +149,7 @@
             <h2>Education</h2>
                 <div><strong>University of Ioannina, Greece</strong></div>
                 <div></div>
-                <div>Bachelor’s Degree in Accounting and Finance</div>
+                <div>Bachelor's Degree in Accounting and Finance</div>
                 <p></p>
 
                 <div><strong>First High School of Ilioupolis, Athens, Greece</strong></div>
@@ -191,10 +209,39 @@
                 <div>Introduction to Packet Tracer - <em>2021</em></div>
         </section>
         
-        <section id="Back to top" style="text-align: center;">
+        <section id="back-to-top" style="text-align: center;">
             <!-- Back to top link -->
             <div><a href="#" class="back-to-top">Back to Top</a></div>
         </section>
+    
+        <script>
+            // JavaScript function to scroll back to the top of the page
+            function scrollToTop() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+    
+            // Show back to top button when scrolling down
+            window.onscroll = function() {
+                scrollFunction();
+            };
+    
+            function scrollFunction() {
+                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                    document.querySelector('.back-to-top').style.display = 'block';
+                } else {
+                    document.querySelector('.back-to-top').style.display = 'none';
+                }
+            }
+    
+            // Add click event listener to the back to top link
+            document.querySelector('.back-to-top').addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent default anchor behavior
+                scrollToTop(); // Scroll to top
+            });
+        </script>
     </div>
 </body>
 </html>
