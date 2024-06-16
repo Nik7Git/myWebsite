@@ -28,8 +28,8 @@
             background: #000000;
             color: #ffffff;
             /* color of name at top left */
-            padding-top: 30px;
-            min-height: 70px;
+            padding-top: 1px;
+            min-height: 1px;
             border-bottom: #c71111 3px solid;
             /* red stripe */
         }
@@ -130,22 +130,23 @@
     <div class="container">
         <section id="bio">
             <h2>About Intune</h2>
-            <p>I have deployed Intune from scratch to manage our windows and apple devices by configuring and testing
+            <p>I have deployed Intune from scratch to manage our Windows and Apple devices. The deployment involved planning, configuring and testing
                 all settings, policies and scripts.
                 <br>
-                Reviewing GPOs to figure out which of them are still relevant and need to be migrated to intune.
+                Reviewing GPOs to figure out which of them are still relevant and need to be migrated to Intune.
+                <br>
                 Configuring, packaging and testing software for remote installations.
                 <br>
-                Remediation scripts to remove MS default apps, customise the GUI of Windows and apps by modifying
-                registry keys (taskbar to the left, hide Cortana, show From: field on outlook) and to also do other
+                Remediation scripts to remove MS default apps, customise the GUI of Windows (Taskbar, Start menu, hide Cortana icon from taskbar) and apps by modifying
+                registry keys using PowerShell (make "From:" field visible on Outlook) and to also do other
                 admin tasks on a schedule (temp folder cleanup)
                 <br>
-                Windows Update policies and autopatch, compliance policies, configuration profiles (deploy AOVPN xml
-                profile, config MS Edge settings, restricting access to removable media USB, deploy custom start/taskbar
-                menu layouts)
+                Windows Update policies and Autopatch, compliance policies, configuration profiles (deploy AOVPN xml
+                profile, config MS Edge settings, restricting access to removable media USB, deploy custom Start/Taskbar
+                menu layouts with pinned Apps)
                 <br>
-                Autopilot (hybrid/cloud), LAPS, troubleshooting enrolment errors (Cond Access prevented
-                our admin accounts enrolling devices unless we authenticated with MFA)
+                Autopilot (hybrid/cloud), LAPS, troubleshooting enrolment errors (Conditional Access prevented
+                our admin accounts enrolling devices unless we authenticated with MFA so I figued this out and configured an exception for Intune on our Conditiona Access policy)
             </p>
         </section>
     </div>
