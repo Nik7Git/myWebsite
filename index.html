@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,56 +12,90 @@
             line-height: 1.6;
             margin: 0;
             padding: 0;
-            background-color: #222222; /* outter background */
-            color: #c4c4c4; /* small letter color */
+            background-color: #222222;
+            /* outter background */
+            color: #c4c4c4;
+            /* small letter color */
         }
+
+        header {
+            position: -webkit-sticky;
+            /* For Safari */
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            /* Ensure it stays on top of other content */
+            background-color: #333;
+            /* Same background color as your header for continuity */
+            padding: 1px 0;
+            /* Adjust padding as needed */
+        }
+
         .container {
             width: 80%;
             margin: auto;
             overflow: hidden;
         }
+
         header {
             background: #000000;
-            color: #ffffff; /* color of name at top left */
-            padding-top: 30px;
-            min-height: 70px;
-            border-bottom: #c71111 3px solid; /* red stripe */
+            color: #ffffff;
+            /* color of name at top left */
+            padding-top: 1px;
+            min-height: 1px;
+            border-bottom: #c71111 3px solid;
+            /* red stripe */
         }
+
         header a {
-            color: #ffffff; /* color of sections at the top right */
+            color: #ffffff;
+            /* color of sections at the top right */
             text-decoration: none;
             text-transform: uppercase;
             font-size: 16px;
         }
+
         header ul {
             padding: 0;
             list-style: none;
         }
+
         header li {
             float: right;
             display: inline;
-            padding: 0 20px 0 20px;
+            padding: 0 10px 0 10px;
         }
+
         header #branding {
             float: left;
         }
+
         header #branding h1 {
             margin: 0;
         }
+
         section {
             padding: 20px 0 20px 0;
         }
-        #bio, #systems, #work, #education, #certifications {
-            background: #363636; /* 2nd background color */
+
+        #bio,
+        #systems,
+        #work,
+        #education,
+        #certifications {
+            background: #363636;
+            /* 2nd background color */
             padding: 20px;
             margin-bottom: 20px;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
         h2 {
             color: #dfdfdf;
             text-align: center;
         }
+
         /* Style for the back to top link */
         .back-to-top {
             position: fixed;
@@ -70,18 +105,46 @@
             color: #fff;
             padding: 10px 20px;
             border-radius: 5px;
-            text-decoration: none; /* Remove default underline */
+            text-decoration: none;
+            /* Remove default underline */
             display: none;
             cursor: pointer;
-            transition: background-color 0.3s ease; /* Smooth transition */
+            transition: background-color 0.3s ease;
+            /* Smooth transition */
         }
 
         .back-to-top:hover {
-            background-color: #e0ac00; /* Gold color on hover */
+            background-color: #e0ac00;
+            /* Gold color on hover */
+        }
+
+        table {
+            margin-left: auto;
+            margin-right: auto;
+            text-align: left;
+        }
+
+        td {
+            padding: 5px;
+        }
+
+        .custom-link {
+            color: inherit;
+            /* This makes the link take the color of its parent element */
+            text-decoration: none;
+            /* This removes the underline */
+        }
+
+        .custom-link:hover {
+            color: rgb(91, 221, 31);
+            /* Change color to gold on hover */
+            font-weight: bold;
+            /* Make text bold on hover */
         }
     </style>
-    
+
 </head>
+
 <body>
     <header>
         <div class="container">
@@ -103,24 +166,312 @@
     <div class="container">
         <section id="bio">
             <h2>Bio</h2>
-            <p>Versatile and accomplished IT professional specialised in M365 cloud tools (Intune, Exchange, Azure, Teams, Defender, Purview), IT networks, CISCO networking devices and Windows systems. The go-to person for tackling complex issues. At GDC, achieved a 95% automation rate in computer imaging using MDT. I've developed PowerShell scripts to automate reports and routine tasks but to also give a fresh and simpler look to our windows PCs by customising the Start and Taskbar layout. Moreover, I've implemented Intune remediation scripts designed to automatically identify and rectify specific erroneous values on a PC, thereby increasing productivity. Elevated email security through SPF/DKIM/DMARC records configuration, showcasing expertise in phishing prevention. Streamlined resource allocation with dynamic-membership security groups for enhanced operational efficiency. A results-oriented professional dedicated to optimizing systems for peak effectiveness.</p>
+            <p>Versatile and accomplished IT professional specialised in M365 Cloud (Intune, Exchange, Azure,
+                Teams, Defender, Purview), IT networks, CISCO networking devices and Windows systems.
+                <br>
+                At GDC, achieved a 95% automation rate in computer imaging using MDT and/or Intune.
+                <br>
+                I've developed PowerShell scripts to automate reports and routine tasks but to also give a fresh and
+                simpler
+                look to our Windows PCs by customising the Start and Taskbar layout.
+                <br>
+                Moreover, I've implemented Intune remediation scripts designed to automatically identify and rectify
+                specific erroneous values on a PC,
+                thereby increasing productivity.
+                <br>
+                Elevated email security through SPF/DKIM/DMARC records configuration, showcasing expertise in phishing
+                prevention.
+                <br>
+                Streamlined resource allocation with dynamic-membership security groups for enhanced operational
+                efficiency.
+                <br>
+                The go-to person for tackling complex issues. A results-oriented professional dedicated to
+                optimizing systems for peak effectiveness.
+            </p>
         </section>
 
         <section id="systems" style="text-align: center;">
             <h2>Systems Experience</h2>
-            <p>Windows Systems, Installing, Patching, Troubleshooting, Hardware Replacement</p>
-            <p>Extensive experience with the Microsoft Office suite</p>
+            <p> <strong>Microsoft 365 Cloud Servers</strong>
+            <table>
+                <tr>
+                    <td><a href="https://nik7git.github.io/myWebsite/Intune.html" class="custom-link">Microsoft
+                            Intune</a></td>
+                    <td>
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                    </td>
+                    <td>Microsoft Defender</td>
+                    <td>
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Microsoft Exchange</td>
+                    <td>
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                    </td>
+                    <td>Microsoft Purview</td>
+                    <td>
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Microsoft Teams</td>
+                    <td>
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                    </td>
+                    <td>Microsoft SharePoint</td>
+                    <td>
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Microsoft Azure Active Directory</td>
+                    <td>
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                    </td>
+                    <td>Microsoft Dynamics CRM</td>
+                    <td>
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                    </td>
+                </tr>
+            </table>
+            </p>
+            <p> <strong>CISCO Routers and Switches basic Configuration via CLI</strong>
+                <br>
+            <table>
+                <tr>
+                    <td>Routing (EIGRP,OSPF,Static)</td>
+                    <td>
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                    </td>
+                    <td></td>
+                    <td>VLAN Creation, Allocation</td>
+                    <td>
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Access Control List</td>
+                    <td>
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                    </td>
+                    <td></td>
+                    <td>Spanning Tree Protocol</td>
+                    <td>
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                    </td>
+                </tr>
+                <tr>
+                    <td>EtherChannel (PAGP, LACP)</td>
+                    <td>
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                    </td>
+                    <td></td>
+                    <td>AAA (Tacacs+, Radius)</td>
+                    <td>
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Hot Standby Router Protocol</td>
+                    <td>
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                        <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png"
+                            alt="Star" style="width:15px;height:15px;">
+                    </td>
+                </tr>
+            </table>
+            </p>
+            <p><strong>Microsoft Office Suite</strong>
+                <br>
+                Outlook, Word, Excel, Powerpoint, OneNote
+            </p>
+            <p><strong>Windows 7, 8, 10, 11</strong>
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+                <br>
+                Installing, Lite Touch, Creating Custom Images, Patching, Troubleshooting
+                <br>
+                Windows Administrative Tools (Computer Management, System Configuration, Registry Editor, Services, MMC,
+                Print Management, Event Viewer, Task Scheduler)
+                <br>Disk Partitioning methods and File System (Disk Management, Storage Spaces)
+            </p>
+            <p><strong>Windows Server 2012/2016/2019/2022</strong>
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+                <br>
+                Windows Server tools (MDT, DHCP, AD, GPO, WSUS, RRAS VPN, File Server, DFS Namespaces/Replication, Print
+                Management, DNS, IIS)
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+            </p>
+            <p>Computer Hardware (Troubleshooting, Repair, Component Replacement)
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+            </p>
+            <p>Windows Remote Access/Desktop and other Remote-Control tools
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+            </p>
+            <p>VMWare Workstation/vSphere, Oracle VM VirtualBox, MS Hyper-V
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+            </p>
             <p>Thorough understanding of computer, networking and security concepts</p>
-            <p>Windows 7, 8, 10, 11, Windows Server 2012/2016/2019/2022</p>
-            <p>Windows Remote Access/Desktop and other Remote-Control tools</p>
-            <p>VMWare Workstation/vSphere, Oracle VM VirtualBox, MS Hyper-V</p>
-            <p>Disk Partitioning methods and File System (Disk Management, Storage Spaces)</p>
-            <p>Intermediate PowerShell and Microsoft Command Line tools</p>
-            <p>Windows Administrative Tools (Computer Management, System Configuration, Registry Editor, Services, MMC, Print Management, Event Viewer, Task Scheduler)</p>
-            <p>Configure Wi-fi Security Protocols (Authentication, MAC filtering, Port Forwarding)</p>
-            <p>Windows Server tools (MDT, DHCP, AD, GPO, WSUS, RRAS, Print Management)</p>
-            <p>CISCO Routers and Switches basic Configuration via CLI</p>
-            <p>Ubiquiti Unifi Router and Switch Configuration</p>
+            <p>Intermediate PowerShell and Microsoft Command Line
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+            </p>
+            <p>Basic HTML and CSS
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+            </p>
+            <p>Cisco Meraki MDM
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+            </p>
+            <p>WebDAV and FTP Servers
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+            </p>
+            <p> <strong>Ubiquiti Unifi Routers and Switches basic Configuration</strong>
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+                <img src="https://raw.githubusercontent.com/Nik7Git/myWebsite/main/apple-touch-icon.png" alt="Star"
+                    style="width:15px;height:15px;">
+                <br>
+                Port Forwarding, VPN, VLAN Creation/Allocation, Firewall Rules
+            </p>
         </section>
 
         <section id="work" style="text-align: center;">
@@ -129,7 +480,7 @@
             <div></div>
             <div>2nd/3rd Line IT Support Analyst - <em>July 2022 - Ongoing</em></div>
             <p></p>
-            
+
             <div><strong>School Business Services</strong></div>
             <div></div>
             <div>ICT Engineer (Grade 2) - <em>April 2022 - July 2022</em></div>
@@ -148,73 +499,73 @@
 
         <section id="education" style="text-align: center;">
             <h2>Education</h2>
-                <div><strong>University of Ioannina, Greece</strong></div>
-                <div></div>
-                <div>Bachelor's Degree in Accounting and Finance</div>
-                <p></p>
+            <div><strong>University of Ioannina, Greece</strong></div>
+            <div></div>
+            <div>Bachelor's Degree in Accounting and Finance</div>
+            <p></p>
 
-                <div><strong>First High School of Ilioupolis, Athens, Greece</strong></div>
-                <div></div>
-                <div>General Upper Secondary School Certificate</div>
+            <div><strong>First High School of Ilioupolis, Athens, Greece</strong></div>
+            <div></div>
+            <div>General Upper Secondary School Certificate</div>
         </section>
 
         <section id="certifications" style="text-align: center;">
             <h2 style="text-align: center;">Certifications</h2>
-                <div><strong>Pluralsight / Udemy</strong></div>
-                <div></div>
-                <div>Cisco Certified Networking Associate (CCNA) - <em>(studying towards)</em></div>
-                <p></p>
+            <div><strong>Pluralsight / Udemy</strong></div>
+            <div></div>
+            <div>Cisco Certified Networking Associate (CCNA) - <em>(studying towards)</em></div>
+            <p></p>
 
-                <div><strong>Pluralsight</strong></div>
-                <div></div>
-                <div>Microsoft Modern Desktop Administrator: Windows Client (MD-100) - <em>2024</em></div>
-                <p></p>
+            <div><strong>Pluralsight</strong></div>
+            <div></div>
+            <div>Microsoft Modern Desktop Administrator: Windows Client (MD-100) - <em>2024</em></div>
+            <p></p>
 
-                <div><strong>Pluralsight</strong></div>
-                <div></div>
-                <div>Implementing MDM with Microsoft Intune - <em>2023</em></div>
-                <p></p>
-                
-                <div><strong>Pluralsight</strong></div>
-                <div></div>
-                <div>CompTIA Security+ - <em>2022</em></div>
-                <p></p>
+            <div><strong>Pluralsight</strong></div>
+            <div></div>
+            <div>Implementing MDM with Microsoft Intune - <em>2023</em></div>
+            <p></p>
 
-                <div><strong>Pluralsight / QA</strong></div>
-                <div></div>
-                <div>Microsoft 365 Messaging (MS-203) - <em>2023</em></div>
-                <p></p>
+            <div><strong>Pluralsight</strong></div>
+            <div></div>
+            <div>CompTIA Security+ - <em>2022</em></div>
+            <p></p>
 
-                <div><strong>CompTIA Certified</strong></div>
-                <div></div>
-                <div>Server+ - <em>2022</em></div>
-                <p></p>
+            <div><strong>Pluralsight / QA</strong></div>
+            <div></div>
+            <div>Microsoft 365 Messaging (MS-203) - <em>2023</em></div>
+            <p></p>
 
-                <div><strong>CompTIA Certified</strong></div>
-                <div></div>
-                <div>Network+ - <em>2021</em></div>
-                <p></p>
+            <div><strong>CompTIA Certified</strong></div>
+            <div></div>
+            <div>Server+ - <em>2022</em></div>
+            <p></p>
 
-                <div><strong>Cisco Certified</strong></div>
-                <div></div>
-                <div>Network Technician Career Path - <em>2023</em></div>
-                <p></p>
+            <div><strong>CompTIA Certified</strong></div>
+            <div></div>
+            <div>Network+ - <em>2021</em></div>
+            <p></p>
 
-                <div><strong>CompTIA Certified</strong></div>
-                <div></div>
-                <div>CompTIA A+ - <em>2021</em></div>
-                <p></p>
+            <div><strong>Cisco Certified</strong></div>
+            <div></div>
+            <div>Network Technician Career Path - <em>2023</em></div>
+            <p></p>
 
-                <div><strong>Cisco Certified</strong></div>
-                <div></div>
-                <div>Introduction to Packet Tracer - <em>2021</em></div>
+            <div><strong>CompTIA Certified</strong></div>
+            <div></div>
+            <div>CompTIA A+ - <em>2021</em></div>
+            <p></p>
+
+            <div><strong>Cisco Certified</strong></div>
+            <div></div>
+            <div>Introduction to Packet Tracer - <em>2021</em></div>
         </section>
-        
+
         <section id="back-to-top" style="text-align: center;">
             <!-- Back to top link -->
             <div><a href="#" class="back-to-top">Back to Top</a></div>
         </section>
-    
+
         <script>
             // JavaScript function to scroll back to the top of the page
             function scrollToTop() {
@@ -223,12 +574,12 @@
                     behavior: 'smooth'
                 });
             }
-    
+
             // Show back to top button when scrolling down
-            window.onscroll = function() {
+            window.onscroll = function () {
                 scrollFunction();
             };
-    
+
             function scrollFunction() {
                 if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
                     document.querySelector('.back-to-top').style.display = 'block';
@@ -236,13 +587,14 @@
                     document.querySelector('.back-to-top').style.display = 'none';
                 }
             }
-    
+
             // Add click event listener to the back to top link
-            document.querySelector('.back-to-top').addEventListener('click', function(e) {
+            document.querySelector('.back-to-top').addEventListener('click', function (e) {
                 e.preventDefault(); // Prevent default anchor behavior
                 scrollToTop(); // Scroll to top
             });
         </script>
     </div>
 </body>
+
 </html>
