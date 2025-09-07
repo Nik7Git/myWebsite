@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Password Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f4f4f9;
+    }
+    h1 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+    #password {
+      font-size: 1.5em;
+      margin: 20px 0;
+      padding: 10px;
+      border: 2px solid #333;
+      border-radius: 8px;
+      background: white;
+      width: 350px;
+      text-align: center;
+      word-wrap: break-word;
+      min-height: 40px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1em;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin: 15px 0;
+      font-size: 1em;
+    }
+    .slider-container {
+      margin: 15px 0;
+      width: 350px;
+    }
+    .slider-container label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input[type=range] {
+      width: 100%;
+    }
+    /* Character colors */
+    .lowercase { color: red; }
+    .uppercase { color: rgb(0, 0, 255); }
+    .number { color: rgb(0, 111, 0); }
+    .special { color: orange; }
+  </style>
+</head>
+<body>
+  <h1>Password Generator</h1>
+  
+  <div class="slider-container">
+    <label for="lengthRange">Password Length: <span id="lengthValue">14</span></label>
+    <input type="range" id="lengthRange" min="6" max="32" value="12">
+  </div>
+
+  <div class="options">
+    <label><input type="checkbox" id="uppercase" checked> Include Uppercase (A–Z)</label>
+    <label><input type="checkbox" id="numbers" checked> Include Numbers (0–9)</label>
+    <label><input type="checkbox" id="specials" checked> Include Special Characters (!@#$%^&*)</label>
+  </div>
+
+  <div id="password">Click "Generate" to create a password</div>
+  <button onclick="generatePassword()">Generate</button>
+
+  <script>
+    const lengthRange = document.getElementById("lengthRange");
+    const lengthValue = document.getElementById("lengthValue");
+
+    lengthRange.addEventListener("input", () => {
+      lengthValue.textContent = lengthRange.value;
+    });
+
+    function generatePassword() {
+      const length = parseInt(lengthRange.value);
+      const includeUppercase = document.getElementById("uppercase").checked;
+      const includeNumbers = document.getElementById("numbers").checked;
+      const includeSpecials = document.getElementById("specials").checked;
+
+      // Character sets
+      const lowerSet = "abcdefghijklmnopqrstuvwxyz";
+      const upperSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      const numSet = "0123456789";
+      const specialSet = "!@#$%^&*";
+
+      let allChars = lowerSet;
+      let required = [];
+
+      if (includeUppercase) {
+        allChars += upperSet;
+        required.push(randomChar(upperSet));
+      }
+      if (includeNumbers) {
+        allChars += numSet;
+        required.push(randomChar(numSet));
+      }
+      if (includeSpecials) {
+        allChars += specialSet;
+        required.push(randomChar(specialSet));
+      }
+
+      if (allChars.length === 0) {
+        document.getElementById("password").textContent = "Please select at least one option!";
+        return;
+      }
+
+      // Always include at least one lowercase
+      required.push(randomChar(lowerSet));
+
+      // Fill the rest randomly
+      let passwordChars = required;
+      while (passwordChars.length < length) {
+        passwordChars.push(randomChar(allChars));
+      }
+
+      // Shuffle
+      passwordChars = passwordChars.sort(() => Math.random() - 0.5);
+
+      // Color each character
+      let passwordHTML = "";
+      for (const char of passwordChars) {
+        if (/[a-z]/.test(char)) {
+          passwordHTML += `<span class="lowercase">${char}</span>`;
+        } else if (/[A-Z]/.test(char)) {
+          passwordHTML += `<span class="uppercase">${char}</span>`;
+        } else if (/[0-9]/.test(char)) {
+          passwordHTML += `<span class="number">${char}</span>`;
+        } else {
+          passwordHTML += `<span class="special">${char}</span>`;
+        }
+      }
+
+      document.getElementById("password").innerHTML = passwordHTML;
+    }
+
+    function randomChar(set) {
+      return set[Math.floor(Math.random() * set.length)];
+    }
+  </script>
+</body>
+</html>
