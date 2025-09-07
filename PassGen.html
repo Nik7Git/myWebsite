@@ -11,11 +11,12 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-      background-color: #333;
+      margin: 0;
+      background-color: #2b2b2b;
+      color: #fff;
     }
     h1 {
       margin-bottom: 20px;
-      color: #ffffff;
     }
     #password {
       font-size: 1.5em;
@@ -23,11 +24,12 @@
       padding: 10px;
       border: 2px solid #870101;
       border-radius: 8px;
-      background: rgb(255, 255, 255);
-      width: 350px;
+      background: #fff;
+      width: min(90%, 350px);
       text-align: center;
       word-wrap: break-word;
       min-height: 40px;
+      color: #000;
     }
     button {
       padding: 10px 20px;
@@ -36,13 +38,13 @@
       border: none;
       border-radius: 8px;
       background-color: #4CAF50;
-      color: rgb(215, 27, 27);
+      color: #fff;
       cursor: pointer;
       transition: 0.3s;
       margin-top: 10px;
     }
     button:hover {
-      background-color: #003c05;
+      background-color: #388e3c;
     }
     .options {
       display: flex;
@@ -50,10 +52,11 @@
       align-items: flex-start;
       margin: 15px 0;
       font-size: 1em;
+      width: min(90%, 350px);
     }
     .slider-container {
       margin: 15px 0;
-      width: 350px;
+      width: min(90%, 350px);
     }
     .slider-container label {
       display: block;
@@ -64,8 +67,8 @@
     }
     /* Character colors */
     .lowercase { color: red; }
-    .uppercase { color: rgb(0, 0, 255); }
-    .number { color: rgb(0, 111, 0); }
+    .uppercase { color: blue; }
+    .number { color: green; }
     .special { color: orange; }
   </style>
 </head>
@@ -74,28 +77,36 @@
   
   <div class="slider-container">
     <label for="lengthRange">Password Length: <span id="lengthValue">14</span></label>
-    <input type="range" id="lengthRange" min="6" max="32" value="14">
+    <input type="range" id="lengthRange" min="6" max="64" value="14">
   </div>
 
-  <div class="options">
+  <fieldset class="options">
+    <legend>Options</legend>
     <label><input type="checkbox" id="uppercase" checked> Include Uppercase (A–Z)</label>
     <label><input type="checkbox" id="numbers" checked> Include Numbers (0–9)</label>
-    <label><input type="checkbox" id="specials" checked> Include Special Characters (!@#$%^&*)</label>
-  </div>
+    <label><input type="checkbox" id="specials" checked> Include Special Characters</label>
+  </fieldset>
 
   <div id="password">Click "Generate" to create a password</div>
+  
   <div class="button-row">
-    <button onclick="generatePassword()">Generate</button>
-    <button id="copyBtn" class="copy-btn" onclick="copyPassword()">Copy to clipboard</button>
+    <button id="generateBtn">Generate</button>
+    <button id="copyBtn">Copy to clipboard</button>
   </div>
 
   <script>
     const lengthRange = document.getElementById("lengthRange");
     const lengthValue = document.getElementById("lengthValue");
+    const passwordElement = document.getElementById("password");
+    const copyBtn = document.getElementById("copyBtn");
+    const generateBtn = document.getElementById("generateBtn");
 
     lengthRange.addEventListener("input", () => {
       lengthValue.textContent = lengthRange.value;
     });
+
+    generateBtn.addEventListener("click", generatePassword);
+    copyBtn.addEventListener("click", copyPassword);
 
     function generatePassword() {
       const length = parseInt(lengthRange.value);
@@ -107,7 +118,7 @@
       const lowerSet = "abcdefghijklmnopqrstuvwxyz";
       const upperSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
       const numSet = "0123456789";
-      const specialSet = "!@#$%^&*";
+      const specialSet = "!@#$%^&*()_+-=[]{}|;:,.<>?/";
 
       let allChars = lowerSet;
       let required = [];
@@ -126,7 +137,7 @@
       }
 
       if (allChars.length === 0) {
-        document.getElementById("password").textContent = "Please select at least one option!";
+        passwordElement.textContent = "Please select at least one option!";
         return;
       }
 
@@ -139,8 +150,8 @@
         passwordChars.push(randomChar(allChars));
       }
 
-      // Shuffle
-      passwordChars = passwordChars.sort(() => Math.random() - 0.5);
+      // Shuffle securely
+      passwordChars = shuffle(passwordChars);
 
       // Color each character
       let passwordHTML = "";
@@ -156,26 +167,36 @@
         }
       }
 
-      document.getElementById("password").innerHTML = passwordHTML;
+      passwordElement.innerHTML = passwordHTML;
     }
 
     function randomChar(set) {
-      return set[Math.floor(Math.random() * set.length)];
+      const array = new Uint32Array(1);
+      window.crypto.getRandomValues(array);
+      return set[array[0] % set.length];
     }
 
-        function copyPassword() {
-      const passwordElement = document.getElementById("password");
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const randArray = new Uint32Array(1);
+        window.crypto.getRandomValues(randArray);
+        const j = randArray[0] % (i + 1);
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function copyPassword() {
       const text = passwordElement.innerText; // strips <span>
-      
       if (!text || text.includes("Click \"Generate\"")) return;
 
       navigator.clipboard.writeText(text).then(() => {
         copyBtn.textContent = "Copied!";
-        copyBtn.classList.add("copied");
+        copyBtn.disabled = true;
 
         setTimeout(() => {
           copyBtn.textContent = "Copy to clipboard";
-          copyBtn.classList.remove("copied");
+          copyBtn.disabled = false;
         }, 1500);
       });
     }
