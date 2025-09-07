@@ -84,7 +84,10 @@
   </div>
 
   <div id="password">Click "Generate" to create a password</div>
-  <button onclick="generatePassword()">Generate</button>
+  <div class="button-row">
+    <button onclick="generatePassword()">Generate</button>
+    <button id="copyBtn" class="copy-btn" onclick="copyPassword()">Copy to clipboard</button>
+  </div>
 
   <script>
     const lengthRange = document.getElementById("lengthRange");
@@ -158,6 +161,23 @@
 
     function randomChar(set) {
       return set[Math.floor(Math.random() * set.length)];
+    }
+
+        function copyPassword() {
+      const passwordElement = document.getElementById("password");
+      const text = passwordElement.innerText; // strips <span>
+      
+      if (!text || text.includes("Click \"Generate\"")) return;
+
+      navigator.clipboard.writeText(text).then(() => {
+        copyBtn.textContent = "Copied!";
+        copyBtn.classList.add("copied");
+
+        setTimeout(() => {
+          copyBtn.textContent = "Copy to clipboard";
+          copyBtn.classList.remove("copied");
+        }, 1500);
+      });
     }
   </script>
 </body>
