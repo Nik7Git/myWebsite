@@ -2,478 +2,408 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IT Engineer</title>
-    <link rel="icon" type="image/x-icon" href="https://computercapriccioso.it/wp-content/uploads/2019/05/favicon.png">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background-color: #222222;
-            /* outter background */
-            color: #c4c4c4;
-            /* small letter color */
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Nik B. - IT Engineer portfolio showcasing Microsoft 365, networking, Windows Server, and IT certifications." />
+  <title>IT Engineer</title>
+  <link rel="icon" type="image/x-icon" href="https://computercapriccioso.it/wp-content/uploads/2019/05/favicon.png" />
+  <style>
+    /* ---------- General Styles ---------- */
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      background-color: #222;
+      color: #c4c4c4;
+    }
 
-        header {
-            position: -webkit-sticky;
-            /* For Safari */
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            /* Ensure it stays on top of other content */
-            background-color: #333;
-            /* Same background color as your header for continuity */
-            padding: 1px 0;
-            /* Adjust padding as needed */
-        }
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
 
-        .container {
-            width: 80%;
-            margin: auto;
-            overflow: hidden;
-        }
+    a:hover {
+      color: #f0a800;
+      font-weight: bold;
+    }
 
-        header {
-            background: #000000;
-            color: #ffffff;
-            /* color of name at top left */
-            padding-top: 1px;
-            min-height: 1px;
-            border-bottom: #c71111 3px solid;
-            /* red stripe */
-        }
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: auto;
+    }
 
-        header a {
-            color: #ffffff;
-            /* color of sections at the top right */
-            text-decoration: none;
-            text-transform: uppercase;
-            font-size: 16px;
-        }
+    h2 {
+      color: #dfdfdf;
+      text-align: center;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #c71111;
+      display: inline-block;
+      padding-bottom: 5px;
+    }
 
-        header ul {
-            padding: 0;
-            list-style: none;
-        }
+    section {
+      padding: 30px 0;
+    }
 
-        header li {
-            float: right;
-            display: inline;
-            padding: 0 10px 0 10px;
-        }
+    .card {
+      background: #363636;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
 
-        header #branding {
-            float: left;
-        }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
 
-        header #branding h1 {
-            margin: 0;
-        }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0;
+    }
 
-        section {
-            padding: 20px 0 20px 0;
-        }
+    td {
+      padding: 5px 10px;
+      vertical-align: top;
+    }
 
-        #bio,
-        #systems,
-        #work,
-        #education,
-        #certifications {
-            background: #363636;
-            /* 2nd background color */
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+    /* ---------- Header ---------- */
+    header {
+      position: sticky;
+      top: 0;
+      background-color: #000;
+      color: #fff;
+      padding: 10px 0;
+      border-bottom: 3px solid #c71111;
+      z-index: 1000;
+    }
 
-        h2 {
-            color: #dfdfdf;
-            text-align: center;
-        }
+    #branding h1 {
+      margin: 0;
+    }
 
-        /* Style for the back to top link */
-        .back-to-top {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #c71111;
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 5px;
-            text-decoration: none;
-            /* Remove default underline */
-            display: none;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            /* Smooth transition */
-        }
+    nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+      margin: 0;
+      padding: 0;
+    }
 
-        .back-to-top:hover {
-            background-color: #e0ac00;
-            /* Gold color on hover */
-        }
+    nav li {
+      position: relative;
+    }
 
-        table {
-            margin-left: auto;
-            margin-right: auto;
-            text-align: left;
-        }
+    /* Dropdown Styles */
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #333;
+      min-width: 200px;
+      top: 100%;
+      left: 0;
+      border-radius: 5px;
+      z-index: 1000;
+    }
 
-        td {
-            padding: 5px;
-        }
+    .dropdown-content li {
+      padding: 10px;
+    }
 
-        .custom-link {
-            color: inherit;
-            /* This makes the link take the color of its parent element */
-            text-decoration: none;
-            /* This removes the underline */
-        }
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
 
-        .custom-link:hover {
-            color: rgb(91, 221, 31);
-            /* Change color to gold on hover */
-            font-weight: bold;
-            /* Make text bold on hover */
-        }
-    </style>
+    /* Flex for header */
+    .header-flex {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
 
+    /* ---------- Back to Top Button ---------- */
+    .back-to-top {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #c71111;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 5px;
+      display: none;
+      cursor: pointer;
+      z-index: 1000;
+    }
+
+    .back-to-top:hover {
+      background-color: #ebdf00;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      nav ul {
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .header-flex {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      table,
+      td {
+        display: block;
+      }
+    }
+  </style>
 </head>
 
 <body>
-    <header>
-        <div class="container">
-            <div id="branding">
-                <h1>Nik B.</h1>
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="#certifications">Certifications</a></li>
-                    <li><a href="#education">Education</a></li>
-                    <li><a href="#work">Career History</a></li>
-                    <li><a href="#systems">Systems Experience</a></li>
-                    <li><a href="#bio">Bio</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
-    <div class="container">
-        <section id="bio" style="text-align: center;">
-            <h2 style="margin-top: 1px;">Bio</h2>
-            <p>Versatile and accomplished IT professional specialised in M365 Cloud (Intune, Exchange, Azure,
-                Teams, Defender, Purview), IT networks, CISCO networking devices and Windows systems.
-                <br>
-                At GDC, achieved a 95% automation rate in computer imaging using MDT and/or Intune.
-                <br>
-                I've developed PowerShell scripts to automate reports and routine tasks but to also give a fresh and
-                simpler
-                look to our Windows PCs by customising the Start and Taskbar layouts.
-                <br>
-                Moreover, I've implemented Intune remediation scripts designed to automatically identify and rectify
-                specific erroneous values on a PC,
-                thereby increasing productivity.
-                <br>
-                Elevated email security through SPF/DKIM/DMARC records configuration, showcasing expertise in phishing/spoofing
-                prevention.
-                <br>
-                Streamlined resource allocation with dynamic-membership security groups for enhanced operational
-                efficiency.
-                <br>
-                The go-to person for tackling complex issues. A results-oriented professional dedicated to
-                optimizing systems for peak effectiveness.
-            </p>
-        </section>
-
-        <section id="systems" style="text-align: center;">
-            <h2 style="margin-top: 1px;">Systems Experience</h2>
-            <strong>Microsoft 365 Cloud Servers</strong>
-            <table>
-                <tr>
-                    <td><a href="https://nik7git.github.io/myWebsite/Intune.html" class="custom-link">Microsoft
-                            Intune</a></td>
-                    <td>
-
-                    </td>
-                    <td>Microsoft Defender</td>
-                    <td>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td>Microsoft Exchange</td>
-                      <td>
-
-                    </td>
-                    <td>Microsoft Purview</td>
-                    <td>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td>Microsoft Teams</td>
-                    <td>
-
-                    </td>
-                    <td>Microsoft SharePoint</td>
-                    <td>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td>Microsoft Azure Active Directory</td>
-                    <td>
-
-                    </td>
-                    <td>Microsoft Dynamics CRM</td>
-                    <td>
-
-                    </td>
-                </tr>
-            </table>
-
-            <p></p>
-
-            <strong>CISCO Routers and Switches basic Configuration via CLI</strong>
-            <table>
-                <tr>
-                    <td>Routing (EIGRP,OSPF,Static)</td>
-                    <td>
-
-                    </td>
-                    <td></td>
-                    <td>VLAN Creation, Allocation</td>
-                    <td>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td>Access Control List</td>
-                    <td>
-
-                    </td>
-                    <td></td>
-                    <td>Spanning Tree Protocol</td>
-                    <td>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td>EtherChannel (PAGP, LACP)</td>
-                    <td>
-
-                    </td>
-                    <td></td>
-                    <td>AAA (Tacacs+, Radius)</td>
-                    <td>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td>Hot Standby Router Protocol</td>
-                    <td>
-
-                    </td>
-                    <td></td>
-                    <td>NAT Overloading/PAT</td>
-                    <td>
-
-                    </td>
-                </tr>
-            </table>
-
-            <p><strong>Microsoft Office Suite</strong>
-                <br>
-                Outlook, Word, Excel, Powerpoint, OneNote
-            </p>
-
-            <p><strong>Windows 7, 8, 10, 11</strong>
-                <br>
-                Installing, Lite Touch, Creating Custom Images, Patching, Troubleshooting
-                <br>
-                Windows Administrative Tools (Computer Management, System Configuration, Registry Editor, Services, MMC,
-                Print Management, Event Viewer, Task Scheduler)
-                <br>Disk Partitioning methods and File System (Disk Management, Storage Spaces)
-            </p>
-
-            <p><strong>Windows Server 2012/2016/2019/2022</strong>
-                <br>
-                Windows Server tools (MDT, DHCP, AD, GPO, WSUS, RRAS VPN, File Server, DFS Namespaces/Replication, Print
-                Management, DNS, IIS)
-            </p>
-
-            <p>Computer Hardware (Troubleshooting, Repair, Component Replacement)
-            </p>
-
-            <p>Windows Remote Access/Desktop and other Remote-Control tools
-            </p>
-
-            <p>VMWare Workstation/vSphere, Oracle VM VirtualBox, MS Hyper-V
-            </p>
-
-            <p>Thorough understanding of computer, networking and security concepts</p>
-
-            <p>Intermediate PowerShell and Microsoft Command Line
-            </p>
-
-            <p>Basic HTML and CSS
-            </p>
-
-            <p>Cisco Meraki MDM
-            </p>
-
-            <p>WebDAV and FTP Servers
-            </p>
-
-            <p> <strong>Ubiquiti Unifi Routers and Switches basic Configuration</strong>
-                <br>
-                Port Forwarding, VPN, VLAN Creation/Allocation, Firewall Rules
-            </p>
-        </section>
-
-        <section id="work" style="text-align: center;">
-            <h2 style="margin-top: 1px;">Career History</h2>
-            <div><strong>Four Marketing Group</strong></div>
-            <div></div>
-            <div>2nd/3rd Line IT Support Analyst — <em>August 2024 - Ongoing</em></div>
-
-            <p></p>
-            <div><strong>General Dental Council</strong></div>
-            <div></div>
-            <div>2nd/3rd Line IT Support Analyst — <em>July 2022 - August 2024</em></div>
-
-            <p></p>
-
-            <div><strong>School Business Services</strong></div>
-            <div></div>
-            <div>ICT Engineer (Grade 2) — <em>April 2022 - July 2022</em></div>
-
-            <p></p>
-
-            <div><strong>Testronic Laboratories</strong></div>
-            <div></div>
-            <div>IT Technician — <em>June 2021 - March 2022</em></div>
-
-            <p></p>
-
-            <div><strong>IT Career Switch Ltd</strong></div>
-            <div></div>
-            <div>IT Technician Traineeship — <em>March 2020 - March 2021</em></div>
-
-            <p></p>
-        </section>
-
-        <section id="education" style="text-align: center;">
-            <h2 style="margin-top: 1px;">Education</h2>
-            <div><strong>University of Ioannina, Greece</strong></div>
-            <div></div>
-            <div>Bachelor's Degree in Accounting and Finance</div>
-        </section>
-
-        <section id="certifications" style="text-align: center;">
-            <h2 style="margin-top: 1px;">Certifications</h2>
-            <div><strong>Pluralsight / Udemy</strong></div>
-            <div></div>
-            <div>Cisco Certified Networking Associate (CCNA) - <em>2024</em></div>
-
-            <p></p>
-
-            <div><strong>Pluralsight</strong></div>
-            <div></div>
-            <div>Microsoft Modern Desktop Administrator: Windows Client (MD-100) - <em>2024</em></div>
-
-            <p></p>
-
-            <div><strong>Pluralsight</strong></div>
-            <div></div>
-            <div>Implementing MDM with Microsoft Intune - <em>2023</em></div>
-
-            <p></p>
-
-            <div><strong>Pluralsight</strong></div>
-            <div></div>
-            <div>CompTIA Security+ - <em>2022</em></div>
-
-            <p></p>
-
-            <div><strong>Pluralsight / QA</strong></div>
-            <div></div>
-            <div>Microsoft 365 Messaging (MS-203) - <em>2023</em></div>
-
-            <p></p>
-
-            <div><strong>CompTIA Certified</strong></div>
-            <div></div>
-            <div>Server+ - <em>2022</em></div>
-
-            <p></p>
-
-            <div><strong>CompTIA Certified</strong></div>
-            <div></div>
-            <div>Network+ - <em>2021</em></div>
-
-            <p></p>
-
-            <div><strong>Cisco Certified</strong></div>
-            <div></div>
-            <div>Network Technician Career Path - <em>2023</em></div>
-
-            <p></p>
-
-            <div><strong>CompTIA Certified</strong></div>
-            <div></div>
-            <div>CompTIA A+ - <em>2021</em></div>
-            
-            <p></p>
-
-            <div><strong>Cisco Certified</strong></div>
-            <div></div>
-            <div>Introduction to Packet Tracer - <em>2021</em></div>
-        </section>
-
-        <section id="back-to-top" style="text-align: center;">
-            <!-- Back to top link -->
-            <div><a href="#" class="back-to-top">Back to Top</a></div>
-        </section>
-
-        <script>
-            // JavaScript function to scroll back to the top of the page
-            function scrollToTop() {
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            }
-
-            // Show back to top button when scrolling down
-            window.onscroll = function () {
-                scrollFunction();
-            };
-
-            function scrollFunction() {
-                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-                    document.querySelector('.back-to-top').style.display = 'block';
-                } else {
-                    document.querySelector('.back-to-top').style.display = 'none';
-                }
-            }
-
-            // Add click event listener to the back to top link
-            document.querySelector('.back-to-top').addEventListener('click', function (e) {
-                e.preventDefault(); // Prevent default anchor behavior
-                scrollToTop(); // Scroll to top
-            });
-        </script>
+  <!-- ---------- Header ---------- -->
+  <header>
+    <div class="container header-flex">
+      <div id="branding">
+        <h1>Nik B.</h1>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="#bio">Bio</a></li>
+          <li><a href="#systems">Systems Experience</a></li>
+          <li><a href="#work">Career History</a></li>
+          <li><a href="#education">Education</a></li>
+          <li><a href="#certifications">Certifications</a></li>
+          <li class="dropdown">
+            <a href="#">Tools</a>
+            <ul class="dropdown-content">
+              <li>
+                <a href="https://nik7git.github.io/myWebsite/PassGen.html">Password Generator</a>
+              </li>
+              <li>
+                <a href="https://nik7git.github.io/myWebsite/TextHash.html">Text Hashing</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
     </div>
+  </header>
+
+  <div class="container">
+    <!-- ---------- Bio ---------- -->
+    <section id="bio">
+      <h2>Bio</h2>
+      <div class="card">
+        <p>
+          Versatile and accomplished IT professional specialised in M365 Cloud
+          (Intune, Exchange, Azure, Teams, Defender, Purview), IT networks,
+          CISCO/Unifi networking devices and Windows systems.
+          <br />Achieved 95% automation in computer imaging using MDT/Intune.
+          <br />Developed PowerShell scripts to automate reports, routine
+          tasks, and customize Windows Start/Taskbar layouts.
+          <br />Implemented Intune remediation scripts designed to
+          automatically identify and rectify specific erroneous values on a
+          PC, thereby increasing productivity. <br />Elevated email security
+          with SPF/DKIM/DMARC configuration to prevent phishing/spoofing.
+          <br />Streamlined resource allocation with dynamic-membership
+          security groups. <br />A results-oriented professional focused on
+          optimizing systems for peak efficiency.
+        </p>
+      </div>
+    </section>
+
+    <!-- ---------- Systems Experience ---------- -->
+    <section id="systems">
+      <h2>Systems Experience</h2>
+      <div class="card">
+        <strong style="color: #ffa703">Microsoft 365 Cloud Servers</strong>
+        <table>
+          <tr>
+            <td>
+              <a href="https://nik7git.github.io/myWebsite/Intune.html">Microsoft Intune</a>
+            </td>
+            <td>Microsoft Defender</td>
+          </tr>
+          <tr>
+            <td>Microsoft Exchange</td>
+            <td>Microsoft Purview</td>
+          </tr>
+          <tr>
+            <td>Microsoft Teams</td>
+            <td>Microsoft SharePoint</td>
+          </tr>
+          <tr>
+            <td>Microsoft Azure Active Directory</td>
+            <td>Microsoft Dynamics CRM</td>
+          </tr>
+        </table>
+
+        <strong style="color: #ffa703">CISCO Routers & Switches</strong>
+        <table>
+          <tr>
+            <td>Routing (EIGRP, OSPF, Static)</td>
+            <td>VLAN Creation/Allocation</td>
+          </tr>
+          <tr>
+            <td>Access Control List</td>
+            <td>Spanning Tree Protocol</td>
+          </tr>
+          <tr>
+            <td>EtherChannel (PAGP, LACP)</td>
+            <td>AAA (Tacacs+, Radius)</td>
+          </tr>
+          <tr>
+            <td>Hot Standby Router Protocol</td>
+            <td>NAT Overloading/PAT</td>
+          </tr>
+        </table>
+
+        <p>
+          <strong style="color: #ffa703">Microsoft Office Suite</strong>
+          <br />
+          Outlook, Word, Excel, Powerpoint, OneNote
+        </p>
+
+        <p>
+          <strong style="color: #ffa703">Windows 7, 8, 10, 11</strong>
+          <br />
+          Installing, Lite Touch, Creating Custom Images, Patching,
+          Troubleshooting
+          <br />
+          Windows Administrative Tools (Computer Management, System
+          Configuration, Registry Editor, Services, MMC, Print Management,
+          Event Viewer, Task Scheduler)
+          <br />Disk Partitioning methods and File System (Disk Management,
+          Storage Spaces)
+        </p>
+
+        <p>
+          <strong style="color: #ffa703">Windows Server 2012/2016/2019/2022</strong>
+          <br />
+          Windows Server tools (MDT, DHCP, AD, GPO, WSUS, RRAS VPN, File
+          Server, DFS Namespaces/Replication, Print Management, DNS, IIS)
+        </p>
+
+        <p style="color: #ffffff">
+          Computer Hardware (Troubleshooting, Repair, Component Replacement)
+        </p>
+
+        <p style="color: #ffffff">
+          Windows Remote Access/Desktop and other Remote-Control tools
+        </p>
+
+        <p style="color: #ffffff">
+          VMWare Workstation/vSphere, Oracle VM VirtualBox, MS Hyper-V
+        </p>
+
+        <p style="color: #ffffff">
+          Thorough understanding of computer, networking and security concepts
+        </p>
+
+        <p style="color: #ffffff">
+          Intermediate PowerShell and Microsoft Command Line
+        </p>
+
+        <p style="color: #ffffff">Basic HTML and CSS</p>
+
+        <p style="color: #ffffff">Cisco Meraki MDM</p>
+
+        <p style="color: #ffffff">WebDAV and FTP Servers</p>
+
+        <p>
+          <strong style="color: #ffa703">Ubiquiti Unifi Routers and Switches basic Configuration</strong>
+          <br />
+          Port Forwarding, VPN, VLAN Creation/Allocation, Firewall Rules
+        </p>
+      </div>
+    </section>
+
+    <!-- ---------- Career History ---------- -->
+    <section id="work">
+      <h2>Career History</h2>
+      <div class="card">
+        <article>
+          <strong>Four Marketing Group</strong> — 2nd/3rd Line IT Support
+          Analyst (<em>Aug 2024 - Ongoing</em>)
+        </article>
+        <article>
+          <strong>General Dental Council</strong> — 2nd/3rd Line IT Support
+          Analyst (<em>Jul 2022 - Aug 2024</em>)
+        </article>
+        <article>
+          <strong>School Business Services</strong> — ICT Engineer (Grade 2)
+          (<em>Apr 2022 - Jul 2022</em>)
+        </article>
+        <article>
+          <strong>Testronic Laboratories</strong> — IT Technician (<em>Jun 2021 - Mar 2022</em>)
+        </article>
+        <article>
+          <strong>IT Career Switch Ltd</strong> — IT Technician Traineeship
+          (<em>Mar 2020 - Mar 2021</em>)
+        </article>
+      </div>
+    </section>
+
+    <!-- ---------- Education ---------- -->
+    <section id="education">
+      <h2>Education</h2>
+      <div class="card">
+        <strong>University of Ioannina, Greece</strong>
+        <div>Bachelor's Degree in Accounting and Finance</div>
+      </div>
+    </section>
+
+    <!-- ---------- Certifications ---------- -->
+    <section id="certifications">
+      <h2>Certifications</h2>
+      <div class="card">
+        <ul>
+          <li>
+            Cisco Certified Networking Associate (CCNA) - 2024 - (Pluralsight
+            / Udemy)
+          </li>
+          <li>
+            Microsoft Modern Desktop Administrator (MD-100) - 2024 -
+            (Pluralsight)
+          </li>
+          <li>
+            Implementing MDM with Microsoft Intune - 2023 - (Pluralsight)
+          </li>
+          <li>CompTIA Security+ - 2022 - (Pluralsight)</li>
+          <li>Microsoft 365 Messaging (MS-203) - 2023 - (Pluralsight / QA)</li>
+          <li>Server+ - 2022 - (CompTIA)</li>
+          <li>Network+ - 2021 - (CompTIA)</li>
+          <li>CompTIA A+ - 2021 - (CompTIA)</li>
+          <li>Cisco Network Technician Career Path - 2023 - (Cisco)</li>
+          <li>Introduction to Packet Tracer - 2021 - (Cisco)</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  <!-- ---------- Back to Top ---------- -->
+  <a href="#" class="back-to-top">Back to Top</a>
+
+  <script>
+    const backToTop = document.querySelector(".back-to-top");
+    window.addEventListener("scroll", () => {
+      backToTop.style.display = window.scrollY > 100 ? "block" : "none";
+    });
+    backToTop.addEventListener("click", (e) => {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  </script>
 </body>
 
 </html>
-
-
-
-
