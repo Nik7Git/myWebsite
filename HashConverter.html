@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -306,17 +307,17 @@
       .container {
         padding: 2rem;
       }
-      
+
       h1 {
         font-size: 1.8rem;
       }
-      
+
       .hash-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
       }
-      
+
       .hash-info {
         flex-direction: column;
         align-items: flex-start;
@@ -335,6 +336,7 @@
         opacity: 0;
         transform: translateY(20px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
@@ -350,17 +352,32 @@
       animation-fill-mode: both;
     }
 
-    .hash-item:nth-child(1) { animation-delay: 0.1s; }
-    .hash-item:nth-child(2) { animation-delay: 0.2s; }
-    .hash-item:nth-child(3) { animation-delay: 0.3s; }
-    .hash-item:nth-child(4) { animation-delay: 0.4s; }
-    .hash-item:nth-child(5) { animation-delay: 0.5s; }
+    .hash-item:nth-child(1) {
+      animation-delay: 0.1s;
+    }
+
+    .hash-item:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .hash-item:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+
+    .hash-item:nth-child(4) {
+      animation-delay: 0.4s;
+    }
+
+    .hash-item:nth-child(5) {
+      animation-delay: 0.5s;
+    }
   </style>
 </head>
+
 <body>
   <div class="container">
     <h1><i class="fas fa-hashtag"></i>Hash Converter</h1>
-    
+
     <div class="input-section">
       <label for="textInput">
         <i class="fas fa-edit"></i>
@@ -414,6 +431,12 @@
 
     const hashTypes = [
       {
+        name: 'Base64',
+        icon: 'fas fa-code',
+        description: 'Encoding • Not a hash, reversible encoding',
+        generate: (text) => btoa(unescape(encodeURIComponent(text)))
+      },
+      {
         name: 'MD5',
         icon: 'fas fa-key',
         description: '128-bit • Fast but not cryptographically secure',
@@ -451,14 +474,14 @@
 
     function generateHashes() {
       const text = textInput.value.trim();
-      
+
       if (!text) {
         hashResults.innerHTML = '<div class="empty-state">Please enter some text to convert</div>';
         return;
       }
 
       hashResults.innerHTML = '';
-      
+
       hashTypes.forEach((hashType, index) => {
         const hashValue = hashType.generate(text);
         const hashItem = createHashItem(hashType, hashValue, index);
@@ -473,7 +496,7 @@
     function createHashItem(hashType, hashValue, index) {
       const item = document.createElement('div');
       item.className = 'hash-item';
-      
+
       item.innerHTML = `
         <div class="hash-header">
           <div class="hash-type">
@@ -491,7 +514,7 @@
           <span>Length: ${hashValue.length} chars</span>
         </div>
       `;
-      
+
       return item;
     }
 
@@ -500,7 +523,7 @@
         const originalHTML = button.innerHTML;
         button.innerHTML = '<i class="fas fa-check"></i> Copied!';
         button.classList.add('copied');
-        
+
         setTimeout(() => {
           button.innerHTML = originalHTML;
           button.classList.remove('copied');
@@ -513,7 +536,7 @@
         textArea.select();
         document.execCommand('copy');
         document.body.removeChild(textArea);
-        
+
         button.innerHTML = '<i class="fas fa-check"></i> Copied!';
         button.classList.add('copied');
         setTimeout(() => {
@@ -536,7 +559,7 @@
       const chars = text.length;
       const bytes = new Blob([text]).size;
       const hashes = hashResults.children.length > 1 || !hashResults.querySelector('.empty-state') ? hashTypes.length : 0;
-      
+
       charCount.textContent = chars.toLocaleString();
       byteCount.textContent = bytes.toLocaleString();
       hashCount.textContent = hashes;
@@ -557,4 +580,5 @@
     updateStats();
   </script>
 </body>
+
 </html>
