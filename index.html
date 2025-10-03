@@ -174,17 +174,29 @@
             transform: translateY(0);
         }
 
-        .dropdown-content a {
-            display: block;
-            padding: 12px 20px;
-            color: var(--text-primary);
-            transition: all 0.3s ease;
-        }
+.dropdown-content a {
+    display: block;
+    padding: 12px 20px;
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+    position: relative; /* Needed for underline */
+}
 
-        .dropdown-content a:hover {
-            background: var(--bg-card-hover);
-            padding-left: 25px;
-        }
+.dropdown-content a::after {
+    content: '';
+    position: absolute;
+    bottom: 6px; /* adjust to align with text */
+    left: 20px; /* match padding */
+    width: 0;
+    height: 2px;
+    background: var(--accent-gradient);
+    transition: width 0.3s ease;
+}
+
+.dropdown-content a:hover::after {
+    width: calc(100% - 40px); /* full width minus padding */
+}
+
 
         /* ---------- Hero Section ---------- */
         .hero {
@@ -596,6 +608,9 @@
                             </a>
                             <a href="https://nik7git.github.io/myWebsite/HashConverter.html">
                                 <i class="fas fa-hashtag"></i> Text Hashing
+                            </a>
+                            <a href="https://nik7git.github.io/myWebsite/QRGenerator.html">
+                                <i class="fas fa-qrcode"></i> QR Generator
                             </a>
                             </a>
                         </div>
@@ -1055,4 +1070,3 @@
 
 
 </html>
-
