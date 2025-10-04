@@ -2,455 +2,422 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QR Generator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="icon"
     href="https://cdn4.iconfinder.com/data/icons/protection-and-security-flat/64/scanner_scan_qr_code_barcode_reader-512.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
   <style>
     :root {
-      --bg: #0b1220;
-      --card: #0f1724;
-      --muted: #9aa4b2;
-      --accent: #00d4aa;
-      --glass: rgba(255, 255, 255, 0.03)
-    }
-
-    * {
-      box-sizing: border-box
+      --primary-color: #00d4aa;
+      --bg-dark: #0a0a0a;
+      --bg-card: #1a1a1a;
+      --bg-card-hover: #252525;
+      --text-primary: #e0e0e0;
+      --text-secondary: #a0a0a0;
+      --accent-gradient: linear-gradient(135deg, #00d4aa 0%, #0066ff 100%);
+      --transition-speed: 0.3s;
     }
 
     body {
-      font-family: Inter, system-ui, Segoe UI, Roboto, -apple-system, "Helvetica Neue", Arial;
-      margin: 0;
-      background: linear-gradient(180deg, #0b1220 0%, #0b1420 100%);
-      color: #e6eef6;
-      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      padding: 2rem;
       display: flex;
-      align-items: center;
       justify-content: center;
-      padding: 28px
+      min-height: 100vh;
     }
 
-    .app {
+    .container {
+      max-width: 900px;
       width: 100%;
-      max-width: 1100px;
-      background: var(--card);
-      border-radius: 12px;
-      padding: 20px;
-      display: grid;
-      grid-template-columns: 1fr 380px;
-      gap: 20px;
-      box-shadow: 0 10px 40px rgba(2, 6, 23, 0.7)
     }
 
     h1 {
-      margin: 0 0 6px;
-      font-size: 20px
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
     }
 
-    p.lead {
-      margin: 0 0 18px;
-      color: var(--muted)
+    .tagline {
+      text-align: center;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      font-size: 1rem;
     }
 
-    .panel {
-      background: var(--glass);
-      padding: 14px;
+    .card {
+      background: var(--bg-card);
+      padding: 2rem;
+      border-radius: 15px;
+      margin-bottom: 2rem;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: all var(--transition-speed) ease;
+    }
+
+    .card:hover {
+      background: var(--bg-card-hover);
+      box-shadow: 0 20px 40px rgba(0, 212, 170, 0.1);
+    }
+
+    .mode-switch {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .mode-switch button {
+      flex: 1;
+      padding: 12px;
       border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.03)
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--text-secondary);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-speed) ease;
+    }
+
+    .mode-switch button.active {
+      background: var(--bg-card-hover);
+      border: 1px solid var(--primary-color);
+      color: var(--primary-color);
+    }
+
+    .input-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
     }
 
     label {
-      display: block;
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 6px
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      font-size: 0.9rem;
     }
 
-    .row {
-      display: flex;
-      gap: 10px
-    }
-
-    input[type=text],
-    input[type=url],
-    input[type=password],
+    input,
     select {
-      width: 100%;
-      padding: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-primary);
+      padding: 0.8rem;
       border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      background: transparent;
-      color: inherit;
-      font-size: 14px
+      font-size: 1rem;
+      transition: all var(--transition-speed) ease;
     }
 
-    select option {
-      background-color: var(--card);
-      color: #e6eef6;
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.15);
     }
 
     button {
-      background: var(--accent);
-      border: none;
-      color: #02121a;
-      padding: 10px 14px;
-      border-radius: 8px;
+      cursor: pointer;
       font-weight: 600;
-      cursor: pointer
+      padding: 0.8rem 1.2rem;
+      border-radius: 8px;
+      border: none;
+      background: var(--accent-gradient);
+      /* gradient style */
+      color: #0a0a0a;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0, 212, 170, 0.25);
+    }
+
+    button:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 8px rgba(0, 212, 170, 0.15);
     }
 
     button.secondary {
       background: transparent;
       border: 1px solid rgba(255, 255, 255, 0.06);
-      color: var(--muted)
+      color: var(--text-secondary);
     }
 
-    .controls {
-      display: grid;
-      gap: 12px
-    }
-
-    .mode-switch {
-      display: flex;
-      gap: 8px
-    }
-
-    .mode-switch button {
-      background: transparent;
-      padding: 8px 12px;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.03);
-      color: var(--muted);
-      cursor: pointer
-    }
-
-    .mode-switch button.active {
-      background: rgba(255, 255, 255, 0.02);
-      border-color: rgba(255, 255, 255, 0.06);
-      color: var(--accent);
-      font-weight: 600
+    select option {
+      background: var(--bg-card);
+      color: var(--text-primary);
+      padding: 0.5rem;
     }
 
     .preview {
+      margin-top: 2rem;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 12px
+      gap: 1rem;
+
     }
 
     #qrcode {
       background: #fff;
-      padding: 14px;
-      border-radius: 10px
+      padding: 16px;
+      border-radius: 12px;
+      max-width: 100%;
     }
 
-    .meta {
+    #logo-container,
+    #size-container {
+      width: 100%;
       display: flex;
-      gap: 10px;
-      align-items: center
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
     }
 
-    .meta small {
-      color: var(--muted)
-    }
-
-    .actions {
-      display: flex;
-      gap: 8px
-    }
-
-    .file-input {
-      display: flex;
-      gap: 8px;
-      align-items: center
-    }
-
-    .footer-note {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 8px
-    }
-
-    @media (max-width:980px) {
-      .app {
+    @media (max-width:768px) {
+      .input-grid {
         grid-template-columns: 1fr;
-        max-width: 760px
       }
 
-      .preview {
-        order: -1
+      #logo-container,
+      #size-container {
+        flex-direction: column;
       }
     }
   </style>
 </head>
 
 <body>
-  <div class="app">
-    <div>
-      <h1>QR Code Generator</h1>
+  <div class="container">
+    <h1><i class="fas fa-qrcode"></i> QR Generator</h1>
+    <p class="tagline">Generate WiFi or URL QR codes with optional center logo and adjustable size</p>
 
-      <div class="panel controls">
-        <div class="mode-switch" role="tablist" aria-label="Select QR type">
-          <button id="mode-wifi" class="active" role="tab" aria-selected="true">WiFi</button>
-          <button id="mode-url" role="tab" aria-selected="false">URL</button>
-        </div>
+    <div class="card">
+      <div class="mode-switch">
+        <button id="mode-wifi" class="active">WiFi</button>
+        <button id="mode-url">URL</button>
+      </div>
 
-        <!-- WiFi form -->
-        <div id="form-wifi">
-          <label for="ssid"><strong>Wireless SSID (network name)</strong></label>
-          <input id="ssid" type="text" placeholder="e.g. MyHomeWiFi" autocomplete="off">
-
-          <div class="row">
-            <div style="flex:1">
-              <label for="wifi-pass"><strong>Password</strong></label>
-              <input id="wifi-pass" type="password" placeholder="Leave blank for open network">
-            </div>
-            <div style="width:140px">
-              <label for="enc"><strong>Encryption</strong></label>
-              <select id="enc">
-                <option value="WPA">WPA/WPA2</option>
-                <option value="WEP">WEP</option>
-                <option value="nopass">None (open)</option>
-              </select>
-            </div>
+      <!-- WiFi Form -->
+      <div id="form-wifi">
+        <div class="input-grid">
+          <div class="input-group">
+            <label for="ssid">SSID</label>
+            <input id="ssid" type="text" placeholder="MyHomeWiFi" required>
           </div>
-
-          <label style="margin-top:8px"><input id="hidden" type="checkbox"> <strong>Hidden SSID</strong></label>
-        </div>
-
-        <!-- URL form -->
-        <div id="form-url" style="display:none">
-          <label for="url">Website URL</label>
-          <input id="url" type="url" placeholder="https://example.com">
-        </div>
-
-        <div>
-          <label for="size">Size: <span id="sizeLabel">300</span> px</label>
-          <input id="size" type="range" min="128" max="1200" step="1" value="300"
-            oninput="document.getElementById('sizeLabel').textContent=this.value">
-        </div>
-
-        <div class="file-input">
-          <div style="flex:1">
-            <label for="logo">Center logo (optional, PNG/SVG)</label>
-            <input id="logo" type="file" accept="image/*">
+          <div class="input-group">
+            <label for="wifi-pass">Password</label>
+            <input id="wifi-pass" type="password" placeholder="Leave blank for open network">
+          </div>
+          <div class="input-group">
+            <label for="enc">Encryption</label>
+            <select id="enc">
+              <option value="WPA">WPA/WPA2</option>
+              <option value="WEP">WEP</option>
+              <option value="nopass">None</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label><input type="checkbox" id="hidden"> Hidden SSID</label>
           </div>
         </div>
-
-        <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
-          <button id="generate">Create QR Code</button>
+        <div class="action-buttons" style="display:flex;gap:8px;">
+          <button id="generate">Generate QR</button>
           <button id="download" class="secondary">Download PNG</button>
           <button id="copyText" class="secondary">Copy Payload</button>
         </div>
+      </div>
 
-        <div class="footer-note">Note: WiFi QR follows the standard format:
-          <code>WIFI:T:WPA;S:SSID;P:pass;H:true;;</code>
+      <!-- URL Form -->
+      <div id="form-url" style="display:none;">
+        <div class="input-grid">
+          <div class="input-group">
+            <label for="url">Website URL</label>
+            <input id="url" type="url" placeholder="https://example.com" required>
+          </div>
+        </div>
+        <div class="action-buttons" style="display:flex;gap:8px;">
+          <button id="generate-url">Generate QR</button>
+          <button id="download-url" class="secondary">Download PNG</button>
+          <button id="copy-url" class="secondary">Copy Payload</button>
         </div>
       </div>
     </div>
 
-    <div class="panel preview">
-      <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
-        <div>
-          <strong>Preview</strong>
-          <div style="color:var(--muted);font-size:13px">Live QR and metadata</div>
-        </div>
-        <div class="meta">
-          <small id="payloadPreview">&nbsp;</small>
-        </div>
+    <!-- QR Preview + Global Logo & Size -->
+    <div class="preview">
+      <strong>Preview</strong>
+      <div id="qrcode"></div>
+      <small id="payloadPreview">&nbsp;</small>
+
+      <div id="size-container">
+        <label for="size">Size: <span id="sizeLabel">300</span> px</label>
+        <input id="size" type="range" min="128" max="1200" value="300"
+          oninput="document.getElementById('sizeLabel').textContent=this.value">
       </div>
 
-      <div id="qrcode" aria-hidden="false"></div>
-
-      <div style="display:flex;align-items:center;gap:8px">
-        <div class="actions">
-          <button id="regen" class="secondary">Regenerate</button>
-        </div>
+      <div id="logo-container">
+        <label for="logo">Center logo (optional)</label>
+        <input id="logo" type="file" accept="image/*">
       </div>
     </div>
   </div>
 
-  <!-- qrcodejs library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
-    // UI elements
-    const modeWiFi = document.getElementById('mode-wifi');
-    const modeURL = document.getElementById('mode-url');
-    const formWiFi = document.getElementById('form-wifi');
-    const formURL = document.getElementById('form-url');
-    const ssid = document.getElementById('ssid');
-    const pass = document.getElementById('wifi-pass');
-    const enc = document.getElementById('enc');
-    const hidden = document.getElementById('hidden');
-    const url = document.getElementById('url');
-    const sizeInput = document.getElementById('size');
-    const logoInput = document.getElementById('logo');
-    const generateBtn = document.getElementById('generate');
-    const downloadBtn = document.getElementById('download');
-    const copyBtn = document.getElementById('copyText');
-    const payloadPreview = document.getElementById('payloadPreview');
-    const qrcodeContainer = document.getElementById('qrcode');
-    const regenBtn = document.getElementById('regen');
+    // Elements
+    const elements = {
+      modeWiFi: document.getElementById('mode-wifi'),
+      modeURL: document.getElementById('mode-url'),
+      formWiFi: document.getElementById('form-wifi'),
+      formURL: document.getElementById('form-url'),
+      ssid: document.getElementById('ssid'),
+      pass: document.getElementById('wifi-pass'),
+      enc: document.getElementById('enc'),
+      hidden: document.getElementById('hidden'),
+      url: document.getElementById('url'),
+      size: document.getElementById('size'),
+      logo: document.getElementById('logo'),
+      qrcodeContainer: document.getElementById('qrcode'),
+      payloadPreview: document.getElementById('payloadPreview'),
+      generateBtn: document.getElementById('generate'),
+      generateUrlBtn: document.getElementById('generate-url'),
+      downloadBtn: document.getElementById('download'),
+      downloadUrlBtn: document.getElementById('download-url'),
+      copyBtn: document.getElementById('copyText'),
+      copyUrlBtn: document.getElementById('copy-url')
+    };
 
     let logoDataUrl = null;
+    let qr = null;
 
-    // Mode switching
-    function setMode(isWiFi) {
-      if (isWiFi) {
-        modeWiFi.classList.add('active'); modeWiFi.setAttribute('aria-selected', 'true');
-        modeURL.classList.remove('active'); modeURL.setAttribute('aria-selected', 'false');
-        formWiFi.style.display = 'block'; formURL.style.display = 'none';
-      } else {
-        modeURL.classList.add('active'); modeURL.setAttribute('aria-selected', 'true');
-        modeWiFi.classList.remove('active'); modeWiFi.setAttribute('aria-selected', 'false');
-        formWiFi.style.display = 'none'; formURL.style.display = 'block';
-      }
-      updatePreview();
+    // Mode switch
+    function switchMode(isWiFi) {
+      elements.modeWiFi.classList.toggle('active', isWiFi);
+      elements.modeURL.classList.toggle('active', !isWiFi);
+      elements.formWiFi.style.display = isWiFi ? 'block' : 'none';
+      elements.formURL.style.display = isWiFi ? 'none' : 'block';
     }
-    modeWiFi.addEventListener('click', () => setMode(true));
-    modeURL.addEventListener('click', () => setMode(false));
 
-    // Read logo file
-    logoInput.addEventListener('change', e => {
-      const f = e.target.files[0];
-      if (!f) { logoDataUrl = null; return; }
+    elements.modeWiFi.addEventListener('click', () => switchMode(true));
+    elements.modeURL.addEventListener('click', () => switchMode(false));
+
+    // Logo upload
+    elements.logo.addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (!file) return logoDataUrl = null;
       const reader = new FileReader();
-      reader.onload = () => { logoDataUrl = reader.result; updatePreview(); };
-      reader.readAsDataURL(f);
+      reader.onload = () => logoDataUrl = reader.result;
+      reader.readAsDataURL(file);
     });
 
-    // Generate payloads
+    // Payload functions
+    function escapeWiFi(str) { return (str || '').replace(/([\\;,:"])/g, '\\$1'); }
+
     function wifiPayload() {
-      const s = (ssid.value || '').replace(/([\\;,:"])/g, '\\$1');
-      const p = (pass.value || '').replace(/([\\;,:"])/g, '\\$1');
-      const t = (enc.value === 'nopass') ? '' : enc.value;
-      // Standard: WIFI:T:WPA;S:mynetwork;P:mypass;H:true;;
-      const H = hidden.checked ? 'H:true;' : '';
-      const parts = ['WIFI:'];
-      parts.push('T:' + (t || '')); // if nopass this will be empty string but keep field
-      parts.push('S:' + s + ';');
-      if (enc.value !== 'nopass') parts.push('P:' + p + ';');
-      parts.push(H);
-      parts.push(';');
-      return parts.join('').replace(/:+;/g, ';');
+      const t = elements.enc.value === 'nopass' ? '' : elements.enc.value;
+      const h = elements.hidden.checked ? 'H:true;' : '';
+      let payload = `WIFI:T:${t};S:${escapeWiFi(elements.ssid.value)};`;
+      if (t) payload += `P:${escapeWiFi(elements.pass.value)};`;
+      payload += h + ';';
+      return payload.replace(/:+;/g, ';');
     }
 
-    function urlPayload() {
-      return url.value || '';
-    }
+    function urlPayload() { return elements.url.value || ''; }
 
-    function getPayload() {
-      if (modeWiFi.classList.contains('active')) return wifiPayload();
-      return urlPayload();
-    }
+    function getPayload() { return elements.formWiFi.style.display === 'block' ? wifiPayload() : urlPayload(); }
 
-    // create QR using qrcodejs (renders as table/DOM or img)
-    let qr = null;
-    function clearQr() { qrcodeContainer.innerHTML = ''; }
+    function clearQr() { elements.qrcodeContainer.innerHTML = ''; }
 
-    function generate() {
-      const payload = getPayload();
-      payloadPreview.textContent = payload || '\u00A0';
-      if (!payload) { alert('Please enter required fields first'); return; }
-
-      clearQr();
-      const size = parseInt(sizeInput.value, 10) || 300;
-
-      // qrcodejs creates a table by default, we'll render onto a temporary canvas instead
-      // Create a hidden canvas and draw the QR onto it by drawing an image of an SVG from a dataURI
-      // Simpler approach: use qrcodejs to render to a DOM element, then convert to canvas by drawing the element's image.
-
-      // Create a temp element to render QR code as an <img>
-      const tmp = document.createElement('div');
-      tmp.style.display = 'inline-block';
-      qrcodeContainer.appendChild(tmp);
-      qr = new QRCode(tmp, { text: payload, width: size, height: size, colorDark: '#000000', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.H });
-
-      // If user added a logo, overlay it
-      if (logoDataUrl) {
-        // Wait a tick to let QRCode render
-        setTimeout(() => {
-          // find generated <img> or <canvas>
-          const img = tmp.querySelector('img') || tmp.querySelector('canvas');
-          if (!img) return;
-
-          // create canvas
-          const canvas = document.createElement('canvas');
-          canvas.width = size; canvas.height = size;
-          const ctx = canvas.getContext('2d');
-
-          // draw white background then QR
-          ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, size, size);
-          ctx.drawImage(img, 0, 0, size, size);
-
-          // draw logo centered
-          const logoImg = new Image();
-          logoImg.onload = () => {
-            const maxLogo = Math.floor(size * 0.22); // logo max size
-            let lw = logoImg.width; let lh = logoImg.height;
-            // scale preserving ratio
-            const scale = Math.min(maxLogo / lw, maxLogo / lh, 1);
-            lw = Math.round(lw * scale); lh = Math.round(lh * scale);
-            const lx = Math.round((size - lw) / 2); const ly = Math.round((size - lh) / 2);
-
-            // optional white round background for logo
-            ctx.fillStyle = '#ffffff';
-            const radius = 8;
-            roundRect(ctx, lx - 6, ly - 6, lw + 12, lh + 12, radius, true, false);
-
-            ctx.drawImage(logoImg, lx, ly, lw, lh);
-            // replace tmp contents with final canvas
-            qrcodeContainer.innerHTML = '';
-            canvas.style.borderRadius = '6px';
-            qrcodeContainer.appendChild(canvas);
-          };
-          logoImg.src = logoDataUrl;
-        }, 80);
-      }
-    }
-
-    // small helper to draw rounded rect
-    function roundRect(ctx, x, y, w, h, r, fill, stroke) { if (typeof r === 'undefined') r = 5; ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); if (fill) ctx.fill(); if (stroke) ctx.stroke(); }
-
-    // download PNG by converting rendered canvas or image
-    function downloadPNG() {
-      const el = qrcodeContainer.querySelector('canvas') || qrcodeContainer.querySelector('img');
-      if (!el) { alert('Generate a QR code first'); return; }
-      if (el.tagName.toLowerCase() === 'img') {
-        // draw the image to a canvas first
-        const size = parseInt(sizeInput.value, 10) || 300;
-        const canvas = document.createElement('canvas'); canvas.width = size; canvas.height = size; const ctx = canvas.getContext('2d');
-        // white background
-        ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, size, size);
-        ctx.drawImage(el, 0, 0, size, size);
-        const a = document.createElement('a'); a.href = canvas.toDataURL('image/png'); a.download = 'qr.png'; a.click();
+    function generate(type) {
+      let payload = '';
+      if (type === 'wifi') {
+        payload = wifiPayload();
       } else {
-        const a = document.createElement('a'); a.href = el.toDataURL('image/png'); a.download = 'qr.png'; a.click();
+        payload = urlPayload();
       }
+
+      elements.payloadPreview.textContent = payload || '\u00A0';
+      clearQr();
+
+      const size = parseInt(elements.size.value || 300);
+      qr = new QRCode(elements.qrcodeContainer, { text: payload, width: size, height: size, colorDark: '#000', colorLight: '#fff', correctLevel: QRCode.CorrectLevel.H });
+
+      if (!logoDataUrl) return;
+
+      setTimeout(() => {
+        const qrEl = elements.qrcodeContainer.querySelector('img') || elements.qrcodeContainer.querySelector('canvas');
+        if (!qrEl) return;
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(0, 0, size, size);
+        ctx.drawImage(qrEl, 0, 0, size, size);
+
+        const logoImg = new Image();
+        logoImg.onload = () => {
+          const maxLogo = Math.floor(size * 0.22);
+          const scale = Math.min(maxLogo / logoImg.width, maxLogo / logoImg.height, 1);
+          const lw = logoImg.width * scale;
+          const lh = logoImg.height * scale;
+          const lx = (size - lw) / 2;
+          const ly = (size - lh) / 2;
+          ctx.fillStyle = '#fff';
+          ctx.fillRect(lx - 6, ly - 6, lw + 12, lh + 12);
+          ctx.drawImage(logoImg, lx, ly, lw, lh);
+          elements.qrcodeContainer.innerHTML = '';
+          canvas.style.borderRadius = '6px';
+          elements.qrcodeContainer.appendChild(canvas);
+        };
+        logoImg.src = logoDataUrl;
+      }, 80);
     }
 
-    // copy payload to clipboard
-    function copyPayload() { const p = getPayload(); if (!p) { alert('Nothing to copy'); return; } navigator.clipboard.writeText(p).then(() => { alert('Payload copied to clipboard'); }).catch(() => { alert('Copy failed'); }); }
+    function downloadQR() {
+      const el = elements.qrcodeContainer.querySelector('canvas') || elements.qrcodeContainer.querySelector('img');
+      const size = parseInt(elements.size.value || 300);
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0, 0, size, size);
+      ctx.drawImage(el, 0, 0, size, size);
+      const a = document.createElement('a');
+      a.href = canvas.toDataURL('image/png');
+      a.download = 'qr.png';
+      a.click();
+    }
 
-    // update preview payload live
-    function updatePreview() { payloadPreview.textContent = getPayload() || '\u00A0'; }
+    function copyPayload() {
+      const payload = getPayload();
+    }
 
-    // event bindings
-    generateBtn.addEventListener('click', generate);
-    regenBtn.addEventListener('click', generate);
-    downloadBtn.addEventListener('click', downloadPNG);
-    copyBtn.addEventListener('click', copyPayload);
-
-    // keep preview updated when inputs change
-    [ssid, pass, enc, hidden, url].forEach(el => { el.addEventListener('input', updatePreview); el.addEventListener('change', updatePreview); });
-
-    // initial state
-    setMode(true);
-
+    // Event bindings
+    elements.generateBtn.addEventListener('click', () => generate('wifi'));
+    elements.generateUrlBtn.addEventListener('click', () => generate('url'));
+    elements.downloadBtn.addEventListener('click', downloadQR);
+    elements.downloadUrlBtn.addEventListener('click', downloadQR);
+    elements.copyBtn.addEventListener('click', copyPayload);
+    elements.copyUrlBtn.addEventListener('click', copyPayload);
   </script>
 </body>
 
