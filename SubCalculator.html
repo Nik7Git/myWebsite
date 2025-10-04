@@ -453,7 +453,7 @@
 
                 // deltaY < 0 => wheel up => increase CIDR (more specific)
                 // deltaY > 0 => wheel down => decrease CIDR (less specific)
-                const step = e.deltaY < 0 ? 1 : -1;
+                const step = e.deltaY < 0 ? -1 : 1;
 
                 const current = parseInt(select.value, 10) || MIN_CIDR;
                 const next = clamp(current + step);
