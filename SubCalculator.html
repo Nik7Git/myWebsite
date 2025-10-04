@@ -406,7 +406,7 @@
             const subnetSize = Math.pow(2, hostBits);
 
             // Safe default cap to avoid freezing the browser
-            const DISPLAY_CAP = 256;
+            const DISPLAY_CAP = 2048;
             const subnetsToShow = Math.min(DISPLAY_CAP, totalSubnets);
 
             for (let i = 0; i < subnetsToShow; i++) {
