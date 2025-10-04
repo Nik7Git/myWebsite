@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPv4 Subnet Calculator</title>
+    <link rel="icon" href="https://cdn3.iconfinder.com/data/icons/education-209/64/calculator-math-tool-school-256.png">
+
+    <style>
+        /* ---------- Modern Variables ---------- */
+        :root {
+            --primary-color: #00d4aa;
+            --secondary-color: #0066ff;
+            --bg-dark: #0a0a0a;
+            --bg-card: #1a1a1a;
+            --bg-card-hover: #252525;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --accent-gradient: linear-gradient(135deg, #00d4aa 0%, #0066ff 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.7;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .tagline {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent-gradient);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            background: var(--bg-card-hover);
+            box-shadow: 0 20px 40px rgba(0, 212, 170, 0.1);
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        input,
+        select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            padding: 0.8rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.1);
+        }
+
+        input:read-only {
+            background: rgba(255, 255, 255, 0.02);
+            cursor: not-allowed;
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2300d4aa' d='M10.293 3.293L6 7.586 1.707 3.293A1 1 0 00.293 4.707l5 5a1 1 0 001.414 0l5-5a1 1 0 10-1.414-1.414z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.8rem center;
+            padding-right: 2.5rem;
+        }
+
+        select option {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            padding: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--accent-gradient);
+            transition: width 0.3s ease;
+        }
+
+        .card:hover h2::after {
+            width: 100%;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        th {
+            background: rgba(0, 212, 170, 0.1);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        tr {
+            transition: background 0.3s ease;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 0.9rem;
+            }
+
+            th,
+            td {
+                padding: 0.7rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>IPv4 Subnet Calculator</h1>
+        <p class="tagline">Calculate subnet masks, host ranges, and network addresses with precision</p>
+
+        <div class="card">
+            <div class="input-grid">
+                <div class="input-group">
+                    <label for="networkAddress">Network Address Block</label>
+                    <input type="text" id="networkAddress" placeholder="e.g., 192.168.1.0" value="10.0.0.0/8">
+                </div>
+
+                <div class="input-group">
+                    <label for="subnetMask">Subnet Mask</label>
+                    <select id="subnetMask" title="Hover here and use mouse wheel to cycle subnets (/8 - /30)">
+                        <!-- Subnet mask options /8 through /30 -->
+                        <option value="8">255.0.0.0 (/8)</option>
+                        <option value="9">255.128.0.0 (/9)</option>
+                        <option value="10" selected>255.192.0.0 (/10)</option>
+                        <option value="11">255.224.0.0 (/11)</option>
+                        <option value="12">255.240.0.0 (/12)</option>
+                        <option value="13">255.248.0.0 (/13)</option>
+                        <option value="14">255.252.0.0 (/14)</option>
+                        <option value="15">255.254.0.0 (/15)</option>
+                        <option value="16">255.255.0.0 (/16)</option>
+                        <option value="17">255.255.128.0 (/17)</option>
+                        <option value="18">255.255.192.0 (/18)</option>
+                        <option value="19">255.255.224.0 (/19)</option>
+                        <option value="20">255.255.240.0 (/20)</option>
+                        <option value="21">255.255.248.0 (/21)</option>
+                        <option value="22">255.255.252.0 (/22)</option>
+                        <option value="23">255.255.254.0 (/23)</option>
+                        <option value="24">255.255.255.0 (/24)</option>
+                        <option value="25">255.255.255.128 (/25)</option>
+                        <option value="26">255.255.255.192 (/26)</option>
+                        <option value="27">255.255.255.224 (/27)</option>
+                        <option value="28">255.255.255.240 (/28)</option>
+                        <option value="29">255.255.255.248 (/29)</option>
+                        <option value="30">255.255.255.252 (/30)</option>
+                    </select>
+
+                </div>
+
+                <div class="input-group">
+                    <label for="hostsPerSubnet">No. of Hosts/Subnet</label>
+                    <input type="text" id="hostsPerSubnet" readonly value="16777216">
+                </div>
+
+                <div class="input-group">
+                    <label for="numberOfSubnets">Number of Subnets</label>
+                    <input type="text" id="numberOfSubnets" readonly value="1">
+                </div>
+            </div>
+
+            <div class="input-grid">
+                <div class="input-group">
+                    <label for="hostRange">Host Address Range</label>
+                    <input type="text" id="hostRange" readonly value="10.0.0.1 - 10.255.255.254">
+                </div>
+
+                <div class="input-group">
+                    <label for="broadcastAddress">Broadcast Address</label>
+                    <input type="text" id="broadcastAddress" readonly value="10.255.255.255">
+                </div>
+
+                <div class="input-group">
+                    <label for="wildcardMask">Wildcard Mask</label>
+                    <input type="text" id="wildcardMask" readonly value="0.255.255.255">
+                </div>
+
+                <div class="input-group">
+                    <label for="cidrNotation">CIDR Notation</label>
+                    <input type="text" id="cidrNotation" readonly value="10.0.0.0/8">
+                </div>
+            </div>
+        </div>
+
+        <div class="card" id="subnetDetails" style="display: none;">
+            <h2>Subnet Details</h2>
+            <div style="overflow-x: auto;">
+                <table id="subnetTable">
+                    <thead>
+                        <tr>
+                            <th>Subnet ID</th>
+                            <th>Subnet Address</th>
+                            <th>Host Address Range</th>
+                            <th>Broadcast Address</th>
+                        </tr>
+                    </thead>
+                    <tbody id="subnetTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function ipToNumber(ip) {
+            const parts = ip.split('.').map(Number);
+            // Use multiplication to avoid signed 32-bit shift issues, then coerce to unsigned
+            return (((((parts[0] * 256) + parts[1]) * 256 + parts[2]) * 256 + parts[3]) >>> 0);
+        }
+
+        function numberToIp(num) {
+            return [
+                (num >>> 24) & 255,
+                (num >>> 16) & 255,
+                (num >>> 8) & 255,
+                num & 255
+            ].join('.');
+        }
+
+        function calculateSubnet() {
+            const networkInput = document.getElementById('networkAddress').value;
+            const cidrMatch = networkInput.match(/^(\d+\.\d+\.\d+\.\d+)(?:\/(\d+))?$/);
+
+            if (!cidrMatch) return;
+
+            const networkIp = cidrMatch[1];
+
+            // basePrefix = the prefix of the block the user provided (classless base).
+            // If the user didn't provide a prefix, fall back to classful.
+            const originalPrefix = cidrMatch[2] ? parseInt(cidrMatch[2]) : null;
+            let basePrefix;
+            if (originalPrefix !== null) {
+                basePrefix = originalPrefix;
+            } else {
+                const firstOctet = parseInt(networkIp.split('.')[0]);
+                basePrefix = 8;
+                if (firstOctet >= 128 && firstOctet < 192) basePrefix = 16;
+                else if (firstOctet >= 192) basePrefix = 24;
+            }
+
+            // selectedCidr = the prefix the user wants to use for subnets (from the select).
+            // If the select is missing or smaller than basePrefix, clamp it to basePrefix.
+            let selectedCidr = parseInt(document.getElementById('subnetMask').value) || basePrefix;
+            if (selectedCidr < basePrefix) selectedCidr = basePrefix;
+
+            // Update the select UI to reflect the active selectedCidr (keeps UI in sync)
+            document.getElementById('subnetMask').value = selectedCidr;
+
+            // Compute unsigned base network address using the basePrefix
+            const networkNum = ipToNumber(networkIp);
+            const baseMask = (0xFFFFFFFF << (32 - basePrefix)) >>> 0;
+            const baseNetworkAddress = (networkNum & baseMask) >>> 0;
+
+            // Compute values for the selectedCidr (the subnet size and mask)
+            const hostBits = 32 - selectedCidr;
+            const maxHosts = hostBits > 0 ? Math.pow(2, hostBits) - 2 : 0;
+            const subnetMask = (0xFFFFFFFF << hostBits) >>> 0;
+            const wildcardMask = (~subnetMask) >>> 0;
+
+            // For display of "network details" we will show the first subnet (subnet 0) of the base network
+            const firstSubnetNetwork = baseNetworkAddress; // subnet index 0
+            const broadcastAddress = (firstSubnetNetwork | (~subnetMask >>> 0)) >>> 0;
+            const firstHost = hostBits > 0 ? (firstSubnetNetwork + 1) >>> 0 : firstSubnetNetwork;
+            const lastHost = hostBits > 0 ? (broadcastAddress - 1) >>> 0 : broadcastAddress;
+
+            // number of subnets = 2^(selectedCidr - basePrefix) if selectedCidr > basePrefix
+            const subnetBits = selectedCidr - basePrefix;
+            const numberOfSubnets = subnetBits > 0 ? Math.pow(2, subnetBits) : 1;
+
+            document.getElementById('hostsPerSubnet').value = maxHosts > 0 ? maxHosts.toLocaleString() : '0';
+            document.getElementById('numberOfSubnets').value = numberOfSubnets.toLocaleString();
+            document.getElementById('hostRange').value = `${numberToIp(firstHost)} - ${numberToIp(lastHost)}`;
+            document.getElementById('broadcastAddress').value = numberToIp(broadcastAddress);
+            document.getElementById('wildcardMask').value = numberToIp(wildcardMask);
+            document.getElementById('cidrNotation').value = `${numberToIp(baseNetworkAddress)}/${basePrefix}`;
+
+            // Generate subnet table using baseNetworkAddress and selectedCidr
+            generateSubnetTable(baseNetworkAddress, selectedCidr, numberOfSubnets);
+        }
+
+
+        function generateSubnetTable(baseNetwork, cidr, totalSubnets) {
+            const tbody = document.getElementById('subnetTableBody');
+            tbody.innerHTML = '';
+
+            document.getElementById('subnetDetails').style.display = 'block';
+
+            const hostBits = 32 - cidr;
+            const subnetSize = Math.pow(2, hostBits);
+
+            // Safe default cap to avoid freezing the browser
+            const DISPLAY_CAP = 256;
+            const subnetsToShow = Math.min(DISPLAY_CAP, totalSubnets);
+
+            for (let i = 0; i < subnetsToShow; i++) {
+                const subnetAddress = (baseNetwork + (i * subnetSize)) >>> 0;
+                const broadcast = (subnetAddress + subnetSize - 1) >>> 0;
+                const firstHost = hostBits > 0 ? (subnetAddress + 1) >>> 0 : subnetAddress;
+                const lastHost = hostBits > 0 ? (broadcast - 1) >>> 0 : broadcast;
+
+                const row = tbody.insertRow();
+                row.innerHTML = `
+            <td>${i + 1}</td>
+            <td>${numberToIp(subnetAddress)}/${cidr}</td>
+            <td>${numberToIp(firstHost)} - ${numberToIp(lastHost)}</td>
+            <td>${numberToIp(broadcast)}</td>
+        `;
+            }
+
+            if (totalSubnets > DISPLAY_CAP) {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+            <td colspan="4" style="text-align: center; color: var(--text-secondary); padding: 1rem;">
+                Showing first ${DISPLAY_CAP.toLocaleString()} of ${totalSubnets.toLocaleString()} total subnets. Use pagination or "Show all" for more.
+            </td>
+        `;
+            }
+        }
+        // Enable changing subnet mask with mouse wheel when hovering the select
+        (function enableSubnetMaskScroll() {
+            const select = document.getElementById('subnetMask');
+            if (!select) return;
+
+            const MIN_CIDR = 8;
+            const MAX_CIDR = 30;
+
+            function clamp(v) {
+                if (v < MIN_CIDR) return MIN_CIDR;
+                if (v > MAX_CIDR) return MAX_CIDR;
+                return v;
+            }
+
+            function onWheel(e) {
+                // Prevent page scroll while adjusting mask
+                e.preventDefault();
+
+                // deltaY < 0 => wheel up => increase CIDR (more specific)
+                // deltaY > 0 => wheel down => decrease CIDR (less specific)
+                const step = e.deltaY < 0 ? 1 : -1;
+
+                const current = parseInt(select.value, 10) || MIN_CIDR;
+                const next = clamp(current + step);
+                if (next === current) return;
+
+                select.value = String(next);
+                // Trigger calculation immediately
+                calculateSubnet();
+            }
+
+            // Passive must be false so preventDefault() works
+            select.addEventListener('wheel', onWheel, { passive: false });
+
+            // Extra: allow scroll on the entire select's parent to affect the select when pointer is over it
+            // (uncomment if you wrap the select in another element and want that behavior)
+            // select.parentElement?.addEventListener('wheel', (e) => {
+            //     if (e.target === select || select.contains(e.target)) return;
+            // }, { passive: false });
+        })();
+
+
+        document.getElementById('networkAddress').addEventListener('input', calculateSubnet);
+        document.getElementById('subnetMask').addEventListener('change', calculateSubnet);
+
+        // Initial calculation
+        calculateSubnet();
+    </script>
+</body>
+
+</html>
