@@ -231,7 +231,7 @@
             <div class="input-grid">
                 <div class="input-group">
                     <label for="networkAddress">Network Address Block</label>
-                    <input type="text" id="networkAddress" placeholder="e.g., 192.168.1.0" value="10.0.0.0/8">
+                    <input type="text" id="networkAddress" placeholder="e.g. 10.0.0.0/8" value="10.0.0.0/8">
                 </div>
 
                 <div class="input-group">
@@ -262,7 +262,6 @@
                         <option value="29">255.255.255.248 (/29)</option>
                         <option value="30">255.255.255.252 (/30)</option>
                     </select>
-
                 </div>
 
                 <div class="input-group">
@@ -383,13 +382,16 @@
             // number of subnets = 2^(selectedCidr - basePrefix) if selectedCidr > basePrefix
             const subnetBits = selectedCidr - basePrefix;
             const numberOfSubnets = subnetBits > 0 ? Math.pow(2, subnetBits) : 1;
+            const selectedMask = (0xFFFFFFFF << (32 - selectedCidr)) >>> 0;
+            const selectedNetworkAddress = (networkNum & selectedMask) >>> 0;
 
             document.getElementById('hostsPerSubnet').value = maxHosts > 0 ? maxHosts.toLocaleString() : '0';
             document.getElementById('numberOfSubnets').value = numberOfSubnets.toLocaleString();
             document.getElementById('hostRange').value = `${numberToIp(firstHost)} - ${numberToIp(lastHost)}`;
             document.getElementById('broadcastAddress').value = numberToIp(broadcastAddress);
             document.getElementById('wildcardMask').value = numberToIp(wildcardMask);
-            document.getElementById('cidrNotation').value = `${numberToIp(baseNetworkAddress)}/${basePrefix}`;
+            document.getElementById('cidrNotation').value = `${numberToIp(selectedNetworkAddress)}/${selectedCidr}`;
+
 
             // Generate subnet table using baseNetworkAddress and selectedCidr
             generateSubnetTable(baseNetworkAddress, selectedCidr, numberOfSubnets);
