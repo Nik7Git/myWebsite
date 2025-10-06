@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>PasteBin - Share Text Instantly</title>
-    <link rel="icon" href="https://cdn3.iconfinder.com/data/icons/education-209/64/clipboard-paste-tool-school-256.png" />
+    <link rel="icon"
+      href="https://cdn3.iconfinder.com/data/icons/education-209/64/clipboard-paste-tool-school-256.png" />
 
     <style>
       :root {
@@ -207,6 +208,12 @@
         border: 1px solid rgba(255, 107, 107, 0.3);
       }
 
+      .status-message.warning {
+        background: rgba(255, 193, 7, 0.15);
+        color: #ffc107;
+        border: 1px solid rgba(255, 193, 7, 0.3);
+      }
+
       @keyframes fadeIn {
         from { opacity: 0; transform: translateY(-10px); }
         to { opacity: 1; transform: translateY(0); }
@@ -231,6 +238,28 @@
 
       .info-box strong {
         color: var(--secondary-color);
+      }
+
+      .expiry-info {
+        background: rgba(255, 193, 7, 0.08);
+        padding: 1rem;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 193, 7, 0.2);
+        margin-top: 1rem;
+        text-align: center;
+        font-size: 0.9rem;
+      }
+
+      .expiry-info strong {
+        color: #ffc107;
+        font-size: 1.1rem;
+      }
+
+      .timer {
+        font-family: 'Courier New', monospace;
+        font-size: 1.2rem;
+        color: var(--primary-color);
+        margin-top: 0.5rem;
       }
 
       @media (max-width: 768px) {
@@ -260,20 +289,20 @@
         }
       }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="container">
       <h1>📋 PasteBin</h1>
-      <p class="tagline">Share text instantly with a simple link</p>
+      <p class="tagline">Share text instantly with a simple link • Expires in 1
+        hour</p>
 
       <div class="card">
         <div id="createMode">
-          <textarea 
-            id="pasteInput" 
+          <textarea
+            id="pasteInput"
             placeholder="Paste your text here..."
-            maxlength="50000"
-          ></textarea>
+            maxlength="50000"></textarea>
           <div class="char-count">
             <span id="charCount">0</span> / 50,000 characters
           </div>
@@ -285,10 +314,10 @@
         </div>
 
         <div id="viewMode" style="display: none;">
-          <textarea 
-            id="pasteOutput" 
-            readonly
-          ></textarea>
+          <div id="expiryWarning"></div>
+          <textarea
+            id="pasteOutput"
+            readonly></textarea>
           <div class="button-group">
             <button id="copyBtn">Copy to Clipboard</button>
             <button id="newBtn" class="secondary">Create New Paste</button>
@@ -299,16 +328,26 @@
 
       <div class="card">
         <div class="info-box">
-          <strong>How it works:</strong> Your text is compressed and encoded directly into the URL using LZ-based compression. 
-          No server storage needed - perfect for GitHub Pages! The link works as long as you share the complete URL including the hash (#).
+          <strong>How it works:</strong> Your text is compressed and encoded
+          directly into the URL using LZ-based compression.
+          No server storage needed - perfect for GitHub Pages! The link works as
+          long as you share the complete URL including the hash (#).
           <br><br>
-          <strong>Note:</strong> Very long texts may create very long URLs. Most browsers support URLs up to 2000 characters.
+          <strong>⏰ Expiration:</strong> Pastes expire after 1 hour. The
+          timestamp is embedded in the URL.
+          <br><br>
+          <strong>⚠️ Note:</strong> This is client-side expiration only.
+          Very long texts may create very long URLs. Most browsers support URLs
+          up to 2000 characters.
         </div>
       </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js"></script>
     <script>
+      const EXPIRY_TIME = 60 * 60 * 1000; // 1 hour in milliseconds
+      
       const pasteInput = document.getElementById('pasteInput');
       const pasteOutput = document.getElementById('pasteOutput');
       const createMode = document.getElementById('createMode');
@@ -320,6 +359,9 @@
       const createStatus = document.getElementById('createStatus');
       const viewStatus = document.getElementById('viewStatus');
       const charCount = document.getElementById('charCount');
+      const expiryWarning = document.getElementById('expiryWarning');
+
+      let timerInterval;
 
       // Update character count
       pasteInput.addEventListener('input', () => {
@@ -333,7 +375,19 @@
           try {
             const decompressed = LZString.decompressFromEncodedURIComponent(hash);
             if (decompressed) {
-              showViewMode(decompressed);
+              const data = JSON.parse(decompressed);
+              
+              // Check expiration
+              const now = Date.now();
+              const createdAt = data.timestamp;
+              const timeElapsed = now - createdAt;
+              
+              if (timeElapsed > EXPIRY_TIME) {
+                showExpiredMessage();
+              } else {
+                const timeRemaining = EXPIRY_TIME - timeElapsed;
+                showViewMode(data.text, timeRemaining);
+              }
             } else {
               showError('Invalid or corrupted paste link', createStatus);
             }
@@ -352,7 +406,13 @@
         }
 
         try {
-          const compressed = LZString.compressToEncodedURIComponent(text);
+          const data = {
+            text: text,
+            timestamp: Date.now()
+          };
+          
+          const jsonStr = JSON.stringify(data);
+          const compressed = LZString.compressToEncodedURIComponent(jsonStr);
           const url = `${window.location.origin}${window.location.pathname}#${compressed}`;
           
           // Update URL without reload
@@ -386,15 +446,69 @@
 
       // Create new paste
       newBtn.addEventListener('click', () => {
+        clearTimer();
         window.history.pushState(null, '', window.location.pathname);
         showCreateMode();
       });
 
-      // Show view mode
-      function showViewMode(text) {
+      // Show view mode with timer
+      function showViewMode(text, timeRemaining) {
         pasteOutput.value = text;
         createMode.style.display = 'none';
         viewMode.style.display = 'block';
+        
+        startExpiryTimer(timeRemaining);
+      }
+
+      // Start expiry countdown timer
+      function startExpiryTimer(timeRemaining) {
+        clearTimer();
+        
+        function updateTimer() {
+          const minutes = Math.floor(timeRemaining / 60000);
+          const seconds = Math.floor((timeRemaining % 60000) / 1000);
+          
+          if (timeRemaining <= 0) {
+            clearTimer();
+            showExpiredMessage();
+            return;
+          }
+          
+          const timeStr = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+          expiryWarning.innerHTML = `
+            <div class="expiry-info">
+              <strong>⏰ This paste expires in:</strong>
+              <div class="timer">${timeStr}</div>
+            </div>
+          `;
+          
+          timeRemaining -= 1000;
+        }
+        
+        updateTimer();
+        timerInterval = setInterval(updateTimer, 1000);
+      }
+
+      // Clear timer
+      function clearTimer() {
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+        }
+      }
+
+      // Show expired message
+      function showExpiredMessage() {
+        clearTimer();
+        createMode.style.display = 'none';
+        viewMode.style.display = 'block';
+        pasteOutput.value = '';
+        expiryWarning.innerHTML = `
+          <div class="status-message error">
+            ⏰ This paste has expired (1 hour limit exceeded)
+          </div>
+        `;
+        copyBtn.disabled = true;
       }
 
       // Show create mode
@@ -404,6 +518,7 @@
         createStatus.innerHTML = '';
         createMode.style.display = 'block';
         viewMode.style.display = 'none';
+        copyBtn.disabled = false;
       }
 
       // Show success message
@@ -415,6 +530,9 @@
             <div class="url-display">
               <a href="${url}" target="_blank">${url}</a>
               <button onclick="copyUrlToClipboard('${url}')" style="padding: 0.5rem 1rem; white-space: nowrap;">Copy Link</button>
+            </div>
+            <div class="status-message warning">
+              ⏰ This link will expire in 1 hour from now
             </div>
           `;
         }
@@ -443,6 +561,7 @@
 
       // Handle browser back/forward
       window.addEventListener('popstate', () => {
+        clearTimer();
         const hash = window.location.hash.substring(1);
         if (hash) {
           checkForPaste();
@@ -451,8 +570,13 @@
         }
       });
 
+      // Cleanup on page unload
+      window.addEventListener('beforeunload', () => {
+        clearTimer();
+      });
+
       // Initialize
       checkForPaste();
     </script>
-</body>
+  </body>
 </html>
