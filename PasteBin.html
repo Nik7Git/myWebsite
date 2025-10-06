@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>PasteBin - Share Text Instantly</title>
+    <link rel="icon" href="https://cdn3.iconfinder.com/data/icons/education-209/64/clipboard-paste-tool-school-256.png" />
+
+    <style>
+      :root {
+        --primary-color: #00d4aa;
+        --secondary-color: #0066ff;
+        --bg-dark: #0a0a0a;
+        --bg-card: #1a1a1a;
+        --bg-card-hover: #222222;
+        --text-primary: #ffffff;
+        --text-secondary: #a8a8a8;
+        --accent-gradient: linear-gradient(135deg, #00d4aa 0%, #0066ff 100%);
+        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+        --shadow-md: 0 8px 24px rgba(0, 212, 170, 0.15);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+        line-height: 1.6;
+        background: var(--bg-dark);
+        color: var(--text-primary);
+        overflow-x: hidden;
+        padding: 2rem 1.5rem;
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+        text-align: center;
+        letter-spacing: -0.02em;
+      }
+
+      .tagline {
+        text-align: center;
+        color: var(--text-secondary);
+        margin-bottom: 3.5rem;
+        font-size: 1.05rem;
+        font-weight: 400;
+      }
+
+      .card {
+        background: var(--bg-card);
+        padding: 2.5rem;
+        border-radius: 16px;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                    background 0.2s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--accent-gradient);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .card:hover::before {
+        transform: scaleX(1);
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 300px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--text-primary);
+        padding: 1rem;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        font-family: 'Courier New', monospace;
+        resize: vertical;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      textarea:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        background: rgba(255, 255, 255, 0.06);
+        box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.12);
+      }
+
+      textarea[readonly] {
+        background: rgba(255, 255, 255, 0.02);
+        cursor: default;
+      }
+
+      .button-group {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+      }
+
+      button {
+        background: var(--accent-gradient);
+        color: var(--text-primary);
+        border: none;
+        padding: 0.875rem 2rem;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: inherit;
+        letter-spacing: 0.01em;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+      }
+
+      button:active {
+        transform: translateY(0);
+      }
+
+      button.secondary {
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      button.secondary:hover {
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none !important;
+      }
+
+      .url-display {
+        background: rgba(0, 212, 170, 0.08);
+        padding: 1rem;
+        border-radius: 10px;
+        border: 1px solid rgba(0, 212, 170, 0.2);
+        margin-top: 1.5rem;
+        word-break: break-all;
+        font-family: 'Courier New', monospace;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .url-display a {
+        color: var(--primary-color);
+        text-decoration: none;
+        flex: 1;
+        min-width: 200px;
+      }
+
+      .url-display a:hover {
+        text-decoration: underline;
+      }
+
+      .status-message {
+        padding: 1rem;
+        border-radius: 10px;
+        margin-top: 1rem;
+        text-align: center;
+        font-weight: 500;
+        animation: fadeIn 0.3s ease;
+      }
+
+      .status-message.success {
+        background: rgba(0, 212, 170, 0.15);
+        color: var(--primary-color);
+        border: 1px solid rgba(0, 212, 170, 0.3);
+      }
+
+      .status-message.error {
+        background: rgba(255, 107, 107, 0.15);
+        color: #ff6b6b;
+        border: 1px solid rgba(255, 107, 107, 0.3);
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .char-count {
+        text-align: right;
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+      }
+
+      .info-box {
+        background: rgba(0, 102, 255, 0.08);
+        padding: 1.25rem;
+        border-radius: 10px;
+        border: 1px solid rgba(0, 102, 255, 0.2);
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      .info-box strong {
+        color: var(--secondary-color);
+      }
+
+      @media (max-width: 768px) {
+        body {
+          padding: 1.5rem 1rem;
+        }
+
+        h1 {
+          font-size: 2rem;
+        }
+
+        .card {
+          padding: 1.75rem;
+        }
+
+        textarea {
+          min-height: 250px;
+          font-size: 0.875rem;
+        }
+
+        .button-group {
+          flex-direction: column;
+        }
+
+        button {
+          width: 100%;
+        }
+      }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+      <h1>📋 PasteBin</h1>
+      <p class="tagline">Share text instantly with a simple link</p>
+
+      <div class="card">
+        <div id="createMode">
+          <textarea 
+            id="pasteInput" 
+            placeholder="Paste your text here..."
+            maxlength="50000"
+          ></textarea>
+          <div class="char-count">
+            <span id="charCount">0</span> / 50,000 characters
+          </div>
+          <div class="button-group">
+            <button id="createBtn">Generate Shareable Link</button>
+            <button id="clearBtn" class="secondary">Clear</button>
+          </div>
+          <div id="createStatus"></div>
+        </div>
+
+        <div id="viewMode" style="display: none;">
+          <textarea 
+            id="pasteOutput" 
+            readonly
+          ></textarea>
+          <div class="button-group">
+            <button id="copyBtn">Copy to Clipboard</button>
+            <button id="newBtn" class="secondary">Create New Paste</button>
+          </div>
+          <div id="viewStatus"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="info-box">
+          <strong>How it works:</strong> Your text is compressed and encoded directly into the URL using LZ-based compression. 
+          No server storage needed - perfect for GitHub Pages! The link works as long as you share the complete URL including the hash (#).
+          <br><br>
+          <strong>Note:</strong> Very long texts may create very long URLs. Most browsers support URLs up to 2000 characters.
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js"></script>
+    <script>
+      const pasteInput = document.getElementById('pasteInput');
+      const pasteOutput = document.getElementById('pasteOutput');
+      const createMode = document.getElementById('createMode');
+      const viewMode = document.getElementById('viewMode');
+      const createBtn = document.getElementById('createBtn');
+      const clearBtn = document.getElementById('clearBtn');
+      const copyBtn = document.getElementById('copyBtn');
+      const newBtn = document.getElementById('newBtn');
+      const createStatus = document.getElementById('createStatus');
+      const viewStatus = document.getElementById('viewStatus');
+      const charCount = document.getElementById('charCount');
+
+      // Update character count
+      pasteInput.addEventListener('input', () => {
+        charCount.textContent = pasteInput.value.length.toLocaleString();
+      });
+
+      // Check if viewing a paste
+      function checkForPaste() {
+        const hash = window.location.hash.substring(1);
+        if (hash) {
+          try {
+            const decompressed = LZString.decompressFromEncodedURIComponent(hash);
+            if (decompressed) {
+              showViewMode(decompressed);
+            } else {
+              showError('Invalid or corrupted paste link', createStatus);
+            }
+          } catch (e) {
+            showError('Failed to decode paste', createStatus);
+          }
+        }
+      }
+
+      // Create paste
+      createBtn.addEventListener('click', () => {
+        const text = pasteInput.value.trim();
+        if (!text) {
+          showError('Please enter some text first', createStatus);
+          return;
+        }
+
+        try {
+          const compressed = LZString.compressToEncodedURIComponent(text);
+          const url = `${window.location.origin}${window.location.pathname}#${compressed}`;
+          
+          // Update URL without reload
+          window.history.pushState(null, '', `#${compressed}`);
+          
+          showSuccess(url, createStatus);
+        } catch (e) {
+          showError('Failed to create paste. Text might be too long.', createStatus);
+        }
+      });
+
+      // Clear input
+      clearBtn.addEventListener('click', () => {
+        pasteInput.value = '';
+        charCount.textContent = '0';
+        createStatus.innerHTML = '';
+      });
+
+      // Copy to clipboard
+      copyBtn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(pasteOutput.value);
+          showSuccess('Copied to clipboard!', viewStatus, true);
+        } catch (e) {
+          // Fallback for older browsers
+          pasteOutput.select();
+          document.execCommand('copy');
+          showSuccess('Copied to clipboard!', viewStatus, true);
+        }
+      });
+
+      // Create new paste
+      newBtn.addEventListener('click', () => {
+        window.history.pushState(null, '', window.location.pathname);
+        showCreateMode();
+      });
+
+      // Show view mode
+      function showViewMode(text) {
+        pasteOutput.value = text;
+        createMode.style.display = 'none';
+        viewMode.style.display = 'block';
+      }
+
+      // Show create mode
+      function showCreateMode() {
+        pasteInput.value = '';
+        charCount.textContent = '0';
+        createStatus.innerHTML = '';
+        createMode.style.display = 'block';
+        viewMode.style.display = 'none';
+      }
+
+      // Show success message
+      function showSuccess(url, container, simple = false) {
+        if (simple) {
+          container.innerHTML = `<div class="status-message success">${url}</div>`;
+        } else {
+          container.innerHTML = `
+            <div class="url-display">
+              <a href="${url}" target="_blank">${url}</a>
+              <button onclick="copyUrlToClipboard('${url}')" style="padding: 0.5rem 1rem; white-space: nowrap;">Copy Link</button>
+            </div>
+          `;
+        }
+        setTimeout(() => {
+          if (simple) container.innerHTML = '';
+        }, 3000);
+      }
+
+      // Show error message
+      function showError(message, container) {
+        container.innerHTML = `<div class="status-message error">${message}</div>`;
+        setTimeout(() => {
+          container.innerHTML = '';
+        }, 5000);
+      }
+
+      // Copy URL to clipboard
+      window.copyUrlToClipboard = async function(url) {
+        try {
+          await navigator.clipboard.writeText(url);
+          showSuccess('Link copied to clipboard!', createStatus, true);
+        } catch (e) {
+          showError('Failed to copy link', createStatus);
+        }
+      };
+
+      // Handle browser back/forward
+      window.addEventListener('popstate', () => {
+        const hash = window.location.hash.substring(1);
+        if (hash) {
+          checkForPaste();
+        } else {
+          showCreateMode();
+        }
+      });
+
+      // Initialize
+      checkForPaste();
+    </script>
+</body>
+</html>
