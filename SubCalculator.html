@@ -202,7 +202,7 @@
       .bits {
         letter-spacing: 0.3rem;
         font-family: 'Courier New', monospace;
-        font-size: 1.1rem;
+        font-size: 1rem;
         white-space: nowrap;
         line-height: 1.8;
       }
@@ -404,6 +404,18 @@
                   <th>Host Portion</th>
                   <td id="binaryHost" class="bits"></td>
                 </tr>
+                <tr>
+                  <th>1st Host</th>
+                  <td id="binaryFirstHost" class="bits"></td>
+                </tr>
+                <tr>
+                  <th>Last Host</th>
+                  <td id="binaryLastHost" class="bits"></td>
+                </tr>
+                <tr>
+                  <th>Broadcast</th>
+                  <td id="binaryBroadcast" class="bits"></td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -559,6 +571,9 @@
           const ipOctets = ipToBinaryOctets(networkIp);
           const maskOctets = ipToBinaryOctets(numberToIp(subnetMask));
           const networkOctets = ipToBinaryOctets(numberToIp(firstSubnetNetwork));
+          const firstHostOctets = ipToBinaryOctets(numberToIp(firstHost));
+          const lastHostOctets = ipToBinaryOctets(numberToIp(lastHost));
+          const broadcastOctets = ipToBinaryOctets(numberToIp(broadcastAddress));
 
           document.getElementById("binaryIp").innerHTML = bitsHtmlFromOctets(
             ipOctets,
@@ -574,6 +589,21 @@
             networkOctets,
             selectedCidr,
             true
+          );
+          document.getElementById("binaryFirstHost").innerHTML = bitsHtmlFromOctets(
+            firstHostOctets,
+            selectedCidr,
+            false
+          );
+          document.getElementById("binaryLastHost").innerHTML = bitsHtmlFromOctets(
+            lastHostOctets,
+            selectedCidr,
+            false
+          );
+          document.getElementById("binaryBroadcast").innerHTML = bitsHtmlFromOctets(
+            broadcastOctets,
+            selectedCidr,
+            false
           );
 
           const bits = networkOctets.join("");
