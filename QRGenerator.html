@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QR Generator</title>
-  <link rel="icon"
-    href="https://cdn4.iconfinder.com/data/icons/protection-and-security-flat/64/scanner_scan_qr_code_barcode_reader-512.png">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Generator</title>
+    <link rel="icon"
+      href="https://cdn4.iconfinder.com/data/icons/protection-and-security-flat/64/scanner_scan_qr_code_barcode_reader-512.png">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap"
+      rel="stylesheet">
+    <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-  <style>
+    <style>
     :root {
       --primary-color: #00d4aa;
       --bg-dark: #0a0a0a;
@@ -136,7 +139,6 @@
       border-radius: 8px;
       border: none;
       background: var(--accent-gradient);
-      /* gradient style */
       color: #0a0a0a;
       transition: all 0.3s ease;
     }
@@ -169,7 +171,6 @@
       flex-direction: column;
       align-items: center;
       gap: 1rem;
-
     }
 
     #qrcode {
@@ -201,122 +202,237 @@
       }
     }
   </style>
-</head>
+  </head>
 
-<body>
-  <div class="container">
-    <h1><i class="fas fa-qrcode"></i> QR Generator</h1>
-    <p class="tagline">Generate WiFi or URL QR codes with optional center logo and adjustable size</p>
+  <body>
+    <div class="container">
+      <h1><i class="fas fa-qrcode"></i> QR Generator</h1>
+      <p class="tagline">Generate WiFi, URL or vCard QR codes with optional
+        center logo and adjustable size</p>
 
-    <div class="card">
-      <div class="mode-switch">
-        <button id="mode-wifi" class="active">WiFi</button>
-        <button id="mode-url">URL</button>
+      <div class="card">
+        <div class="mode-switch">
+          <button id="mode-wifi" class="active">WiFi</button>
+          <button id="mode-url">URL</button>
+          <button id="mode-vcard">vCard</button>
+        </div>
+
+        <!-- WiFi Form -->
+        <div id="form-wifi">
+          <div class="input-grid">
+            <div class="input-group">
+              <label for="ssid">SSID</label>
+              <input id="ssid" type="text" placeholder="MyHomeWiFi" required>
+            </div>
+            <div class="input-group">
+              <label for="wifi-pass">Password</label>
+              <input id="wifi-pass" type="password"
+                placeholder="Leave blank for open network">
+            </div>
+            <div class="input-group">
+              <label for="enc">Encryption</label>
+              <select id="enc">
+                <option value="WPA">WPA/WPA2</option>
+                <option value="WEP">WEP</option>
+                <option value="nopass">None</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label><input type="checkbox" id="hidden"> Hidden SSID</label>
+            </div>
+          </div>
+          <div class="action-buttons" style="display:flex;gap:8px;">
+            <button id="generate">Generate QR</button>
+            <button id="download" class="secondary">Download PNG</button>
+            <button id="copyText" class="secondary">Copy Payload</button>
+          </div>
+        </div>
+
+        <!-- URL Form -->
+        <div id="form-url" style="display:none;">
+          <div class="input-grid">
+            <div class="input-group">
+              <label for="url">Website URL</label>
+              <input id="url" type="url" placeholder="https://example.com"
+                required>
+            </div>
+          </div>
+          <div class="action-buttons" style="display:flex;gap:8px;">
+            <button id="generate-url">Generate QR</button>
+            <button id="download-url" class="secondary">Download PNG</button>
+            <button id="copy-url" class="secondary">Copy Payload</button>
+          </div>
+        </div>
+
+        <!-- vCard Form -->
+        <div id="form-vcard" style="display:none;">
+          <div class="input-grid">
+            <div class="input-group">
+              <label for="vcard-firstname">Firstname</label>
+              <input id="vcard-firstname" type="text" placeholder="John">
+            </div>
+            <div class="input-group">
+              <label for="vcard-lastname">Lastname</label>
+              <input id="vcard-lastname" type="text" placeholder="Doe">
+            </div>
+            <div class="input-group">
+              <label for="vcard-org">Organization</label>
+              <input id="vcard-org" type="text" placeholder="Company Inc.">
+            </div>
+            <div class="input-group">
+              <label for="vcard-position">Position (Work)</label>
+              <input id="vcard-position" type="text" placeholder="CEO">
+            </div>
+            <div class="input-group">
+              <label for="vcard-phone-work">Phone (Work)</label>
+              <input id="vcard-phone-work" type="tel" placeholder="+1234567890">
+            </div>
+            <div class="input-group">
+              <label for="vcard-phone-private">Phone (Private)</label>
+              <input id="vcard-phone-private" type="tel"
+                placeholder="+1234567890">
+            </div>
+            <div class="input-group">
+              <label for="vcard-mobile-work">Mobile (Work)</label>
+              <input id="vcard-mobile-work" type="tel"
+                placeholder="+1234567890">
+            </div>
+            <div class="input-group">
+              <label for="vcard-mobile-private">Mobile (Private)</label>
+              <input id="vcard-mobile-private" type="tel"
+                placeholder="+1234567890">
+            </div>
+            <div class="input-group">
+              <label for="vcard-fax-work">Fax (Work)</label>
+              <input id="vcard-fax-work" type="tel" placeholder="+1234567890">
+            </div>
+            <div class="input-group">
+              <label for="vcard-fax-private">Fax (Private)</label>
+              <input id="vcard-fax-private" type="tel"
+                placeholder="+1234567890">
+            </div>
+            <div class="input-group">
+              <label for="vcard-email">Email</label>
+              <input id="vcard-email" type="email"
+                placeholder="john@example.com">
+            </div>
+            <div class="input-group">
+              <label for="vcard-website">Website</label>
+              <input id="vcard-website" type="url"
+                placeholder="https://example.com">
+            </div>
+            <div class="input-group">
+              <label for="vcard-street">Street</label>
+              <input id="vcard-street" type="text" placeholder="123 Main St">
+            </div>
+            <div class="input-group">
+              <label for="vcard-zipcode">Zipcode</label>
+              <input id="vcard-zipcode" type="text" placeholder="12345">
+            </div>
+            <div class="input-group">
+              <label for="vcard-city">City</label>
+              <input id="vcard-city" type="text" placeholder="New York">
+            </div>
+            <div class="input-group">
+              <label for="vcard-state">State</label>
+              <input id="vcard-state" type="text" placeholder="NY">
+            </div>
+            <div class="input-group">
+              <label for="vcard-country">Country</label>
+              <input id="vcard-country" type="text" placeholder="USA">
+            </div>
+          </div>
+          <div class="action-buttons" style="display:flex;gap:8px;">
+            <button id="generate-vcard">Generate QR</button>
+            <button id="download-vcard" class="secondary">Download PNG</button>
+            <button id="copy-vcard" class="secondary">Copy Payload</button>
+          </div>
+        </div>
       </div>
 
-      <!-- WiFi Form -->
-      <div id="form-wifi">
-        <div class="input-grid">
-          <div class="input-group">
-            <label for="ssid">SSID</label>
-            <input id="ssid" type="text" placeholder="MyHomeWiFi" required>
-          </div>
-          <div class="input-group">
-            <label for="wifi-pass">Password</label>
-            <input id="wifi-pass" type="password" placeholder="Leave blank for open network">
-          </div>
-          <div class="input-group">
-            <label for="enc">Encryption</label>
-            <select id="enc">
-              <option value="WPA">WPA/WPA2</option>
-              <option value="WEP">WEP</option>
-              <option value="nopass">None</option>
-            </select>
-          </div>
-          <div class="input-group">
-            <label><input type="checkbox" id="hidden"> Hidden SSID</label>
-          </div>
-        </div>
-        <div class="action-buttons" style="display:flex;gap:8px;">
-          <button id="generate">Generate QR</button>
-          <button id="download" class="secondary">Download PNG</button>
-          <button id="copyText" class="secondary">Copy Payload</button>
-        </div>
-      </div>
+      <!-- QR Preview + Global Logo & Size -->
+      <div class="preview">
+        <strong>Preview</strong>
+        <div id="qrcode"></div>
+        <small id="payloadPreview">&nbsp;</small>
 
-      <!-- URL Form -->
-      <div id="form-url" style="display:none;">
-        <div class="input-grid">
-          <div class="input-group">
-            <label for="url">Website URL</label>
-            <input id="url" type="url" placeholder="https://example.com" required>
-          </div>
+        <div id="size-container">
+          <label for="size">Size: <span id="sizeLabel">300</span> px</label>
+          <input id="size" type="range" min="128" max="1200" value="300"
+            oninput="document.getElementById('sizeLabel').textContent=this.value">
         </div>
-        <div class="action-buttons" style="display:flex;gap:8px;">
-          <button id="generate-url">Generate QR</button>
-          <button id="download-url" class="secondary">Download PNG</button>
-          <button id="copy-url" class="secondary">Copy Payload</button>
+
+        <div id="logo-container">
+          <label for="logo">Center logo (optional)</label>
+          <input id="logo" type="file" accept="image/*">
         </div>
       </div>
     </div>
 
-    <!-- QR Preview + Global Logo & Size -->
-    <div class="preview">
-      <strong>Preview</strong>
-      <div id="qrcode"></div>
-      <small id="payloadPreview">&nbsp;</small>
-
-      <div id="size-container">
-        <label for="size">Size: <span id="sizeLabel">300</span> px</label>
-        <input id="size" type="range" min="128" max="1200" value="300"
-          oninput="document.getElementById('sizeLabel').textContent=this.value">
-      </div>
-
-      <div id="logo-container">
-        <label for="logo">Center logo (optional)</label>
-        <input id="logo" type="file" accept="image/*">
-      </div>
-    </div>
-  </div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script>
     // Elements
     const elements = {
       modeWiFi: document.getElementById('mode-wifi'),
       modeURL: document.getElementById('mode-url'),
+      modeVCard: document.getElementById('mode-vcard'),
       formWiFi: document.getElementById('form-wifi'),
       formURL: document.getElementById('form-url'),
+      formVCard: document.getElementById('form-vcard'),
       ssid: document.getElementById('ssid'),
       pass: document.getElementById('wifi-pass'),
       enc: document.getElementById('enc'),
       hidden: document.getElementById('hidden'),
       url: document.getElementById('url'),
+      vcardFirstname: document.getElementById('vcard-firstname'),
+      vcardLastname: document.getElementById('vcard-lastname'),
+      vcardOrg: document.getElementById('vcard-org'),
+      vcardPosition: document.getElementById('vcard-position'),
+      vcardPhoneWork: document.getElementById('vcard-phone-work'),
+      vcardPhonePrivate: document.getElementById('vcard-phone-private'),
+      vcardMobileWork: document.getElementById('vcard-mobile-work'),
+      vcardMobilePrivate: document.getElementById('vcard-mobile-private'),
+      vcardFaxWork: document.getElementById('vcard-fax-work'),
+      vcardFaxPrivate: document.getElementById('vcard-fax-private'),
+      vcardEmail: document.getElementById('vcard-email'),
+      vcardWebsite: document.getElementById('vcard-website'),
+      vcardStreet: document.getElementById('vcard-street'),
+      vcardZipcode: document.getElementById('vcard-zipcode'),
+      vcardCity: document.getElementById('vcard-city'),
+      vcardState: document.getElementById('vcard-state'),
+      vcardCountry: document.getElementById('vcard-country'),
       size: document.getElementById('size'),
       logo: document.getElementById('logo'),
       qrcodeContainer: document.getElementById('qrcode'),
       payloadPreview: document.getElementById('payloadPreview'),
       generateBtn: document.getElementById('generate'),
       generateUrlBtn: document.getElementById('generate-url'),
+      generateVCardBtn: document.getElementById('generate-vcard'),
       downloadBtn: document.getElementById('download'),
       downloadUrlBtn: document.getElementById('download-url'),
+      downloadVCardBtn: document.getElementById('download-vcard'),
       copyBtn: document.getElementById('copyText'),
-      copyUrlBtn: document.getElementById('copy-url')
+      copyUrlBtn: document.getElementById('copy-url'),
+      copyVCardBtn: document.getElementById('copy-vcard')
     };
 
     let logoDataUrl = null;
     let qr = null;
 
     // Mode switch
-    function switchMode(isWiFi) {
-      elements.modeWiFi.classList.toggle('active', isWiFi);
-      elements.modeURL.classList.toggle('active', !isWiFi);
-      elements.formWiFi.style.display = isWiFi ? 'block' : 'none';
-      elements.formURL.style.display = isWiFi ? 'none' : 'block';
+    function switchMode(mode) {
+      elements.modeWiFi.classList.toggle('active', mode === 'wifi');
+      elements.modeURL.classList.toggle('active', mode === 'url');
+      elements.modeVCard.classList.toggle('active', mode === 'vcard');
+      elements.formWiFi.style.display = mode === 'wifi' ? 'block' : 'none';
+      elements.formURL.style.display = mode === 'url' ? 'block' : 'none';
+      elements.formVCard.style.display = mode === 'vcard' ? 'block' : 'none';
     }
 
-    elements.modeWiFi.addEventListener('click', () => switchMode(true));
-    elements.modeURL.addEventListener('click', () => switchMode(false));
+    elements.modeWiFi.addEventListener('click', () => switchMode('wifi'));
+    elements.modeURL.addEventListener('click', () => switchMode('url'));
+    elements.modeVCard.addEventListener('click', () => switchMode('vcard'));
 
     // Logo upload
     elements.logo.addEventListener('change', e => {
@@ -341,7 +457,65 @@
 
     function urlPayload() { return elements.url.value || ''; }
 
-    function getPayload() { return elements.formWiFi.style.display === 'block' ? wifiPayload() : urlPayload(); }
+    function vcardPayload() {
+      const firstname = elements.vcardFirstname.value || '';
+      const lastname = elements.vcardLastname.value || '';
+      const org = elements.vcardOrg.value || '';
+      const position = elements.vcardPosition.value || '';
+      const phoneWork = elements.vcardPhoneWork.value || '';
+      const phonePrivate = elements.vcardPhonePrivate.value || '';
+      const mobileWork = elements.vcardMobileWork.value || '';
+      const mobilePrivate = elements.vcardMobilePrivate.value || '';
+      const faxWork = elements.vcardFaxWork.value || '';
+      const faxPrivate = elements.vcardFaxPrivate.value || '';
+      const email = elements.vcardEmail.value || '';
+      const website = elements.vcardWebsite.value || '';
+      const street = elements.vcardStreet.value || '';
+      const zipcode = elements.vcardZipcode.value || '';
+      const city = elements.vcardCity.value || '';
+      const state = elements.vcardState.value || '';
+      const country = elements.vcardCountry.value || '';
+
+      let vcard = 'BEGIN:VCARD\n';
+      vcard += 'VERSION:3.0\n';
+      
+      // Name (N:lastname;firstname;;;)
+      if (firstname || lastname) {
+        vcard += `N:${lastname};${firstname};;;\n`;
+        vcard += `FN:${firstname} ${lastname}\n`.trim() + '\n';
+      }
+      
+      // Organization and Title
+      if (org) vcard += `ORG:${org}\n`;
+      if (position) vcard += `TITLE:${position}\n`;
+      
+      // Phone numbers with types
+      if (phoneWork) vcard += `TEL;TYPE=WORK,VOICE:${phoneWork}\n`;
+      if (phonePrivate) vcard += `TEL;TYPE=HOME,VOICE:${phonePrivate}\n`;
+      if (mobileWork) vcard += `TEL;TYPE=WORK,CELL:${mobileWork}\n`;
+      if (mobilePrivate) vcard += `TEL;TYPE=HOME,CELL:${mobilePrivate}\n`;
+      if (faxWork) vcard += `TEL;TYPE=WORK,FAX:${faxWork}\n`;
+      if (faxPrivate) vcard += `TEL;TYPE=HOME,FAX:${faxPrivate}\n`;
+      
+      // Email and Website
+      if (email) vcard += `EMAIL:${email}\n`;
+      if (website) vcard += `URL:${website}\n`;
+      
+      // Address (ADR:;;street;city;state;zipcode;country)
+      if (street || city || state || zipcode || country) {
+        vcard += `ADR;TYPE=WORK:;;${street};${city};${state};${zipcode};${country}\n`;
+      }
+      
+      vcard += 'END:VCARD';
+      return vcard;
+    }
+
+    function getPayload() {
+      if (elements.formWiFi.style.display === 'block') return wifiPayload();
+      if (elements.formURL.style.display === 'block') return urlPayload();
+      if (elements.formVCard.style.display === 'block') return vcardPayload();
+      return '';
+    }
 
     function clearQr() { elements.qrcodeContainer.innerHTML = ''; }
 
@@ -349,8 +523,10 @@
       let payload = '';
       if (type === 'wifi') {
         payload = wifiPayload();
-      } else {
+      } else if (type === 'url') {
         payload = urlPayload();
+      } else if (type === 'vcard') {
+        payload = vcardPayload();
       }
 
       elements.payloadPreview.textContent = payload || '\u00A0';
@@ -409,16 +585,22 @@
 
     function copyPayload() {
       const payload = getPayload();
+      navigator.clipboard.writeText(payload).then(() => {
+        alert('Payload copied to clipboard!');
+      });
     }
 
     // Event bindings
     elements.generateBtn.addEventListener('click', () => generate('wifi'));
     elements.generateUrlBtn.addEventListener('click', () => generate('url'));
+    elements.generateVCardBtn.addEventListener('click', () => generate('vcard'));
     elements.downloadBtn.addEventListener('click', downloadQR);
     elements.downloadUrlBtn.addEventListener('click', downloadQR);
+    elements.downloadVCardBtn.addEventListener('click', downloadQR);
     elements.copyBtn.addEventListener('click', copyPayload);
     elements.copyUrlBtn.addEventListener('click', copyPayload);
+    elements.copyVCardBtn.addEventListener('click', copyPayload);
   </script>
-</body>
+  </body>
 
 </html>
