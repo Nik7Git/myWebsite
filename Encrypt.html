@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>EncryptVault — compact</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+      :root {
+        --primary-color: #00d4aa;
+        --secondary-color: #0066ff;
+        --bg-dark: #0a0a0a;
+        --bg-card: #1a1a1a;
+        --bg-card-hover: #222222;
+        --text-primary: #ffffff;
+        --text-secondary: #a8a8a8;
+        --accent-gradient: linear-gradient(135deg, #00d4aa 0%, #0066ff 100%);
+        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+        --shadow-md: 0 8px 24px rgba(0, 212, 170, 0.15);
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      body {
+        font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+        line-height: 1.6;
+        background: var(--bg-dark);
+        color: var(--text-primary);
+        overflow-x: hidden;
+        padding: 2rem 1.5rem;
+        min-height: 100vh;
+      }
+
+      .container { max-width: 900px; margin: 0 auto; }
+
+      h1 {
+        font-size: 2.5rem; font-weight:700; background: var(--accent-gradient);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        margin-bottom: 0.5rem; text-align:center; letter-spacing:-0.02em;
+      }
+
+      .tagline { text-align:center; color:var(--text-secondary); margin-bottom:3.5rem; font-size:1.05rem; font-weight:400; }
+
+      .card {
+        background: var(--bg-card); padding: 2.5rem; border-radius: 16px; margin-bottom: 2rem;
+        border: 1px solid rgba(255,255,255,0.06); transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+        position: relative; overflow: hidden;
+      }
+
+      .card::before { content: ""; position:absolute; top:0; left:0; right:0; height:2px; background:var(--accent-gradient); transform:scaleX(0); transform-origin:left; transition: transform 0.3s; }
+      .card:hover::before { transform:scaleX(1); }
+
+      label { display:block; color:var(--text-secondary); margin-bottom:8px; font-weight:600; }
+      input[type=password] { width:100%; padding:0.85rem 1rem; border-radius:10px; border:1px solid rgba(255,255,255,0.06); background:transparent; color:var(--text-primary); font-size:0.95rem; }
+      input[type=password]:focus { outline:none; box-shadow:0 0 0 3px rgba(0,212,170,0.08); border-color:var(--primary-color); }
+
+      textarea { width:100%; min-height:300px; background: rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:var(--text-primary); padding:1rem; border-radius:10px; font-size:0.95rem; font-family:'Courier New', monospace; resize:vertical; transition: all 0.2s; }
+      textarea:focus { outline:none; border-color:var(--primary-color); box-shadow:0 0 0 3px rgba(0,212,170,0.08); background: rgba(255,255,255,0.06); }
+      textarea[readonly] { background: rgba(255,255,255,0.02); cursor:default; }
+
+      .grid { display:grid; grid-template-columns: 1fr 1fr; gap:1rem; }
+      .button-group { display:flex; gap:1rem; margin-top:1rem; flex-wrap:wrap; }
+
+      button { background: var(--accent-gradient); color:var(--text-primary); border:none; padding:0.875rem 2rem; border-radius:10px; font-size:0.95rem; font-weight:600; cursor:pointer; transition: all 0.2s; font-family:inherit; }
+      button:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); }
+      button:active { transform:translateY(0); }
+      button.secondary { background: rgba(255,255,255,0.08); }
+      button.secondary:hover { background: rgba(255,255,255,0.12); }
+      button:disabled { opacity:0.5; cursor:not-allowed; transform:none !important; }
+
+      .url-display { background: rgba(0,212,170,0.08); padding:1rem; border-radius:10px; border:1px solid rgba(0,212,170,0.2); margin-top:1rem; word-break:break-all; font-family:'Courier New', monospace; display:flex; gap:1rem; align-items:center; }
+
+      .muted { color:var(--text-secondary); font-size:0.95rem; }
+      .small { font-size:0.9rem; color:var(--text-secondary); }
+
+      .status-message { padding:1rem; border-radius:10px; margin-top:1rem; text-align:center; font-weight:500; animation:fadeIn 0.3s ease; }
+      .status-message.success { background: rgba(0,212,170,0.12); color:var(--primary-color); border:1px solid rgba(0,212,170,0.18); }
+      .status-message.error { background: rgba(255,107,107,0.12); color:#ff6b6b; border:1px solid rgba(255,107,107,0.18); }
+
+      pre { white-space: pre-wrap; word-break: break-word; background: rgba(255,255,255,0.02); padding:12px; border-radius:10px; color:var(--text-secondary); }
+
+      @keyframes fadeIn { from{opacity:0; transform:translateY(-10px);} to{opacity:1; transform:translateY(0);} }
+
+      .char-count { text-align:right; color:var(--text-secondary); font-size:0.875rem; margin-top:0.5rem; }
+
+      @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } textarea { min-height: 220px; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>EncryptVault</h1>
+    <p class="tagline">Compact client-side AES‑GCM encrypt / decrypt. Keep the password secret — it's your only key.</p>
+
+    <div class="card">
+      <label for="password">Password (derives the key)</label>
+      <input id="password" type="password" placeholder="Enter a strong password — keep it secret" />
+      <div class="muted small" style="margin-top:8px">We derive a 256-bit AES key from your password using PBKDF2 (SHA-256).</div>
+
+      <div class="grid" style="margin-top:16px">
+        <div>
+          <label for="plaintext">Plaintext (to encrypt)</label>
+          <textarea id="plaintext" placeholder="Type text to encrypt..."></textarea>
+          <div class="char-count" id="plainCount">0 chars</div>
+          <div class="button-group">
+            <button id="encryptBtn">Encrypt →</button>
+            <button id="clearPlain" class="secondary">Clear</button>
+          </div>
+        </div>
+
+        <div>
+          <label for="ciphertext">Encrypted output / Input for decrypt</label>
+          <textarea id="ciphertext" placeholder='Encrypted blob will appear here (JSON base64). Paste blob here to decrypt.'></textarea>
+          <div class="char-count" id="cipherCount">0 chars</div>
+          <div class="button-group">
+            <button id="decryptBtn">← Decrypt</button>
+            <button id="clearCipher" class="secondary">Clear</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:center;margin-top:14px;justify-content:space-between;flex-wrap:wrap;">
+        <div class="muted small">Format: JSON with base64 fields: <code style="color:var(--text-secondary);">{salt, iv, ciphertext}</code></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button id="copyCipher" class="secondary">Copy Encrypted</button>
+          <button id="copyPlain" class="secondary">Copy Plain</button>
+          <button id="downloadCipher" class="secondary">Download</button>
+        </div>
+      </div>
+
+      <div id="status" aria-live="polite"></div>
+    </div>
+
+    <div class="card" style="margin-top:18px">
+      <h2 style="margin-bottom:8px; color:var(--text-primary)">Implementation</h2>
+      <pre>PBKDF2 iterations: 200000
+Salt: 16 bytes (random per-encryption)
+IV (nonce): 12 bytes random per-encryption
+AES mode: AES-GCM 256-bit
+Output: JSON {salt,iv,ciphertext} all base64 encoded
+</pre>
+    </div>
+  </div>
+
+  <script>
+  // CONFIG
+  // Change these constants to modify KDF/encryption parameters
+  const PBKDF2_ITERATIONS = 200000;
+  const SALT_BYTES = 16;
+  const IV_BYTES = 12;
+
+  // helpers
+  function ab2b64(buf){ const arr=new Uint8Array(buf); let binary=''; const chunk=0x8000; for(let i=0;i<arr.length;i+=chunk){ binary+=String.fromCharCode.apply(null, arr.subarray(i,i+chunk)); } return btoa(binary); }
+  function b642ab(b64){ const binary=atob(b64); const len=binary.length; const bytes=new Uint8Array(len); for(let i=0;i<len;i++) bytes[i]=binary.charCodeAt(i); return bytes.buffer; }
+
+  async function deriveKey(password, salt){
+    const enc=new TextEncoder();
+    const passKey=await crypto.subtle.importKey('raw', enc.encode(password), {name:'PBKDF2'}, false, ['deriveKey']);
+    const key=await crypto.subtle.deriveKey({name:'PBKDF2', salt: salt, iterations: PBKDF2_ITERATIONS, hash:'SHA-256'}, passKey, {name:'AES-GCM', length:256}, false, ['encrypt','decrypt']);
+    return key;
+  }
+
+  async function encryptText(plaintext, password){
+    const enc=new TextEncoder();
+    const salt=crypto.getRandomValues(new Uint8Array(SALT_BYTES));
+    const iv=crypto.getRandomValues(new Uint8Array(IV_BYTES));
+    const key=await deriveKey(password, salt);
+    const ct=await crypto.subtle.encrypt({name:'AES-GCM', iv: iv}, key, enc.encode(plaintext));
+    return JSON.stringify({ salt: ab2b64(salt.buffer), iv: ab2b64(iv.buffer), ciphertext: ab2b64(ct) });
+  }
+
+  async function decryptText(blobJson, password){
+    const obj=JSON.parse(blobJson);
+    if(!obj.salt||!obj.iv||!obj.ciphertext) throw new Error('Invalid blob format');
+    const salt=new Uint8Array(b642ab(obj.salt));
+    const iv=new Uint8Array(b642ab(obj.iv));
+    const key=await deriveKey(password, salt.buffer);
+    const ptBuf=await crypto.subtle.decrypt({name:'AES-GCM', iv: iv}, key, b642ab(obj.ciphertext));
+    return new TextDecoder().decode(ptBuf);
+  }
+
+  // UI
+  const passwordEl=document.getElementById('password');
+  const plaintextEl=document.getElementById('plaintext');
+  const ciphertextEl=document.getElementById('ciphertext');
+  const encryptBtn=document.getElementById('encryptBtn');
+  const decryptBtn=document.getElementById('decryptBtn');
+  const clearPlain=document.getElementById('clearPlain');
+  const clearCipher=document.getElementById('clearCipher');
+  const copyCipher=document.getElementById('copyCipher');
+  const copyPlain=document.getElementById('copyPlain');
+  const downloadCipher=document.getElementById('downloadCipher');
+  const statusEl=document.getElementById('status');
+  const plainCount=document.getElementById('plainCount');
+  const cipherCount=document.getElementById('cipherCount');
+
+  function setStatus(msg,type='success'){ statusEl.innerHTML = `<div class="status-message ${type}">${msg}</div>`; setTimeout(()=>{ if(statusEl.firstChild) statusEl.firstChild.remove(); },4000); }
+
+  plaintextEl.addEventListener('input', ()=>{ plainCount.textContent = `${plaintextEl.value.length} chars`; });
+  ciphertextEl.addEventListener('input', ()=>{ cipherCount.textContent = `${ciphertextEl.value.length} chars`; });
+
+  encryptBtn.addEventListener('click', async ()=>{
+    try{
+      const pwd=passwordEl.value; if(!pwd) return setStatus('Enter a password to derive the key','error');
+      const pt=plaintextEl.value; if(!pt) return setStatus('Enter plaintext to encrypt','error');
+      encryptBtn.disabled=true; encryptBtn.textContent='Encrypting...';
+      const blob=await encryptText(pt,pwd);
+      ciphertextEl.value=blob; cipherCount.textContent = `${blob.length} chars`;
+      setStatus('Encryption successful','success');
+    }catch(e){ setStatus('Encryption failed: '+e.message,'error'); }
+    finally{ encryptBtn.disabled=false; encryptBtn.textContent='Encrypt →'; }
+  });
+
+  decryptBtn.addEventListener('click', async ()=>{
+    try{
+      const pwd=passwordEl.value; if(!pwd) return setStatus('Enter your password (key)','error');
+      const blob=ciphertextEl.value; if(!blob) return setStatus('Paste encrypted blob into the encrypted textbox','error');
+      decryptBtn.disabled=true; decryptBtn.textContent='Decrypting...';
+      const pt=await decryptText(blob,pwd);
+      plaintextEl.value=pt; plainCount.textContent = `${pt.length} chars`;
+      setStatus('Decryption successful','success');
+    }catch(e){ setStatus('Decryption failed: '+e.message,'error'); }
+    finally{ decryptBtn.disabled=false; decryptBtn.textContent='← Decrypt'; }
+  });
+
+  clearPlain.addEventListener('click', ()=>{ plaintextEl.value=''; plainCount.textContent='0 chars'; });
+  clearCipher.addEventListener('click', ()=>{ ciphertextEl.value=''; cipherCount.textContent='0 chars'; });
+
+  copyCipher.addEventListener('click', ()=>{ navigator.clipboard.writeText(ciphertextEl.value || '').then(()=>setStatus('Encrypted text copied','success')); });
+  copyPlain.addEventListener('click', ()=>{ navigator.clipboard.writeText(plaintextEl.value || '').then(()=>setStatus('Plaintext copied','success')); });
+
+  downloadCipher.addEventListener('click', ()=>{
+    const blob=new Blob([ciphertextEl.value || ''],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='encrypted.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); setStatus('Downloaded encrypted blob','success');
+  });
+
+  // === Extension point ===
+  // To modify KDF/encryption parameters: edit PBKDF2_ITERATIONS, SALT_BYTES, IV_BYTES at the top.
+  // To add Argon2: replace deriveKey() and include Argon2 WASM. If you want that, tell me and I'll add it and mark where it goes.
+  // To add a "Generate random key" button: add a button near the password input and call crypto.getRandomValues to make a 32-byte key,
+  // then import the key with crypto.subtle.importKey('raw', keyBytes, {name:'AES-GCM'}, false, ['encrypt','decrypt']) and use that for encrypt/decrypt.
+
+  </script>
+</body>
+</html>
