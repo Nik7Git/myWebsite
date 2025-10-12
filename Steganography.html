@@ -1,0 +1,843 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Multi-File Steganography</title>
+
+    <!-- 1) PASTE YOUR EXISTING STYLE BLOCK HERE -->
+    <!-- (Keep your exact <style> ... </style> from the prompt.) -->
+    <style>
+      :root {
+        --primary-color: #00d4aa;
+        --secondary-color: #0066ff;
+        --bg-dark: #0a0a0a;
+        --bg-card: #1a1a1a;
+        --bg-card-hover: #222222;
+        --text-primary: #ffffff;
+        --text-secondary: #a8a8a8;
+        --accent-gradient: linear-gradient(135deg, #00d4aa 0%, #0066ff 100%);
+        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+        --shadow-md: 0 8px 24px rgba(0, 212, 170, 0.15);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+        line-height: 1.6;
+        background: var(--bg-dark);
+        color: var(--text-primary);
+        overflow-x: hidden;
+        padding: 2rem 1.5rem;
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+        text-align: center;
+        letter-spacing: -0.02em;
+      }
+
+      .tagline {
+        text-align: center;
+        color: var(--text-secondary);
+        margin-bottom: 3.5rem;
+        font-size: 1.05rem;
+        font-weight: 400;
+      }
+
+      .card {
+        background: var(--bg-card);
+        padding: 2.5rem;
+        border-radius: 16px;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                    background 0.2s ease;
+        position: relative;
+        overflow: hidden;
+        contain: layout style paint;
+        will-change: transform;
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--accent-gradient);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .card:hover {
+        transform: translateY(-4px);
+        background: var(--bg-card-hover);
+        box-shadow: var(--shadow-md);
+      }
+
+      .card:hover::before {
+        transform: scaleX(1);
+      }
+
+      .card h3 {
+        font-size: 1.35rem;
+        color: var(--text-primary);
+        margin-bottom: 1.75rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
+
+      .input-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.25rem;
+        margin-bottom: 2rem;
+      }
+
+      .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      label {
+        color: var(--primary-color);
+        font-weight: 500;
+        font-size: 0.875rem;
+        letter-spacing: 0.01em;
+      }
+
+      input,
+      select {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--text-primary);
+        padding: 0.875rem 1rem;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: inherit;
+      }
+
+      input:focus,
+      select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        background: rgba(255, 255, 255, 0.06);
+        box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.12);
+      }
+
+      input[readonly] {
+        background: rgba(255, 255, 255, 0.02);
+        cursor: not-allowed;
+        color: var(--text-primary);
+      }
+
+      select {
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2300d4aa' d='M10.293 3.293L6 7.586 1.707 3.293A1 1 0 00.293 4.707l5 5a1 1 0 001.414 0l5-5a1 1 0 10-1.414-1.414z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        padding-right: 2.75rem;
+      }
+
+      select option {
+        background: var(--bg-card);
+        color: var(--text-primary);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 0.5rem;
+      }
+
+      th,
+      td {
+        padding: 1rem 0.5rem;
+        text-align: left;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      th {
+        background: rgba(0, 212, 170, 0.08);
+        color: var(--primary-color);
+        font-weight: 600;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      tr {
+        transition: background 0.15s ease;
+      }
+
+      tbody tr:hover {
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .bits {
+        letter-spacing: 0.3rem;
+        font-family: 'Courier New', monospace;
+        font-size: 1rem;
+        white-space: nowrap;
+        line-height: 1.8;
+      }
+
+      .bit {
+        display: inline-block;
+        width: 1.1ch;
+        text-align: center;
+      }
+
+      .bit.net {
+        color: #00d4aa;
+        font-weight: 600;
+      }
+
+      .bit.host {
+        color: #ff6b6b;
+        font-weight: 600;
+      }
+
+      .bit.dim {
+        color: rgba(255, 255, 255, 0.15);
+      }
+
+      .octet-space {
+        display: inline-block;
+        width: 0.6rem;
+      }
+
+      .card-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      @media (max-width: 1024px) {
+        .card-container {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 768px) {
+        body {
+          padding: 1.5rem 1rem;
+        }
+
+        h1 {
+          font-size: 2rem;
+        }
+
+        .card {
+          padding: 1.75rem;
+        }
+
+        .input-grid {
+          grid-template-columns: 1fr;
+        }
+
+        table {
+          font-size: 0.85rem;
+        }
+
+        th,
+        td {
+          padding: 0.75rem 0.5rem;
+        }
+
+        .bits {
+          font-size: 0.8rem;
+          letter-spacing: 0.25rem;
+        }
+      }
+
+      /* Loading state */
+      .calculating {
+        opacity: 0.6;
+        pointer-events: none;
+      }
+    </style>
+
+    <!-- Quick font for nicer look; you can remove if you want it 100% offline -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Multi-File Steganography</h1>
+      <p class="tagline">Hide multiple files inside a single PNG and extract
+        them later — entirely in your browser.</p>
+
+      <div class="card-container">
+        <!-- ENCODE -->
+        <section class="card" id="encodeCard">
+          <h3>Hide Files → PNG</h3>
+
+          <div class="input-grid">
+            <div class="input-group">
+              <label for="carrier">Carrier Image (PNG/JPG)</label>
+              <input id="carrier" type="file" accept="image/png,image/jpeg" />
+              <small id="carrierInfo"
+                style="color:var(--text-secondary)"></small>
+            </div>
+
+            <div class="input-group">
+              <label for="payload">Files to Hide (multiple)</label>
+              <input id="payload" type="file" multiple />
+              <small id="payloadInfo"
+                style="color:var(--text-secondary)"></small>
+            </div>
+
+            <div class="input-group">
+              <label for="bitsPerChannel">Bits per Color Channel</label>
+              <select id="bitsPerChannel">
+                <option value="1" selected>1 (safer, lower capacity)</option>
+                <option value="2">2 (balanced)</option>
+                <option value="3">3 (higher capacity, more risk)</option>
+              </select>
+            </div>
+
+            <div class="input-group">
+              <label>&nbsp;</label>
+              <button id="embedBtn"
+                style="padding:0.9rem 1.2rem;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:var(--accent-gradient);color:#fff;font-weight:600;cursor:pointer;box-shadow:var(--shadow-sm)">
+                Embed & Download PNG
+              </button>
+            </div>
+          </div>
+
+          <div id="capacityPanel"
+            style="margin-top:.5rem;color:var(--text-secondary)">
+            <div><strong>Carrier capacity:</strong> <span
+                id="capacityBytes">–</span></div>
+            <div><strong>Payload size:</strong> <span
+                id="payloadBytes">–</span></div>
+            <div><strong>Status:</strong> <span id="statusText">Waiting for
+                files…</span></div>
+          </div>
+
+          <div id="fileTableWrap" style="margin-top:1rem;display:none">
+            <table>
+              <thead>
+                <tr>
+                  <th>File name</th>
+                  <th>Size</th>
+                  <th>Type</th>
+                </tr>
+              </thead>
+              <tbody id="fileRows"></tbody>
+            </table>
+          </div>
+
+          <div style="margin-top:1rem;display:flex;gap:.75rem;flex-wrap:wrap">
+            <button id="genCarrierBtn"
+              title="Creates a blank PNG with enough capacity for your payload"
+              style="padding:.7rem 1rem;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#fff;cursor:pointer">Generate
+              Blank Carrier</button>
+            <small style="color:var(--text-secondary)">Tip: If the payload is
+              too big for your image, click “Generate Blank Carrier”.</small>
+          </div>
+        </section>
+
+        <!-- DECODE -->
+        <section class="card" id="decodeCard">
+          <h3>Extract Files ← PNG</h3>
+
+          <div class="input-grid">
+            <div class="input-group">
+              <label for="stego">Stego Image (PNG)</label>
+              <input id="stego" type="file" accept="image/png,image/jpeg" />
+            </div>
+            <div class="input-group">
+              <label>&nbsp;</label>
+              <button id="extractBtn"
+                style="padding:0.9rem 1.2rem;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:var(--accent-gradient);color:#fff;font-weight:600;cursor:pointer;box-shadow:var(--shadow-sm)">
+                Extract Files
+              </button>
+            </div>
+          </div>
+
+          <div id="extractedWrap" style="display:none">
+            <table>
+              <thead>
+                <tr>
+                  <th>File name</th>
+                  <th>Size</th>
+                  <th>Download</th>
+                </tr>
+              </thead>
+              <tbody id="extractedRows"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <section class="card">
+        <h3>How it works (quick notes)</h3>
+        <ul
+          style="margin-left:1rem;color:var(--text-secondary);display:grid;gap:.5rem">
+          <li>Data is stored in the least significant bits (LSBs) of the
+            carrier’s RGB channels.</li>
+          <li>You choose 1–3 bits per channel (3 bits per pixel/channel set
+            gives higher capacity but increases risk of artifacts).</li>
+          <li>Payload format supports multiple files with names and sizes,
+            wrapped in a custom header.</li>
+          <li>Everything happens locally in your browser — no uploads.</li>
+        </ul>
+      </section>
+    </div>
+
+    <!-- Hidden workspace -->
+    <canvas id="workCanvas" style="display:none"></canvas>
+
+    <!-- 2) PASTE THIS SCRIPT BLOCK AT THE END OF <body> -->
+    <script>
+    // ---------- Utilities ----------
+    const $ = (id) => document.getElementById(id);
+    const enc = new TextEncoder();
+    const dec = new TextDecoder();
+
+    function human(n) {
+      if (n === 0) return '0 B';
+      const units = ['B','KB','MB','GB','TB'];
+      const i = Math.floor(Math.log(n)/Math.log(1024));
+      return (n/Math.pow(1024,i)).toFixed(i ? 2 : 0) + ' ' + units[i];
+    }
+
+    function readAsArrayBuffer(file){
+      return new Promise((res, rej) => {
+        const fr = new FileReader();
+        fr.onerror = () => rej(fr.error);
+        fr.onload = () => res(fr.result);
+        fr.readAsArrayBuffer(file);
+      });
+    }
+
+    function loadImageFromFile(file){
+      return new Promise((res, rej) => {
+        const fr = new FileReader();
+        fr.onload = () => {
+          const img = new Image();
+          img.onload = () => res(img);
+          img.onerror = rej;
+          img.src = fr.result;
+        };
+        fr.readAsDataURL(file);
+      });
+    }
+
+    function drawToCanvas(img) {
+      const canvas = $('workCanvas');
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img,0,0);
+      return { canvas, ctx };
+    }
+
+    // ---------- Simple multi-file archive ----------
+    // Format:
+    // magic(8) "STEGMUL1"
+    // totalLen(4, uint32 LE) = fileCount/headers/payload length after this field
+    // fileCount(2, uint16 LE)
+    // repeat: nameLen(2), name[utf8], size(4), data[size]
+    const MAGIC = enc.encode('STEGMUL1');
+
+    function buildArchive(fileEntries) {
+      const parts = [];
+      let payloadLen = 0;
+
+      // Count + headers + data
+      const fileCountBuf = new Uint8Array(2);
+      new DataView(fileCountBuf.buffer).setUint16(0, fileEntries.length, true);
+      parts.push(fileCountBuf); payloadLen += 2;
+
+      for (const {name, data} of fileEntries) {
+        const nameBytes = enc.encode(name);
+        const nameLenBuf = new Uint8Array(2);
+        new DataView(nameLenBuf.buffer).setUint16(0, nameBytes.length, true);
+
+        const sizeBuf = new Uint8Array(4);
+        new DataView(sizeBuf.buffer).setUint32(0, data.byteLength, true);
+
+        parts.push(nameLenBuf, nameBytes, sizeBuf, new Uint8Array(data));
+        payloadLen += 2 + nameBytes.length + 4 + data.byteLength;
+      }
+
+      const totalBuf = new Uint8Array(4);
+      new DataView(totalBuf.buffer).setUint32(0, payloadLen, true);
+
+      // concat: MAGIC + totalLen + payload
+      const out = new Uint8Array(MAGIC.length + totalBuf.length + payloadLen);
+      let o = 0;
+      out.set(MAGIC, o); o += MAGIC.length;
+      out.set(totalBuf, o); o += totalBuf.length;
+      for (const p of parts){ out.set(p, o); o += p.length; }
+      return out;
+    }
+
+    function parseArchive(bytes) {
+      // Verify magic
+      if (bytes.length < 12) throw new Error('Not enough data.');
+      for (let i=0;i<MAGIC.length;i++){
+        if (bytes[i] !== MAGIC[i]) throw new Error('Invalid or missing archive header.');
+      }
+      const totalLen = new DataView(bytes.buffer, bytes.byteOffset + MAGIC.length, 4).getUint32(0, true);
+      const start = MAGIC.length + 4;
+      if (bytes.length < start + totalLen) throw new Error('Truncated archive.');
+
+      let p = start;
+      const dv = new DataView(bytes.buffer, bytes.byteOffset);
+      const fileCount = dv.getUint16(p, true); p += 2;
+
+      const files = [];
+      for (let i=0;i<fileCount;i++){
+        const nameLen = dv.getUint16(p, true); p += 2;
+        const nameBytes = bytes.slice(p, p + nameLen); p += nameLen;
+        const name = dec.decode(nameBytes);
+        const size = dv.getUint32(p, true); p += 4;
+        const data = bytes.slice(p, p + size); p += size;
+        files.push({ name, size, data });
+      }
+      return files;
+    }
+
+    // ---------- Bit IO ----------
+    function capacityBytesFor(imgWidth, imgHeight, bitsPerChannel){
+      // Use RGB channels only (ignore alpha): 3 * bitsPerChannel bits per pixel
+      const bits = imgWidth * imgHeight * 3 * bitsPerChannel;
+      return Math.floor(bits / 8);
+    }
+
+    function embedBytesIntoImageData(imageData, bytes, bitsPerChannel){
+      const data = imageData.data; // RGBA
+      const totalBits = bytes.length * 8;
+      const channelsPerPixel = 4;
+      const usableChannelsMask = [0,1,2]; // R,G,B
+      const totalUsableChannels = usableChannelsMask.length;
+      const capacityBits = Math.floor((data.length / channelsPerPixel) * totalUsableChannels * bitsPerChannel);
+      if (totalBits > capacityBits) throw new Error('Payload too large for this carrier and bit setting.');
+
+      let bitIndex = 0;
+      for (let i = 0; i < data.length && bitIndex < totalBits; i += channelsPerPixel) {
+        for (const c of usableChannelsMask) {
+          const idx = i + c;
+          let value = data[idx];
+          // Write bitsPerChannel bits LSB from current payload position
+          for (let b = 0; b < bitsPerChannel && bitIndex < totalBits; b++, bitIndex++) {
+            const bytePos = bitIndex >> 3; // /8
+            const bitPos = 7 - (bitIndex & 7);
+            const bit = (bytes[bytePos] >> bitPos) & 1;
+
+            // set LSB b to 'bit'
+            const mask = 1 << b;
+            value = (value & ~mask) | (bit << b);
+          }
+          data[idx] = value;
+          if (bitIndex >= totalBits) break;
+        }
+      }
+      return imageData;
+    }
+
+    function extractBytesFromImageData(imageData, byteLength, bitsPerChannel){
+      const data = imageData.data;
+      const channelsPerPixel = 4;
+      const usableChannelsMask = [0,1,2];
+      const totalNeededBits = byteLength * 8;
+      const capacityBits = Math.floor((data.length / channelsPerPixel) * usableChannelsMask.length * bitsPerChannel);
+      if (totalNeededBits > capacityBits) throw new Error('Requested length exceeds carrier capacity.');
+
+      const out = new Uint8Array(byteLength);
+      let bitIndex = 0;
+      for (let i = 0; i < data.length && bitIndex < totalNeededBits; i += channelsPerPixel) {
+        for (const c of usableChannelsMask) {
+          const value = data[i + c];
+          for (let b = 0; b < bitsPerChannel && bitIndex < totalNeededBits; b++, bitIndex++) {
+            const bit = (value >> b) & 1;
+            const bytePos = bitIndex >> 3;
+            const bitPos = 7 - (bitIndex & 7);
+            out[bytePos] |= (bit << bitPos);
+          }
+        }
+      }
+      return out;
+    }
+
+    // Special small reader to peek the header (MAGIC + totalLen) before full extraction
+    function peekHeaderAndLength(imageData, bitsPerChannel){
+      const headerLen = MAGIC.length + 4; // 12 bytes
+      const headerBytes = extractBytesFromImageData(imageData, headerLen, bitsPerChannel);
+      for (let i=0;i<MAGIC.length;i++){
+        if (headerBytes[i] !== MAGIC[i]) throw new Error('No archive found (bad header).');
+      }
+      const totalLen = new DataView(headerBytes.buffer, headerBytes.byteOffset + MAGIC.length, 4).getUint32(0, true);
+      return { totalLen, headerLen };
+    }
+
+    // ---------- UI Logic ----------
+    const state = {
+      carrierImg: null,
+      payloadFiles: [],
+    };
+
+    const carrierInput = $('carrier');
+    const payloadInput = $('payload');
+    const bitsSelect = $('bitsPerChannel');
+    const embedBtn = $('embedBtn');
+    const carrierInfo = $('carrierInfo');
+    const payloadInfo = $('payloadInfo');
+    const statusText = $('statusText');
+    const capacityBytesEl = $('capacityBytes');
+    const payloadBytesEl = $('payloadBytes');
+    const fileRows = $('fileRows');
+    const fileTableWrap = $('fileTableWrap');
+
+    const stegoInput = $('stego');
+    const extractBtn = $('extractBtn');
+    const extractedWrap = $('extractedWrap');
+    const extractedRows = $('extractedRows');
+
+    function updateCapacityInfo(){
+      if (!state.carrierImg){
+        capacityBytesEl.textContent = '—';
+        statusText.textContent = 'Choose a carrier image.';
+        return;
+      }
+      const bpc = Number(bitsSelect.value);
+      const cap = capacityBytesFor(state.carrierImg.width, state.carrierImg.height, bpc);
+      capacityBytesEl.textContent = human(cap);
+      const totalPayload = computePayloadSizeEstimate();
+      payloadBytesEl.textContent = human(totalPayload);
+      const ok = totalPayload <= cap;
+      statusText.textContent = ok ? 'Ready to embed.' : 'Payload is too large for this carrier.';
+      statusText.style.color = ok ? 'var(--primary-color)' : '#ff6b6b';
+    }
+
+    function computePayloadSizeEstimate(){
+      // Archive overhead = MAGIC(8)+totalLen(4)+fileCount(2) + per-file(overheads)
+      let total = 8 + 4 + 2;
+      for (const f of state.payloadFiles){
+        const nameBytes = enc.encode(f.name);
+        total += 2 + nameBytes.length + 4 + f.size; // nameLen + name + size + data
+      }
+      return total;
+    }
+
+    function refreshFileTable(){
+      if (!state.payloadFiles.length){
+        fileTableWrap.style.display = 'none';
+        fileRows.innerHTML = '';
+        payloadInfo.textContent = '';
+        return;
+      }
+      fileTableWrap.style.display = 'block';
+      fileRows.innerHTML = state.payloadFiles.map(f => `
+        <tr>
+          <td>${escapeHtml(f.name)}</td>
+          <td>${human(f.size)}</td>
+          <td>${escapeHtml(f.type || '—')}</td>
+        </tr>
+      `).join('');
+      const total = state.payloadFiles.reduce((a,b)=>a+b.size,0);
+      payloadInfo.textContent = `Selected: ${state.payloadFiles.length} file(s), ${human(total)} total`;
+    }
+
+    function escapeHtml(s){
+      return s.replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+    }
+
+    carrierInput.addEventListener('change', async () => {
+      const f = carrierInput.files && carrierInput.files[0];
+      if (!f) return;
+      try {
+        state.carrierImg = await loadImageFromFile(f);
+        carrierInfo.textContent = `Loaded ${escapeHtml(f.name)} (${state.carrierImg.width}×${state.carrierImg.height})`;
+        updateCapacityInfo();
+      } catch (e) {
+        carrierInfo.textContent = 'Failed to load image.';
+        console.error(e);
+      }
+    });
+
+    payloadInput.addEventListener('change', () => {
+      state.payloadFiles = Array.from(payloadInput.files || []);
+      refreshFileTable();
+      updateCapacityInfo();
+    });
+
+    bitsSelect.addEventListener('change', updateCapacityInfo);
+
+    embedBtn.addEventListener('click', async () => {
+      if (!state.carrierImg) {
+        alert('Select a carrier image first.');
+        return;
+      }
+      if (!state.payloadFiles.length) {
+        alert('Select one or more files to hide.');
+        return;
+      }
+      try {
+        embedBtn.classList.add('calculating');
+        statusText.textContent = 'Embedding…';
+
+        // Read payloads
+        const entries = [];
+        for (const f of state.payloadFiles){
+          const data = await readAsArrayBuffer(f);
+          entries.push({ name: f.name, data: data });
+        }
+        const archive = buildArchive(entries);
+
+        // Capacity check
+        const bpc = Number(bitsSelect.value);
+        const { canvas, ctx } = drawToCanvas(state.carrierImg);
+        const cap = capacityBytesFor(canvas.width, canvas.height, bpc);
+        if (archive.byteLength > cap) {
+          throw new Error(`Payload (${human(archive.byteLength)}) exceeds capacity (${human(cap)}). Try fewer files, lower sizes, a larger image, or higher bits per channel.`);
+        }
+
+        // Embed
+        const imgData = ctx.getImageData(0,0,canvas.width,canvas.height);
+        embedBytesIntoImageData(imgData, archive, bpc);
+        ctx.putImageData(imgData, 0, 0);
+
+        // Download PNG
+        canvas.toBlob((blob) => {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'stego.png';
+          a.click();
+          setTimeout(()=>URL.revokeObjectURL(url),1000);
+          statusText.textContent = 'Done. Your stego image has been downloaded.';
+          statusText.style.color = 'var(--primary-color)';
+        }, 'image/png');
+      } catch (e) {
+        console.error(e);
+        statusText.textContent = 'Error: ' + e.message;
+        statusText.style.color = '#ff6b6b';
+      } finally {
+        embedBtn.classList.remove('calculating');
+      }
+    });
+
+    extractBtn.addEventListener('click', async () => {
+      const f = stegoInput.files && stegoInput.files[0];
+      if (!f) { alert('Choose the stego image first.'); return; }
+      try {
+        extractBtn.classList.add('calculating');
+        extractedRows.innerHTML = '';
+        extractedWrap.style.display = 'none';
+
+        const img = await loadImageFromFile(f);
+        const { canvas, ctx } = drawToCanvas(img);
+        const imgData = ctx.getImageData(0,0,canvas.width,canvas.height);
+
+        const bpc = Number(bitsSelect.value); // Use the current selection for reading as well
+        // 1) Peek header to know how much to read
+        const { totalLen, headerLen } = peekHeaderAndLength(imgData, bpc);
+        // 2) Extract full archive
+        const fullLen = headerLen + totalLen;
+        const archiveBytes = extractBytesFromImageData(imgData, fullLen, bpc);
+        const files = parseArchive(archiveBytes);
+
+        if (!files.length) {
+          alert('No files found in the image.');
+          return;
+        }
+
+        extractedWrap.style.display = 'block';
+        for (const f of files){
+          const blob = new Blob([f.data]);
+          const url = URL.createObjectURL(blob);
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${escapeHtml(f.name)}</td>
+            <td>${human(f.size)}</td>
+            <td><a href="${url}" download="${escapeHtml(f.name)}" style="color:var(--primary-color);font-weight:600">Download</a></td>
+          `;
+          extractedRows.appendChild(tr);
+        }
+      } catch (e) {
+        console.error(e);
+        alert('Failed to extract: ' + e.message);
+      } finally {
+        extractBtn.classList.remove('calculating');
+      }
+    });
+
+    // Generate a blank carrier that fits the selected payload
+    $('genCarrierBtn').addEventListener('click', async () => {
+      try {
+        const files = Array.from(state.payloadFiles || []);
+        if (!files.length) { alert('Select files to hide first.'); return; }
+        const entries = await Promise.all(files.map(async f => ({ name: f.name, data: await readAsArrayBuffer(f) })));
+        const archive = buildArchive(entries);
+
+        const bpc = Number(bitsSelect.value);
+        // Calculate smallest square image that can fit the archive
+        const bitsNeeded = archive.byteLength * 8;
+        const bitsPerPixel = 3 * bpc; // R,G,B
+        const pixelsNeeded = Math.ceil(bitsNeeded / bitsPerPixel);
+        const side = Math.ceil(Math.sqrt(pixelsNeeded));
+
+        const canvas = $('workCanvas');
+        canvas.width = side;
+        canvas.height = side;
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+
+        // Fill with low-noise pattern for nicer look (random RGB)
+        const imgData = ctx.createImageData(side, side);
+        for (let i=0;i<imgData.data.length;i+=4){
+          imgData.data[i]   = 16 + Math.floor(Math.random()*16);
+          imgData.data[i+1] = 16 + Math.floor(Math.random()*16);
+          imgData.data[i+2] = 16 + Math.floor(Math.random()*16);
+          imgData.data[i+3] = 255;
+        }
+        ctx.putImageData(imgData,0,0);
+
+        // Update "carrier" state with this generated image
+        await new Promise(r => canvas.toBlob(b => {
+          const url = URL.createObjectURL(b);
+          const img = new Image();
+          img.onload = () => { state.carrierImg = img; URL.revokeObjectURL(url); r(); };
+          img.src = url;
+        }, 'image/png'));
+
+        carrierInfo.textContent = `Generated blank carrier: ${state.carrierImg.width}×${state.carrierImg.height}`;
+        updateCapacityInfo();
+      } catch (e) {
+        console.error(e);
+        alert('Failed to generate carrier: ' + e.message);
+      }
+    });
+  </script>
+  </body>
+</html>
