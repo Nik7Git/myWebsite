@@ -1,296 +1,306 @@
 <!doctype html>
 <html lang="en">
+
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Multi-File Steganography</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet">
+    <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+      rel="icon"
+      href="https://cdn1.iconfinder.com/data/icons/seo-outline-colored-5/128/Spy_Hacker_criminal_Security_unknown_Anonymous-512.png" />
 
     <!-- 1) PASTE YOUR EXISTING STYLE BLOCK HERE -->
     <!-- (Keep your exact <style> ... </style> from the prompt.) -->
     <style>
-      :root {
-        --primary-color: #00d4aa;
-        --secondary-color: #0066ff;
-        --bg-dark: #0a0a0a;
-        --bg-card: #1a1a1a;
-        --bg-card-hover: #222222;
-        --text-primary: #ffffff;
-        --text-secondary: #a8a8a8;
-        --accent-gradient: linear-gradient(135deg, #00d4aa 0%, #0066ff 100%);
-        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-        --shadow-md: 0 8px 24px rgba(0, 212, 170, 0.15);
-      }
+    :root {
+      --primary-color: #00d4aa;
+      --secondary-color: #0066ff;
+      --bg-dark: #0a0a0a;
+      --bg-card: #1a1a1a;
+      --bg-card-hover: #222222;
+      --text-primary: #ffffff;
+      --text-secondary: #a8a8a8;
+      --accent-gradient: linear-gradient(135deg, #00d4aa 0%, #0066ff 100%);
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 8px 24px rgba(0, 212, 170, 0.15);
+    }
 
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
+    body {
+      font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      padding: 2rem 1.5rem;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+      text-align: center;
+      letter-spacing: -0.02em;
+    }
+
+    .tagline {
+      text-align: center;
+      color: var(--text-secondary);
+      margin-bottom: 3.5rem;
+      font-size: 1.05rem;
+      font-weight: 400;
+    }
+
+    .card {
+      background: var(--bg-card);
+      padding: 2.5rem;
+      border-radius: 16px;
+      margin-bottom: 2rem;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+        background 0.2s ease;
+      position: relative;
+      overflow: hidden;
+      contain: layout style paint;
+      will-change: transform;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--accent-gradient);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      background: var(--bg-card-hover);
+      box-shadow: var(--shadow-md);
+    }
+
+    .card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .card h3 {
+      font-size: 1.35rem;
+      color: var(--text-primary);
+      margin-bottom: 1.75rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .input-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    label {
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 0.875rem;
+      letter-spacing: 0.01em;
+    }
+
+    input,
+    select {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-primary);
+      padding: 0.875rem 1rem;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      font-family: inherit;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      background: rgba(255, 255, 255, 0.06);
+      box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.12);
+    }
+
+    input[readonly] {
+      background: rgba(255, 255, 255, 0.02);
+      cursor: not-allowed;
+      color: var(--text-primary);
+    }
+
+    select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2300d4aa' d='M10.293 3.293L6 7.586 1.707 3.293A1 1 0 00.293 4.707l5 5a1 1 0 001.414 0l5-5a1 1 0 10-1.414-1.414z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      padding-right: 2.75rem;
+    }
+
+    select option {
+      background: var(--bg-card);
+      color: var(--text-primary);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.5rem;
+    }
+
+    th,
+    td {
+      padding: 1rem 0.5rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    th {
+      background: rgba(0, 212, 170, 0.08);
+      color: var(--primary-color);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    tr {
+      transition: background 0.15s ease;
+    }
+
+    tbody tr:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .bits {
+      letter-spacing: 0.3rem;
+      font-family: 'Courier New', monospace;
+      font-size: 1rem;
+      white-space: nowrap;
+      line-height: 1.8;
+    }
+
+    .bit {
+      display: inline-block;
+      width: 1.1ch;
+      text-align: center;
+    }
+
+    .bit.net {
+      color: #00d4aa;
+      font-weight: 600;
+    }
+
+    .bit.host {
+      color: #ff6b6b;
+      font-weight: 600;
+    }
+
+    .bit.dim {
+      color: rgba(255, 255, 255, 0.15);
+    }
+
+    .octet-space {
+      display: inline-block;
+      width: 0.6rem;
+    }
+
+    .card-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 1024px) {
+      .card-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
       body {
-        font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
-        line-height: 1.6;
-        background: var(--bg-dark);
-        color: var(--text-primary);
-        overflow-x: hidden;
-        padding: 2rem 1.5rem;
-        min-height: 100vh;
-      }
-
-      .container {
-        max-width: 1400px;
-        margin: 0 auto;
+        padding: 1.5rem 1rem;
       }
 
       h1 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        background: var(--accent-gradient);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin-bottom: 0.5rem;
-        text-align: center;
-        letter-spacing: -0.02em;
-      }
-
-      .tagline {
-        text-align: center;
-        color: var(--text-secondary);
-        margin-bottom: 3.5rem;
-        font-size: 1.05rem;
-        font-weight: 400;
+        font-size: 2rem;
       }
 
       .card {
-        background: var(--bg-card);
-        padding: 2.5rem;
-        border-radius: 16px;
-        margin-bottom: 2rem;
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-                    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-                    background 0.2s ease;
-        position: relative;
-        overflow: hidden;
-        contain: layout style paint;
-        will-change: transform;
-      }
-
-      .card::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: var(--accent-gradient);
-        transform: scaleX(0);
-        transform-origin: left;
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-
-      .card:hover {
-        transform: translateY(-4px);
-        background: var(--bg-card-hover);
-        box-shadow: var(--shadow-md);
-      }
-
-      .card:hover::before {
-        transform: scaleX(1);
-      }
-
-      .card h3 {
-        font-size: 1.35rem;
-        color: var(--text-primary);
-        margin-bottom: 1.75rem;
-        font-weight: 600;
-        letter-spacing: -0.01em;
+        padding: 1.75rem;
       }
 
       .input-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 1.25rem;
-        margin-bottom: 2rem;
-      }
-
-      .input-group {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-
-      label {
-        color: var(--primary-color);
-        font-weight: 500;
-        font-size: 0.875rem;
-        letter-spacing: 0.01em;
-      }
-
-      input,
-      select {
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: var(--text-primary);
-        padding: 0.875rem 1rem;
-        border-radius: 10px;
-        font-size: 0.95rem;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        font-family: inherit;
-      }
-
-      input:focus,
-      select:focus {
-        outline: none;
-        border-color: var(--primary-color);
-        background: rgba(255, 255, 255, 0.06);
-        box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.12);
-      }
-
-      input[readonly] {
-        background: rgba(255, 255, 255, 0.02);
-        cursor: not-allowed;
-        color: var(--text-primary);
-      }
-
-      select {
-        cursor: pointer;
-        appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2300d4aa' d='M10.293 3.293L6 7.586 1.707 3.293A1 1 0 00.293 4.707l5 5a1 1 0 001.414 0l5-5a1 1 0 10-1.414-1.414z'/%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 1rem center;
-        padding-right: 2.75rem;
-      }
-
-      select option {
-        background: var(--bg-card);
-        color: var(--text-primary);
+        grid-template-columns: 1fr;
       }
 
       table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 0.5rem;
+        font-size: 0.85rem;
       }
 
       th,
       td {
-        padding: 1rem 0.5rem;
-        text-align: left;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      }
-
-      th {
-        background: rgba(0, 212, 170, 0.08);
-        color: var(--primary-color);
-        font-weight: 600;
-        font-size: 0.875rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-      }
-
-      tr {
-        transition: background 0.15s ease;
-      }
-
-      tbody tr:hover {
-        background: rgba(255, 255, 255, 0.03);
+        padding: 0.75rem 0.5rem;
       }
 
       .bits {
-        letter-spacing: 0.3rem;
-        font-family: 'Courier New', monospace;
-        font-size: 1rem;
-        white-space: nowrap;
-        line-height: 1.8;
+        font-size: 0.8rem;
+        letter-spacing: 0.25rem;
       }
+    }
 
-      .bit {
-        display: inline-block;
-        width: 1.1ch;
-        text-align: center;
-      }
-
-      .bit.net {
-        color: #00d4aa;
-        font-weight: 600;
-      }
-
-      .bit.host {
-        color: #ff6b6b;
-        font-weight: 600;
-      }
-
-      .bit.dim {
-        color: rgba(255, 255, 255, 0.15);
-      }
-
-      .octet-space {
-        display: inline-block;
-        width: 0.6rem;
-      }
-
-      .card-container {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 2rem;
-        margin-bottom: 2rem;
-      }
-
-      @media (max-width: 1024px) {
-        .card-container {
-          grid-template-columns: 1fr;
-        }
-      }
-
-      @media (max-width: 768px) {
-        body {
-          padding: 1.5rem 1rem;
-        }
-
-        h1 {
-          font-size: 2rem;
-        }
-
-        .card {
-          padding: 1.75rem;
-        }
-
-        .input-grid {
-          grid-template-columns: 1fr;
-        }
-
-        table {
-          font-size: 0.85rem;
-        }
-
-        th,
-        td {
-          padding: 0.75rem 0.5rem;
-        }
-
-        .bits {
-          font-size: 0.8rem;
-          letter-spacing: 0.25rem;
-        }
-      }
-
-      /* Loading state */
-      .calculating {
-        opacity: 0.6;
-        pointer-events: none;
-      }
-    </style>
+    /* Loading state */
+    .calculating {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+  </style>
 
     <!-- Quick font for nicer look; you can remove if you want it 100% offline -->
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
       rel="stylesheet">
   </head>
+
   <body>
     <div class="container">
-      <h1>Multi-File Steganography</h1>
+      <h1><i class="fa-solid fa-user-secret"></i> Multi-File Steganography</h1>
       <p class="tagline">Hide multiple files inside a single PNG and extract
         them later — entirely in your browser.</p>
 
@@ -425,12 +435,12 @@
 
     function human(n) {
       if (n === 0) return '0 B';
-      const units = ['B','KB','MB','GB','TB'];
-      const i = Math.floor(Math.log(n)/Math.log(1024));
-      return (n/Math.pow(1024,i)).toFixed(i ? 2 : 0) + ' ' + units[i];
+      const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+      const i = Math.floor(Math.log(n) / Math.log(1024));
+      return (n / Math.pow(1024, i)).toFixed(i ? 2 : 0) + ' ' + units[i];
     }
 
-    function readAsArrayBuffer(file){
+    function readAsArrayBuffer(file) {
       return new Promise((res, rej) => {
         const fr = new FileReader();
         fr.onerror = () => rej(fr.error);
@@ -439,7 +449,7 @@
       });
     }
 
-    function loadImageFromFile(file){
+    function loadImageFromFile(file) {
       return new Promise((res, rej) => {
         const fr = new FileReader();
         fr.onload = () => {
@@ -457,7 +467,7 @@
       const ctx = canvas.getContext('2d', { willReadFrequently: true });
       canvas.width = img.width;
       canvas.height = img.height;
-      ctx.drawImage(img,0,0);
+      ctx.drawImage(img, 0, 0);
       return { canvas, ctx };
     }
 
@@ -478,7 +488,7 @@
       new DataView(fileCountBuf.buffer).setUint16(0, fileEntries.length, true);
       parts.push(fileCountBuf); payloadLen += 2;
 
-      for (const {name, data} of fileEntries) {
+      for (const { name, data } of fileEntries) {
         const nameBytes = enc.encode(name);
         const nameLenBuf = new Uint8Array(2);
         new DataView(nameLenBuf.buffer).setUint16(0, nameBytes.length, true);
@@ -498,14 +508,14 @@
       let o = 0;
       out.set(MAGIC, o); o += MAGIC.length;
       out.set(totalBuf, o); o += totalBuf.length;
-      for (const p of parts){ out.set(p, o); o += p.length; }
+      for (const p of parts) { out.set(p, o); o += p.length; }
       return out;
     }
 
     function parseArchive(bytes) {
       // Verify magic
       if (bytes.length < 12) throw new Error('Not enough data.');
-      for (let i=0;i<MAGIC.length;i++){
+      for (let i = 0; i < MAGIC.length; i++) {
         if (bytes[i] !== MAGIC[i]) throw new Error('Invalid or missing archive header.');
       }
       const totalLen = new DataView(bytes.buffer, bytes.byteOffset + MAGIC.length, 4).getUint32(0, true);
@@ -517,7 +527,7 @@
       const fileCount = dv.getUint16(p, true); p += 2;
 
       const files = [];
-      for (let i=0;i<fileCount;i++){
+      for (let i = 0; i < fileCount; i++) {
         const nameLen = dv.getUint16(p, true); p += 2;
         const nameBytes = bytes.slice(p, p + nameLen); p += nameLen;
         const name = dec.decode(nameBytes);
@@ -529,17 +539,17 @@
     }
 
     // ---------- Bit IO ----------
-    function capacityBytesFor(imgWidth, imgHeight, bitsPerChannel){
+    function capacityBytesFor(imgWidth, imgHeight, bitsPerChannel) {
       // Use RGB channels only (ignore alpha): 3 * bitsPerChannel bits per pixel
       const bits = imgWidth * imgHeight * 3 * bitsPerChannel;
       return Math.floor(bits / 8);
     }
 
-    function embedBytesIntoImageData(imageData, bytes, bitsPerChannel){
+    function embedBytesIntoImageData(imageData, bytes, bitsPerChannel) {
       const data = imageData.data; // RGBA
       const totalBits = bytes.length * 8;
       const channelsPerPixel = 4;
-      const usableChannelsMask = [0,1,2]; // R,G,B
+      const usableChannelsMask = [0, 1, 2]; // R,G,B
       const totalUsableChannels = usableChannelsMask.length;
       const capacityBits = Math.floor((data.length / channelsPerPixel) * totalUsableChannels * bitsPerChannel);
       if (totalBits > capacityBits) throw new Error('Payload too large for this carrier and bit setting.');
@@ -566,10 +576,10 @@
       return imageData;
     }
 
-    function extractBytesFromImageData(imageData, byteLength, bitsPerChannel){
+    function extractBytesFromImageData(imageData, byteLength, bitsPerChannel) {
       const data = imageData.data;
       const channelsPerPixel = 4;
-      const usableChannelsMask = [0,1,2];
+      const usableChannelsMask = [0, 1, 2];
       const totalNeededBits = byteLength * 8;
       const capacityBits = Math.floor((data.length / channelsPerPixel) * usableChannelsMask.length * bitsPerChannel);
       if (totalNeededBits > capacityBits) throw new Error('Requested length exceeds carrier capacity.');
@@ -591,10 +601,10 @@
     }
 
     // Special small reader to peek the header (MAGIC + totalLen) before full extraction
-    function peekHeaderAndLength(imageData, bitsPerChannel){
+    function peekHeaderAndLength(imageData, bitsPerChannel) {
       const headerLen = MAGIC.length + 4; // 12 bytes
       const headerBytes = extractBytesFromImageData(imageData, headerLen, bitsPerChannel);
-      for (let i=0;i<MAGIC.length;i++){
+      for (let i = 0; i < MAGIC.length; i++) {
         if (headerBytes[i] !== MAGIC[i]) throw new Error('No archive found (bad header).');
       }
       const totalLen = new DataView(headerBytes.buffer, headerBytes.byteOffset + MAGIC.length, 4).getUint32(0, true);
@@ -624,8 +634,8 @@
     const extractedWrap = $('extractedWrap');
     const extractedRows = $('extractedRows');
 
-    function updateCapacityInfo(){
-      if (!state.carrierImg){
+    function updateCapacityInfo() {
+      if (!state.carrierImg) {
         capacityBytesEl.textContent = '—';
         statusText.textContent = 'Choose a carrier image.';
         return;
@@ -640,18 +650,18 @@
       statusText.style.color = ok ? 'var(--primary-color)' : '#ff6b6b';
     }
 
-    function computePayloadSizeEstimate(){
+    function computePayloadSizeEstimate() {
       // Archive overhead = MAGIC(8)+totalLen(4)+fileCount(2) + per-file(overheads)
       let total = 8 + 4 + 2;
-      for (const f of state.payloadFiles){
+      for (const f of state.payloadFiles) {
         const nameBytes = enc.encode(f.name);
         total += 2 + nameBytes.length + 4 + f.size; // nameLen + name + size + data
       }
       return total;
     }
 
-    function refreshFileTable(){
-      if (!state.payloadFiles.length){
+    function refreshFileTable() {
+      if (!state.payloadFiles.length) {
         fileTableWrap.style.display = 'none';
         fileRows.innerHTML = '';
         payloadInfo.textContent = '';
@@ -665,12 +675,12 @@
           <td>${escapeHtml(f.type || '—')}</td>
         </tr>
       `).join('');
-      const total = state.payloadFiles.reduce((a,b)=>a+b.size,0);
+      const total = state.payloadFiles.reduce((a, b) => a + b.size, 0);
       payloadInfo.textContent = `Selected: ${state.payloadFiles.length} file(s), ${human(total)} total`;
     }
 
-    function escapeHtml(s){
-      return s.replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+    function escapeHtml(s) {
+      return s.replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
     }
 
     carrierInput.addEventListener('change', async () => {
@@ -709,7 +719,7 @@
 
         // Read payloads
         const entries = [];
-        for (const f of state.payloadFiles){
+        for (const f of state.payloadFiles) {
           const data = await readAsArrayBuffer(f);
           entries.push({ name: f.name, data: data });
         }
@@ -724,7 +734,7 @@
         }
 
         // Embed
-        const imgData = ctx.getImageData(0,0,canvas.width,canvas.height);
+        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         embedBytesIntoImageData(imgData, archive, bpc);
         ctx.putImageData(imgData, 0, 0);
 
@@ -735,7 +745,7 @@
           a.href = url;
           a.download = 'stego.png';
           a.click();
-          setTimeout(()=>URL.revokeObjectURL(url),1000);
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
           statusText.textContent = 'Done. Your stego image has been downloaded.';
           statusText.style.color = 'var(--primary-color)';
         }, 'image/png');
@@ -758,7 +768,7 @@
 
         const img = await loadImageFromFile(f);
         const { canvas, ctx } = drawToCanvas(img);
-        const imgData = ctx.getImageData(0,0,canvas.width,canvas.height);
+        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
         const bpc = Number(bitsSelect.value); // Use the current selection for reading as well
         // 1) Peek header to know how much to read
@@ -774,7 +784,7 @@
         }
 
         extractedWrap.style.display = 'block';
-        for (const f of files){
+        for (const f of files) {
           const blob = new Blob([f.data]);
           const url = URL.createObjectURL(blob);
           const tr = document.createElement('tr');
@@ -815,13 +825,13 @@
 
         // Fill with low-noise pattern for nicer look (random RGB)
         const imgData = ctx.createImageData(side, side);
-        for (let i=0;i<imgData.data.length;i+=4){
-          imgData.data[i]   = 16 + Math.floor(Math.random()*16);
-          imgData.data[i+1] = 16 + Math.floor(Math.random()*16);
-          imgData.data[i+2] = 16 + Math.floor(Math.random()*16);
-          imgData.data[i+3] = 255;
+        for (let i = 0; i < imgData.data.length; i += 4) {
+          imgData.data[i] = 16 + Math.floor(Math.random() * 16);
+          imgData.data[i + 1] = 16 + Math.floor(Math.random() * 16);
+          imgData.data[i + 2] = 16 + Math.floor(Math.random() * 16);
+          imgData.data[i + 3] = 255;
         }
-        ctx.putImageData(imgData,0,0);
+        ctx.putImageData(imgData, 0, 0);
 
         // Update "carrier" state with this generated image
         await new Promise(r => canvas.toBlob(b => {
@@ -840,4 +850,5 @@
     });
   </script>
   </body>
+
 </html>
