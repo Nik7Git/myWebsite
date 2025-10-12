@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Base64 Encoder / Decoder</title>
+
+    <style>
+      /* --------- Base Theme --------- */
+      :root {
+        --primary-color: #00d4aa;
+        --secondary-color: #0066ff;
+        --bg-dark: #0a0a0a;
+        --bg-card: #151515;
+        --bg-card-hover: #1f1f1f;
+        --text-primary: #e8e8e8;
+        --text-secondary: #a6a6a6;
+        --accent-gradient: linear-gradient(135deg, #00d4aa 0%, #0066ff 100%);
+        --success: #00d4aa;
+        --warning: #ff6b35;
+        --outline: rgba(255, 255, 255, 0.07);
+        --muted: rgba(255, 255, 255, 0.05);
+        --shadow: 0 10px 40px rgba(0, 0, 0, 0.55);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+        background: radial-gradient(
+            1200px 400px at 50% -50%,
+            rgba(0, 212, 170, 0.08),
+            transparent 60%
+          ),
+          radial-gradient(
+            900px 300px at 85% -20%,
+            rgba(0, 102, 255, 0.07),
+            transparent 55%
+          ),
+          var(--bg-dark);
+        color: var(--text-primary);
+        line-height: 1.7;
+        min-height: 100vh;
+        padding: 48px 20px;
+      }
+
+      .container {
+        /* wider and fluid on big screens */
+        width: min(92vw, 1400px);
+        margin: 0 auto;
+
+        background: linear-gradient(
+              180deg,
+              rgba(255, 255, 255, 0.02),
+              rgba(255, 255, 255, 0.01)
+            )
+            no-repeat,
+          var(--bg-card);
+        padding: 3rem;
+        border-radius: 22px;
+        border: 1px solid var(--outline);
+        box-shadow: var(--shadow);
+        position: relative;
+        overflow: hidden;
+        animation: fadeInUp 0.55s ease;
+      }
+      .container::before {
+        content: "";
+        position: absolute;
+        inset: 0 -40% auto;
+        height: 3px;
+        background: var(--accent-gradient);
+      }
+
+      h1 {
+        font-size: clamp(2.2rem, 1.5rem + 1.8vw, 3rem);
+        font-weight: 800;
+        letter-spacing: 0.2px;
+        text-align: center;
+        margin: 4px 0 26px;
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .page-sub {
+        text-align: center;
+        color: var(--text-secondary);
+        margin-bottom: 30px;
+        font-size: 1rem;
+      }
+
+      /* --------- Cards / Layout --------- */
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 28px;
+      }
+      @media (max-width: 1200px) {
+        .grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      @media (max-width: 760px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .card {
+        background: linear-gradient(
+              180deg,
+              rgba(255, 255, 255, 0.02),
+              rgba(255, 255, 255, 0)
+            )
+            no-repeat,
+          var(--bg-card);
+        border: 1px solid var(--outline);
+        border-radius: 18px;
+        padding: 22px;
+        transition: 0.25s ease;
+      }
+      .card:hover {
+        background: var(--bg-card-hover);
+        border-color: rgba(255, 255, 255, 0.09);
+      }
+
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 14px;
+      }
+      .card-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        color: var(--primary-color);
+      }
+      .badges {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .badge {
+        padding: 7px 12px;
+        border: 1px solid var(--outline);
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 999px;
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+      }
+
+      /* --------- Dropzone / Fields --------- */
+      .dropzone {
+        border: 1.5px dashed var(--outline);
+        border-radius: 12px;
+        padding: 14px;
+        text-align: center;
+        background: var(--muted);
+        transition: 0.2s ease;
+      }
+      .dropzone.drag {
+        border-color: var(--primary-color);
+        background: rgba(0, 212, 170, 0.08);
+      }
+      .inline {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .small {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+      }
+
+      .mono-input {
+        width: 100%;
+        min-height: 160px;
+        padding: 14px 16px;
+        border-radius: 12px;
+        border: 1px solid var(--outline);
+        background: rgba(0, 0, 0, 0.25);
+        color: var(--text-primary);
+        font-family: ui-monospace, Menlo, Consolas, "Courier New", monospace;
+        font-size: 1rem;
+        line-height: 1.6;
+        transition: 0.2s ease;
+      }
+      .mono-input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px rgba(0, 212, 170, 0.08);
+      }
+
+      .input-row {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+      }
+      .input-row .mono-input {
+        min-height: 52px;
+        height: 52px;
+      }
+
+      /* --------- Buttons / Toolbar --------- */
+      .toolbar {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin: 12px 0;
+        flex-wrap: wrap;
+      }
+      .status {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        margin-left: 4px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px 16px;
+        border-radius: 12px;
+        font-weight: 650;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: 0.2s ease;
+        border: 1.5px solid transparent;
+        user-select: none;
+      }
+      .btn-primary {
+        background: var(--accent-gradient);
+        color: #00130d;
+        box-shadow: 0 6px 24px rgba(0, 212, 170, 0.25);
+      }
+      .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 10px 30px rgba(0, 212, 170, 0.35);
+      }
+      .btn-ghost {
+        border-color: rgba(0, 212, 170, 0.5);
+        color: var(--primary-color);
+        background: rgba(0, 212, 170, 0.08);
+      }
+      .btn-ghost:hover {
+        background: rgba(0, 212, 170, 0.15);
+      }
+      .btn-warning {
+        border: 1.5px solid var(--warning);
+        color: var(--warning);
+        background: rgba(255, 107, 53, 0.08);
+      }
+      .btn-warning:hover {
+        background: rgba(255, 107, 53, 0.15);
+      }
+
+      /* --------- Metrics --------- */
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        margin: 14px 0 8px;
+      }
+      .stat {
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid var(--outline);
+        border-radius: 12px;
+        padding: 10px;
+        text-align: center;
+      }
+      .stat .value {
+        font-weight: 800;
+        font-size: 1.1rem;
+        color: var(--primary-color);
+      }
+      .stat .label {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+      }
+
+      /* --------- Output block --------- */
+      .output {
+        background: rgba(0, 0, 0, 0.35);
+        border: 1px solid var(--outline);
+        border-radius: 12px;
+        padding: 14px;
+        min-height: 260px;
+        font-family: ui-monospace, Menlo, Consolas, "Courier New", monospace;
+        word-break: break-word;
+        border-left: 3px solid var(--primary-color);
+      }
+
+      /* --------- Preview --------- */
+      .preview-box {
+        background: rgba(0, 0, 0, 0.25);
+        border: 1px solid var(--outline);
+        border-radius: 12px;
+        padding: 14px;
+        min-height: 320px;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+      }
+      .preview-box .empty {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        text-align: center;
+      }
+      .preview-box img,
+      .preview-box video,
+      .preview-box audio,
+      .preview-box iframe {
+        max-width: 100%;
+        width: 100%;
+        border-radius: 10px;
+      }
+      .preview-box iframe {
+        height: 460px;
+      }
+      .preview-box video,
+      .preview-box img {
+        max-height: 460px;
+        object-fit: contain;
+      }
+
+      .tip {
+        text-align: center;
+        color: var(--text-secondary);
+        margin-top: 18px;
+      }
+
+      /* --------- Animation --------- */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Base64 Encoder / Decoder</h1>
+      <p class="page-sub">
+        Encode any file to Base64, or decode Base64 (including
+        <code>data:</code> URLs) back into its original file.
+      </p>
+
+      <div class="grid">
+        <!-- ENCODER -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">⬆ Encode a File</div>
+            <div class="badges">
+              <label
+                class="badge"
+                style="
+                  cursor: pointer;
+                  display: inline-flex;
+                  gap: 6px;
+                  align-items: center;
+                ">
+                <input id="asDataUrl" type="checkbox" /> as data URL
+              </label>
+              <span class="badge" id="encMime">MIME: —</span>
+              <span class="badge" id="encName">Name: —</span>
+              <span class="badge" id="encSize">Size: —</span>
+            </div>
+          </div>
+
+          <div class="dropzone" id="dropEnc">
+            <input type="file" id="fileInput" style="display: none" />
+            <p class="small">
+              Drag and drop a file here, or
+              <button id="chooseFileBtn" class="btn btn-ghost" type="button">
+                Browse…
+              </button>
+            </p>
+          </div>
+
+          <div class="stats">
+            <div class="stat">
+              <div class="value" id="origSize">—</div>
+              <div class="label">Original size</div>
+            </div>
+            <div class="stat">
+              <div class="value" id="b64Size">—</div>
+              <div class="label">Base64 size</div>
+            </div>
+            <div class="stat">
+              <div class="value" id="overhead">—</div>
+              <div class="label">Overhead</div>
+            </div>
+          </div>
+
+          <div class="toolbar">
+            <button class="btn btn-primary" id="encodeBtn" type="button">
+              Encode to Base64
+            </button>
+            <button class="btn btn-ghost" id="copyB64Btn" type="button">
+              Copy
+            </button>
+            <button class="btn btn-ghost" id="saveB64Btn" type="button">
+              Save .txt
+            </button>
+            <button class="btn btn-warning" id="clearEnc" type="button">
+              Clear
+            </button>
+            <span class="status" id="encMsg">Ready.</span>
+          </div>
+
+          <div class="output" id="base64Output"></div>
+        </section>
+
+        <!-- DECODER -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">⬇ Decode to File</div>
+            <div class="badges">
+              <span class="badge">Accepts Base64 or <code>data:</code>
+                URLs</span>
+            </div>
+          </div>
+
+          <textarea
+            id="b64Input"
+            class="mono-input"
+            placeholder="Paste Base64 here (e.g. iVBORw0KGgo… or data:image/png;base64,iVBORw0KGgo…)"></textarea>
+
+          <div class="input-row">
+            <input
+              id="decName"
+              class="mono-input"
+              placeholder="Output filename (optional, e.g. file.docx)" />
+            <input
+              id="decMime"
+              class="mono-input"
+              placeholder="MIME type (optional, e.g. application/vnd.openxmlformats-officedocument.wordprocessingml.document)" />
+          </div>
+
+          <div class="toolbar">
+            <button class="btn btn-primary" id="decodeBtn" type="button">
+              Decode & Download
+            </button>
+            <button class="btn btn-ghost" id="loadB64FromFile" type="button">
+              Load Base64 from file…
+            </button>
+            <input
+              type="file"
+              id="b64File"
+              accept=".txt,.b64,.base64"
+              style="display: none" />
+            <button class="btn btn-warning" id="clearDec" type="button">
+              Clear
+            </button>
+            <span class="status" id="decMsg">Ready.</span>
+          </div>
+        </section>
+
+        <!-- PREVIEW -->
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">👁 Preview</div>
+            <div class="badges">
+              <span class="badge" id="prevMime">MIME: —</span>
+              <span class="badge" id="prevName">Name: —</span>
+              <span class="badge" id="prevSize">Size: —</span>
+            </div>
+          </div>
+
+          <div class="preview-box" id="previewArea">
+            <div class="empty">
+              Paste Base64 (or data URL) to see a live preview.
+            </div>
+          </div>
+
+          <div class="toolbar">
+            <button
+              class="btn btn-ghost"
+              id="openInTabBtn"
+              type="button"
+              disabled>
+              Open in new tab
+            </button>
+            <button class="btn btn-warning" id="clearPreviewBtn" type="button">
+              Clear
+            </button>
+            <span class="status" id="prevMsg">Ready.</span>
+          </div>
+        </section>
+      </div>
+
+      <p class="tip">
+        Tip: Base64 inflates size by ~33%. Very large files will produce very
+        large strings.
+      </p>
+    </div>
+
+    <script>
+      // -------- Utilities --------
+      const qs = (s, r = document) => r.querySelector(s);
+      const fmtBytes = (n) => {
+        if (!n) return "0 B";
+        const k = 1024,
+          sizes = ["B", "KB", "MB", "GB", "TB"];
+        const i = Math.floor(Math.log(n) / Math.log(k));
+        return (n / Math.pow(k, i)).toFixed(i ? 2 : 0) + " " + sizes[i];
+      };
+      const downloadText = (name, text) => {
+        const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = name;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+      };
+      const copyText = async (text, btn) => {
+        try {
+          await navigator.clipboard.writeText(text);
+          if (btn) {
+            const old = btn.textContent;
+            btn.textContent = "Copied";
+            setTimeout(() => (btn.textContent = old), 1000);
+          }
+        } catch (e) {
+          alert("Clipboard failed: " + e.message);
+        }
+      };
+
+      // -------- Encode --------
+      const fileInput = qs("#fileInput"),
+        chooseBtn = qs("#chooseFileBtn"),
+        dropEnc = qs("#dropEnc");
+      const encodeBtn = qs("#encodeBtn"),
+        asDataUrl = qs("#asDataUrl");
+      const encMime = qs("#encMime"),
+        encName = qs("#encName"),
+        encSizeChip = qs("#encSize");
+      const origSizeEl = qs("#origSize"),
+        b64SizeEl = qs("#b64Size"),
+        overheadEl = qs("#overhead");
+      const base64Out = qs("#base64Output"),
+        copyB64Btn = qs("#copyB64Btn"),
+        saveB64Btn = qs("#saveB64Btn"),
+        encMsg = qs("#encMsg"),
+        clearEnc = qs("#clearEnc");
+
+      let selectedFile = null,
+        lastBase64 = "";
+
+      const resetEncodeUI = () => {
+        encMime.textContent = "MIME: —";
+        encName.textContent = "Name: —";
+        encSizeChip.textContent = "Size: —";
+        origSizeEl.textContent = "—";
+        b64SizeEl.textContent = "—";
+        overheadEl.textContent = "—";
+        base64Out.textContent = "";
+        encMsg.textContent = "Ready.";
+        selectedFile = null;
+        lastBase64 = "";
+      };
+
+      chooseBtn.addEventListener("click", () => fileInput.click());
+      fileInput.addEventListener("change", (e) =>
+        handleFile(e.target.files?.[0])
+      );
+      ["dragenter", "dragover"].forEach((evt) =>
+        dropEnc.addEventListener(evt, (e) => {
+          e.preventDefault();
+          dropEnc.classList.add("drag");
+        })
+      );
+      ["dragleave", "drop"].forEach((evt) =>
+        dropEnc.addEventListener(evt, (e) => {
+          e.preventDefault();
+          dropEnc.classList.remove("drag");
+        })
+      );
+      dropEnc.addEventListener("drop", (e) => {
+        const f = e.dataTransfer.files?.[0];
+        if (f) handleFile(f);
+      });
+
+      function handleFile(file) {
+        selectedFile = file;
+        encMime.textContent =
+          "MIME: " + (file.type || "application/octet-stream");
+        encName.textContent = "Name: " + (file.name || "unknown");
+        encSizeChip.textContent = "Size: " + fmtBytes(file.size);
+        origSizeEl.textContent = fmtBytes(file.size);
+        b64SizeEl.textContent = "—";
+        overheadEl.textContent = "—";
+        base64Out.textContent = "";
+        encMsg.textContent = "File selected.";
+      }
+
+      encodeBtn.addEventListener("click", async () => {
+        if (!selectedFile) {
+          encMsg.textContent = "Please choose a file first.";
+          return;
+        }
+        encMsg.textContent = "Encoding…";
+        try {
+          const buf = await selectedFile.arrayBuffer();
+          const b64 = arrayBufferToBase64(buf);
+          lastBase64 = asDataUrl.checked
+            ? `data:${
+                selectedFile.type || "application/octet-stream"
+              };base64,${b64}`
+            : b64;
+
+          base64Out.textContent = lastBase64;
+
+          const b64Bytes = new TextEncoder().encode(lastBase64).length;
+          b64SizeEl.textContent = fmtBytes(b64Bytes);
+          const overhead = (b64Bytes / selectedFile.size - 1) * 100;
+          overheadEl.textContent = isFinite(overhead)
+            ? `${overhead.toFixed(1)}%`
+            : "—";
+          encMsg.textContent = "Done.";
+        } catch (e) {
+          encMsg.textContent = "Error: " + e.message;
+        }
+      });
+
+      copyB64Btn.addEventListener(
+        "click",
+        () =>
+          base64Out.textContent && copyText(base64Out.textContent, copyB64Btn)
+      );
+      saveB64Btn.addEventListener("click", () => {
+        if (!base64Out.textContent) return;
+        const name =
+          (selectedFile?.name || "base64") +
+          (asDataUrl.checked ? ".dataurl.txt" : ".b64.txt");
+        downloadText(name, base64Out.textContent);
+      });
+      clearEnc.addEventListener("click", resetEncodeUI);
+
+      function arrayBufferToBase64(buffer) {
+        let binary = "";
+        const bytes = new Uint8Array(buffer);
+        const chunk = 0x8000;
+        for (let i = 0; i < bytes.length; i += chunk) {
+          binary += String.fromCharCode.apply(
+            null,
+            bytes.subarray(i, i + chunk)
+          );
+        }
+        return btoa(binary);
+      }
+
+      // -------- Decode --------
+      const b64Input = qs("#b64Input"),
+        decName = qs("#decName"),
+        decMime = qs("#decMime");
+      const decodeBtn = qs("#decodeBtn"),
+        decMsg = qs("#decMsg"),
+        clearDec = qs("#clearDec");
+      const loadBtn = qs("#loadB64FromFile"),
+        b64File = qs("#b64File");
+
+      loadBtn.addEventListener("click", () => b64File.click());
+      b64File.addEventListener("change", async (e) => {
+        const f = e.target.files?.[0];
+        if (!f) return;
+        const text = await f.text();
+        b64Input.value = text.trim();
+        decMsg.textContent = `Loaded ${f.name} (${fmtBytes(f.size)}).`;
+        setTimeout(updatePreviewFromInputs, 0);
+      });
+
+      clearDec.addEventListener("click", () => {
+        b64Input.value = "";
+        decName.value = "";
+        decMime.value = "";
+        decMsg.textContent = "Ready.";
+        updatePreviewFromInputs();
+      });
+
+      decodeBtn.addEventListener("click", () => {
+        const raw = (b64Input.value || "").trim();
+        if (!raw) {
+          decMsg.textContent = "Paste Base64 first.";
+          return;
+        }
+
+        try {
+          let mime = decMime.value.trim() || "application/octet-stream";
+          let name = decName.value.trim() || "output.bin";
+          let b64 = raw;
+
+          const m = raw.match(/^data:([^;,]+)?;base64,(.+)$/i);
+          if (m) {
+            if (m[1]) mime = m[1];
+            b64 = m[2];
+            if (!decName.value.trim()) {
+              const ext = mimeToExt(mime);
+              name = "output" + (ext ? "." + ext : ".bin");
+            }
+          } else if (!decName.value.trim()) {
+            const ext = mimeToExt(mime);
+            if (ext) name = "output." + ext;
+          }
+
+          const bytes = base64ToUint8Array(b64);
+          const blob = new Blob([bytes], { type: mime });
+          const a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = name;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+
+          decMsg.textContent = `Decoded ${fmtBytes(
+            bytes.length
+          )} ⇒ ${name} (${mime}).`;
+          updatePreviewFromInputs();
+        } catch (e) {
+          decMsg.textContent = "Decode failed: " + e.message;
+        }
+      });
+
+      function base64ToUint8Array(b64) {
+        b64 = b64.replace(/\s+/g, "");
+        const binary = atob(b64);
+        const len = binary.length;
+        const bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) bytes[i] = binary.charCodeAt(i);
+        return bytes;
+      }
+
+      // Extended MIME → extension (includes Office)
+      function mimeToExt(mime) {
+        const map = {
+          // Images
+          "image/png": "png",
+          "image/jpeg": "jpg",
+          "image/gif": "gif",
+          "image/webp": "webp",
+          "image/svg+xml": "svg",
+          // Text / web
+          "text/plain": "txt",
+          "text/html": "html",
+          "text/css": "css",
+          "application/json": "json",
+          "text/csv": "csv",
+          // Office (OOXML)
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+            "docx",
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+            "xlsx",
+          "application/vnd.openxmlformats-officedocument.presentationml.presentation":
+            "pptx",
+          // Office legacy
+          "application/msword": "doc",
+          "application/vnd.ms-excel": "xls",
+          "application/vnd.ms-powerpoint": "ppt",
+          // Other common
+          "application/pdf": "pdf",
+          "application/zip": "zip",
+          "audio/mpeg": "mp3",
+          "audio/wav": "wav",
+          "video/mp4": "mp4",
+          "application/octet-stream": "bin",
+        };
+        return map[mime] || "";
+      }
+
+      // -------- Preview --------
+      const previewArea = qs("#previewArea");
+      const prevMime = qs("#prevMime");
+      const prevName = qs("#prevName");
+      const prevSize = qs("#prevSize");
+      const prevMsg = qs("#prevMsg");
+      const openInTabBtn = qs("#openInTabBtn");
+      const clearPreviewBtn = qs("#clearPreviewBtn");
+
+      let lastPreviewURL = null;
+
+      function revokePreviewURL() {
+        if (lastPreviewURL) {
+          URL.revokeObjectURL(lastPreviewURL);
+          lastPreviewURL = null;
+        }
+      }
+      function setPreviewEmpty(
+        msg = "Paste Base64 (or data URL) to see a live preview."
+      ) {
+        revokePreviewURL();
+        previewArea.innerHTML = `<div class="empty">${msg}</div>`;
+        prevMime.textContent = "MIME: —";
+        prevName.textContent = "Name: —";
+        prevSize.textContent = "Size: —";
+        openInTabBtn.disabled = true;
+      }
+      function buildPreview(raw, mimeHint = "", nameHint = "output") {
+        // Returns { blob, mime, name, size, url, kind }
+        let mime = mimeHint || "application/octet-stream";
+        let name = nameHint || "output";
+        let b64 = (raw || "").trim();
+
+        const m = b64.match(/^data:([^;,]+)?;base64,(.+)$/i);
+        if (m) {
+          if (m[1]) mime = m[1];
+          b64 = m[2];
+          if (!nameHint) {
+            const ext = mimeToExt(mime);
+            name = "output" + (ext ? "." + ext : ".bin");
+          }
+        }
+        const bytes = base64ToUint8Array(b64);
+        const blob = new Blob([bytes], { type: mime });
+        const url = URL.createObjectURL(blob);
+        const size = bytes.length;
+
+        let kind = "binary";
+        if (mime.startsWith("image/")) kind = "image";
+        else if (mime.startsWith("audio/")) kind = "audio";
+        else if (mime.startsWith("video/")) kind = "video";
+        else if (mime === "application/pdf") kind = "pdf";
+        else if (mime.startsWith("text/") || mime === "application/json")
+          kind = "text";
+
+        return { blob, mime, name, size, url, kind };
+      }
+      function renderPreview(info) {
+        revokePreviewURL();
+        lastPreviewURL = info.url;
+
+        prevMime.textContent = "MIME: " + info.mime;
+        prevName.textContent = "Name: " + info.name;
+        prevSize.textContent = "Size: " + fmtBytes(info.size);
+        openInTabBtn.disabled = false;
+
+        if (info.kind === "image") {
+          previewArea.innerHTML = `<img alt="preview image" src="${info.url}">`;
+        } else if (info.kind === "audio") {
+          previewArea.innerHTML = `<audio controls src="${info.url}"></audio>`;
+        } else if (info.kind === "video") {
+          previewArea.innerHTML = `<video controls src="${info.url}"></video>`;
+        } else if (info.kind === "pdf") {
+          previewArea.innerHTML = `<iframe title="PDF preview" src="${info.url}"></iframe>`;
+        } else if (info.kind === "text") {
+          info.blob.text().then((txt) => {
+            const pretty =
+              info.mime === "application/json"
+                ? (() => {
+                    try {
+                      return JSON.stringify(JSON.parse(txt), null, 2);
+                    } catch {
+                      return txt;
+                    }
+                  })()
+                : txt;
+            previewArea.innerHTML = `<pre class="mono-input" style="min-height:200px; white-space:pre-wrap">${pretty.slice(
+              0,
+              20000
+            )}</pre>`;
+          });
+        } else {
+          previewArea.innerHTML = `<div class="empty">No inline preview for <b>${info.mime}</b>.<br/>Use “Open in new tab”.</div>`;
+        }
+      }
+      function updatePreviewFromInputs() {
+        const raw = (b64Input.value || "").trim();
+        if (!raw) {
+          setPreviewEmpty();
+          prevMsg.textContent = "Ready.";
+          return;
+        }
+        try {
+          const mimeHint = decMime.value.trim();
+          const nameHint = decName.value.trim();
+          const info = buildPreview(raw, mimeHint, nameHint);
+          renderPreview(info);
+          prevMsg.textContent = "Preview ready.";
+        } catch (e) {
+          setPreviewEmpty("Could not preview: " + e.message);
+          prevMsg.textContent = "Error.";
+        }
+      }
+
+      // Live preview on input changes
+      b64Input.addEventListener(
+        "input",
+        debounce(updatePreviewFromInputs, 200)
+      );
+      decMime.addEventListener("input", updatePreviewFromInputs);
+      decName.addEventListener("input", updatePreviewFromInputs);
+
+      // Buttons
+      openInTabBtn.addEventListener("click", () => {
+        if (lastPreviewURL) window.open(lastPreviewURL, "_blank");
+      });
+      clearPreviewBtn.addEventListener("click", () => {
+        b64Input.value = "";
+        decName.value = "";
+        decMime.value = "";
+        setPreviewEmpty(
+          "Cleared. Paste Base64 (or data URL) to see a live preview."
+        );
+        prevMsg.textContent = "Ready.";
+      });
+
+      // simple debounce helper
+      function debounce(fn, ms = 200) {
+        let t;
+        return (...args) => {
+          clearTimeout(t);
+          t = setTimeout(() => fn(...args), ms);
+        };
+      }
+
+      // Initialize
+      setPreviewEmpty();
+    </script>
+  </body>
+</html>
