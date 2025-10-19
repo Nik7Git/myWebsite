@@ -2,152 +2,127 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Intune</title>
-    <link rel="icon" type="image/x-icon" href="https://computercapriccioso.it/wp-content/uploads/2019/05/favicon.png">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>About Intune</title>
+
+    <link rel="icon" href="https://cdn2.iconfinder.com/data/icons/5g-technology-flat/60/Fast-Bandwidth-speed-performance-timer-256.png" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
+        :root {
+            --primary-color: #00d4aa;
+            --secondary-color: #0066ff;
+            --bg-dark: #0a0a0a;
+            --bg-card: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #a8a8a8;
+            --accent-gradient: linear-gradient(135deg, #00d4aa 0%, #0066ff 100%);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
             margin: 0;
             padding: 0;
-            background-color: #222222;
-            /* outter background */
-            color: #c4c4c4;
-            /* small letter color */
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            padding: 2rem 1.5rem;
+            min-height: 100vh;
+            line-height: 1.6;
         }
 
         .container {
-            width: 80%;
-            margin: auto;
-            overflow: hidden;
+            max-width: 1000px;
+            margin: 0 auto;
         }
 
-        header {
-            background: #000000;
-            color: #ffffff;
-            /* color of name at top left */
-            padding-top: 1px;
-            min-height: 1px;
-            border-bottom: #c71111 3px solid;
-            /* red stripe */
-        }
-
-        header a {
-            color: #ffffff;
-            /* color of sections at the top right */
-            text-decoration: none;
-            text-transform: uppercase;
-            font-size: 16px;
-        }
-
-        header ul {
-            padding: 0;
-            list-style: none;
-        }
-
-        header li {
-            float: right;
-            display: inline;
-            padding: 0 20px 0 20px;
-        }
-
-        header #branding {
-            float: left;
-        }
-
-        header #branding h1 {
-            margin: 0;
-        }
-
-        section {
-            padding: 20px 0 20px 0;
-        }
-
-        #bio,
-        #systems,
-        #work,
-        #education,
-        #certifications {
-            background: #363636;
-            /* 2nd background color */
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        h2 {
-            color: #dfdfdf;
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
             text-align: center;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2rem;
+            letter-spacing: -0.02em;
         }
 
-        /* Style for the back to top link */
-        .back-to-top {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #c71111;
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 5px;
-            text-decoration: none;
-            /* Remove default underline */
-            display: none;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            /* Smooth transition */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, .06);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
         }
 
-        .back-to-top:hover {
-            background-color: #e0ac00;
-            /* Gold color on hover */
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent-gradient);
         }
 
-        table {
-            margin-left: auto;
-            margin-right: auto;
-            text-align: left;
+        .card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
         }
 
-        td {
-            padding: 5px;
+        .result {
+            padding: 1rem;
+            background: rgba(255, 255, 255, .03);
+            border: 1px solid rgba(255, 255, 255, .06);
+            border-radius: 12px;
+        }
+
+        .result p {
+            margin: 0 0 .8rem 0;
+        }
+
+        .result p:last-child {
+            margin-bottom: 0;
         }
     </style>
-
 </head>
 
 <body>
-    <header>
-        <div class="container">
-            <div id="branding">
-                <h1>Nik B.</h1>
-            </div>
-        </div>
-    </header>
-
     <div class="container">
-        <section id="bio">
-            <h2 style="margin-top: 1px;">About Intune</h2>
-            <p>I have deployed Intune from scratch to manage our Windows and Apple devices. The deployment involved planning, configuring and testing
-                all settings, policies and scripts.
-                <br>
-                Reviewing GPOs to figure out which of them are still relevant and need to be migrated to Intune.
-                <br>
-                Configuring, packaging and testing software for remote installations.
-                <br>
-                Remediation scripts to remove MS default apps, customise the GUI of Windows (Taskbar, Start menu, hide Cortana icon from taskbar) and apps by modifying
-                registry keys using PowerShell (make "From:" field visible on Outlook) and to also do other
-                admin tasks on a schedule (temp folder cleanup)
-                <br>
-                Windows Update policies and Autopatch, compliance policies, configuration profiles (deploy AOVPN xml
-                profile, config MS Edge settings, restricting access to removable media USB, deploy custom Start/Taskbar
-                menu layouts with pinned Apps)
-                <br>
-                Autopilot (hybrid/cloud), LAPS, troubleshooting enrolment errors (Conditional Access prevented
-                our admin accounts enrolling devices unless we authenticated with MFA so I figued this out and configured an exception for Intune on our Conditiona Access policy)
-            </p>
+        <h1>About Intune</h1>
+
+        <section class="card" id="about-intune-card">
+            <h3>Overview</h3>
+            <div class="result">
+                <div>
+                    <p>I have deployed Intune from scratch to manage our Windows and Apple devices. The deployment
+                        involved planning, configuring and testing all settings, policies and scripts.</p>
+                    <p>Reviewing GPOs to figure out which of them are still relevant and need to be migrated to Intune.
+                    </p>
+                    <p>Configuring, packaging and testing software for remote installations.</p>
+                    <p>Remediation scripts to remove MS default apps, customise the GUI of Windows (Taskbar, Start menu,
+                        hide Cortana icon from taskbar) and apps by modifying registry keys using PowerShell (make
+                        "From:" field visible on Outlook) and to also do other admin tasks on a schedule (temp folder
+                        cleanup).</p>
+                    <p>Windows Update policies and Autopatch, compliance policies, configuration profiles (deploy AOVPN
+                        XML profile, config MS Edge settings, restricting access to removable media USB, deploy custom
+                        Start/Taskbar menu layouts with pinned apps).</p>
+                    <p>Autopilot (hybrid/cloud), LAPS, troubleshooting enrolment errors (Conditional Access prevented
+                        our admin accounts enrolling devices unless we authenticated with MFA so I figured this out and
+                        configured an exception for Intune on our Conditional Access policy).</p>
+                </div>
+            </div>
         </section>
     </div>
 </body>
