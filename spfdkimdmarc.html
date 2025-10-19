@@ -1,140 +1,330 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>SPF / DMARC / DKIM Checker</title>
 
-  <!-- Fonts & Icons -->
+  <link rel="icon" href="https://cdn1.iconfinder.com/data/icons/security-filledoutline/64/EMAIL-Lock-Security-Communicate-256.png" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link rel="icon" href="https://cdn3.iconfinder.com/data/icons/education-209/64/calculator-math-tool-school-256.png" />
 
   <style>
-    :root{
-      --primary:#00d4aa;
-      --secondary:#0066ff;
-      --bg:#0a0a0a;
-      --card:#151515;
-      --card-hover:#1d1d1d;
-      --text:#fff;
-      --muted:#a8a8a8;
-      --grad:linear-gradient(135deg,#00d4aa 0%,#0066ff 100%);
-      --border:rgba(255,255,255,.08);
+    :root {
+      --primary: #00d4aa;
+      --secondary: #0066ff;
+      --bg: #0a0a0a;
+      --card: #151515;
+      --card-hover: #1d1d1d;
+      --text: #fff;
+      --muted: #a8a8a8;
+      --grad: linear-gradient(135deg, #00d4aa 0%, #0066ff 100%);
+      --border: rgba(255, 255, 255, .08);
     }
 
-    *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%}
-    body{
-      font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      background:var(--bg);
-      color:var(--text);
-      line-height:1.6;
-      padding:2rem 1.25rem;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
     }
 
-    .container{max-width:1200px;margin:0 auto}
-    h1{
-      font-size:2.25rem;font-weight:700;text-align:center;letter-spacing:-.02em;margin-bottom:.5rem;
-      background:var(--grad);
-      -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent
+    html,
+    body {
+      height: 100%
     }
-    .tagline{color:var(--muted);text-align:center;margin-bottom:2rem}
 
-    .card{
-      background:var(--card); border:1px solid var(--border);
-      border-radius:16px; padding:1.75rem; transition:background .2s ease, transform .2s ease;
-      box-shadow:0 2px 10px rgba(0,0,0,.25); margin-bottom:1.25rem
+    body {
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2rem 1.25rem;
     }
-    
-    .card h3{font-size:1.2rem; font-weight:700; margin-bottom:1rem}
 
-    .grid{display:grid; gap:1rem}
-    .grid-2{grid-template-columns:repeat(2,1fr)}
-    @media (max-width:900px){ .grid-2{grid-template-columns:1fr} }
-
-    label{font-weight:600; font-size:.9rem; color:var(--primary)}
-    input, select{
-      width:100%; margin-top:.35rem;
-      background:rgba(255,255,255,.04);
-      border:1px solid var(--border); border-radius:10px; color:var(--text);
-      padding:.8rem 1rem; font-size:.95rem; transition:border-color .15s, box-shadow .15s;
+    .container {
+      max-width: 1200px;
+      margin: 0 auto
     }
-    input:focus, select:focus{outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(0,212,170,.12)}
-    .helper{color:var(--muted); font-size:.9rem; margin-top:.35rem}
 
-    button{
-      display:inline-flex; align-items:center; gap:.5rem; cursor:pointer;
-      background:var(--grad); color:#001018; border:0; border-radius:12px;
-      padding:.85rem 1rem; font-weight:700; letter-spacing:.01em;
-      box-shadow:0 8px 24px rgba(0,212,170,.15); transition:transform .12s ease, box-shadow .12s ease;
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: -.02em;
+      margin-bottom: .5rem;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent
     }
-    button:hover{transform:translateY(-1px)}
-    button:disabled{opacity:.6; cursor:not-allowed}
 
-    .badge{
-      display:inline-flex; align-items:center; gap:.4rem;
-      font-size:.8rem; padding:.35rem .6rem; border-radius:999px;
-      background:rgba(255,255,255,.06); border:1px solid var(--border)
+    .tagline {
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 2rem
     }
-    .ok{color:#00e29b; border-color:rgba(0,226,155,.35); background:rgba(0,226,155,.09)}
-    .warn{color:#ffd166; border-color:rgba(255,209,102,.35); background:rgba(255,209,102,.1)}
-    .err{color:#ff6b6b; border-color:rgba(255,107,107,.35); background:rgba(255,107,107,.1)}
-    .info{color:#00e5ff; border-color:rgba(0,229,255,.45); background:rgba(0,229,255,.08)}
-    .muted{color:var(--muted)}
 
-    .mono{font-family:ui-monospace,Menlo,Consolas,monospace}
-    .break{word-break:break-word; overflow-wrap:anywhere; white-space:normal}
-
-    table{width:100%; border-collapse:collapse; margin-top:.5rem}
-    th, td{padding:.8rem .5rem; text-align:left; border-bottom:1px solid rgba(255,255,255,.06)}
-    th{
-      font-size:.8rem; text-transform:uppercase; letter-spacing:.05em; color:var(--primary);
-      background:rgba(0,212,170,.08)
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.75rem;
+      transition: background .2s ease, transform .2s ease;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, .25);
+      margin-bottom: 1.25rem
     }
-    tbody tr:hover{background:rgba(255,255,255,.03)}
 
-    .list{display:grid; gap:.75rem; margin-top:.5rem}
-    .muteborder{border:1px dashed var(--border); border-radius:12px; padding:.9rem 1rem}
+    .card h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 1rem
+    }
 
-    .cards-split{display:grid; grid-template-columns:1fr 1fr; gap:1.25rem}
-    @media (max-width:1024px){ .cards-split{grid-template-columns:1fr} }
+    .grid {
+      display: grid;
+      gap: 1rem
+    }
 
-    [aria-live]{min-height:1.75rem}
+    .grid-2 {
+      grid-template-columns: repeat(2, 1fr)
+    }
 
-    .calculating{opacity:.6; pointer-events:none}
+    @media (max-width:900px) {
+      .grid-2 {
+        grid-template-columns: 1fr
+      }
+    }
 
-    .dkim-row-header{display:flex; align-items:center; justify-content:space-between; gap:.75rem; flex-wrap:nowrap}
-    .dkim-row-title{min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
-    .dkim-body{margin-top:.5rem}
+    label {
+      font-weight: 600;
+      font-size: .9rem;
+      color: var(--primary)
+    }
+
+    input,
+    select {
+      width: 100%;
+      margin-top: .35rem;
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      padding: .8rem 1rem;
+      font-size: .95rem;
+      transition: border-color .15s, box-shadow .15s;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0, 212, 170, .12)
+    }
+
+    .helper {
+      color: var(--muted);
+      font-size: .9rem;
+      margin-top: .35rem
+    }
+
+    button {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      cursor: pointer;
+      background: var(--grad);
+      color: #001018;
+      border: 0;
+      border-radius: 12px;
+      padding: .85rem 1rem;
+      font-weight: 700;
+      letter-spacing: .01em;
+      box-shadow: 0 8px 24px rgba(0, 212, 170, .15);
+      transition: transform .12s ease, box-shadow .12s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px)
+    }
+
+    button:disabled {
+      opacity: .6;
+      cursor: not-allowed
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      font-size: .8rem;
+      padding: .35rem .6rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid var(--border)
+    }
+
+    .ok {
+      color: #00e29b;
+      border-color: rgba(0, 226, 155, .35);
+      background: rgba(0, 226, 155, .09)
+    }
+
+    .warn {
+      color: #ffd166;
+      border-color: rgba(255, 209, 102, .35);
+      background: rgba(255, 209, 102, .1)
+    }
+
+    .err {
+      color: #ff6b6b;
+      border-color: rgba(255, 107, 107, .35);
+      background: rgba(255, 107, 107, .1)
+    }
+
+    .info {
+      color: #00e5ff;
+      border-color: rgba(0, 229, 255, .45);
+      background: rgba(0, 229, 255, .08)
+    }
+
+    .muted {
+      color: var(--muted)
+    }
+
+    .mono {
+      font-family: ui-monospace, Menlo, Consolas, monospace
+    }
+
+    .break {
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      white-space: normal
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: .5rem
+    }
+
+    th,
+    td {
+      padding: .8rem .5rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, .06)
+    }
+
+    th {
+      font-size: .8rem;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--primary);
+      background: rgba(0, 212, 170, .08)
+    }
+
+    tbody tr:hover {
+      background: rgba(255, 255, 255, .03)
+    }
+
+    .list {
+      display: grid;
+      gap: .75rem;
+      margin-top: .5rem
+    }
+
+    .muteborder {
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      padding: .9rem 1rem
+    }
+
+    .cards-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem
+    }
+
+    @media (max-width:1024px) {
+      .cards-split {
+        grid-template-columns: 1fr
+      }
+    }
+
+    [aria-live] {
+      min-height: 1.75rem
+    }
+
+    .calculating {
+      opacity: .6;
+      pointer-events: none
+    }
+
+    .dkim-row-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .75rem;
+      flex-wrap: nowrap
+    }
+
+    .dkim-row-title {
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .dkim-body {
+      margin-top: .5rem
+    }
 
     /* ========= DIMMER MULTI-SELECT ========= */
-    select[multiple]{
-      --opt-bg: rgba(255,255,255,.02);
-      --opt-checked: rgba(0,0,0,.35);
+    select[multiple] {
+      --opt-bg: rgba(255, 255, 255, .02);
+      --opt-checked: rgba(0, 0, 0, .35);
       --opt-checked-text: #e8fff8;
-      --opt-hover: rgba(255,255,255,.06);
-      border-radius:12px;
-      padding:.25rem;
+      --opt-hover: rgba(255, 255, 255, .06);
+      border-radius: 12px;
+      padding: .25rem;
       -webkit-tap-highlight-color: transparent;
     }
-    select[multiple] option{ padding:.35rem .5rem; background:var(--opt-bg); }
-    select[multiple] option:checked{ background:var(--opt-checked) !important; color:var(--opt-checked-text); }
-    select[multiple]:hover option:not(:checked){ background:rgba(255,255,255,.025); }
-    select[multiple].dim{
-      --opt-checked: rgba(0,0,0,.55);
-      --opt-checked-text: #d6fff4;
-      border-color: rgba(255,255,255,.12);
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+
+    select[multiple] option {
+      padding: .35rem .5rem;
+      background: var(--opt-bg);
     }
-    .helper .count-pill{
-      display:inline-block; margin-left:.4rem; font-size:.8rem;
-      padding:.15rem .45rem; border-radius:999px; border:1px solid var(--border);
-      background:rgba(255,255,255,.04); color:var(--muted);
+
+    select[multiple] option:checked {
+      background: var(--opt-checked) !important;
+      color: var(--opt-checked-text);
+    }
+
+    select[multiple]:hover option:not(:checked) {
+      background: rgba(255, 255, 255, .025);
+    }
+
+    select[multiple].dim {
+      --opt-checked: rgba(0, 0, 0, .55);
+      --opt-checked-text: #d6fff4;
+      border-color: rgba(255, 255, 255, .12);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .04);
+    }
+
+    .helper .count-pill {
+      display: inline-block;
+      margin-left: .4rem;
+      font-size: .8rem;
+      padding: .15rem .45rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .04);
+      color: var(--muted);
     }
   </style>
 </head>
+
 <body>
   <main class="container">
     <header>
@@ -149,16 +339,15 @@
         <div class="grid grid-2">
           <div>
             <label for="domain">Domain</label>
-            <input id="domain" name="domain" type="text" placeholder="example.com" spellcheck="false"
-                   autocomplete="off" inputmode="url"
-                   pattern="^[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"
-                   aria-describedby="domainHelp" />
+            <input id="domain" name="domain" type="text" placeholder="example.com" spellcheck="false" autocomplete="off"
+              inputmode="url" pattern="^[A-Za-z0-9.-]+\.[A-Za-z]{2,}$" aria-describedby="domainHelp" />
             <div id="domainHelp" class="helper">TXT lookups are made via Google’s DNS-over-HTTPS.</div>
           </div>
 
           <div>
             <label for="selector">DKIM selector (optional)</label>
-            <input id="selector" name="selector" type="text" placeholder="e.g. default, s1, google" spellcheck="false" autocomplete="off" />
+            <input id="selector" name="selector" type="text" placeholder="e.g. default, s1, google" spellcheck="false"
+              autocomplete="off" />
             <div class="helper">If empty, common selectors below will be tried.</div>
           </div>
         </div>
@@ -175,13 +364,13 @@
               <option value="s2" selected>s2</option>
               <option value="google" selected>google</option>
               <option value="k1" selected>k1</option>
-              <option value="mail"selected>mail</option>
-              <option value="mx"selected>mx</option>
-              <option value="mandrill"selected>mandrill</option>
-              <option value="sendgrid"selected>sendgrid</option>
-              <option value="smtpapi"selected>smtpapi</option>
-              <option value="m1"selected>m1</option>
-              <option value="m2"selected>m2</option>
+              <option value="mail" selected>mail</option>
+              <option value="mx" selected>mx</option>
+              <option value="mandrill" selected>mandrill</option>
+              <option value="sendgrid" selected>sendgrid</option>
+              <option value="smtpapi" selected>smtpapi</option>
+              <option value="m1" selected>m1</option>
+              <option value="m2" selected>m2</option>
             </select>
             <div id="selHelp" class="helper">
               Hold <span class="mono">Ctrl</span>/<span class="mono">⌘</span> to toggle selections.
@@ -201,13 +390,15 @@
     <section class="cards-split">
       <article class="card" aria-labelledby="spfHeading">
         <h3 id="spfHeading"><i class="fa-solid fa-shield-halved"></i> SPF</h3>
-        <div id="spfStatus" class="badge muted" aria-live="polite"><i class="fa-regular fa-circle"></i> Awaiting input</div>
+        <div id="spfStatus" class="badge muted" aria-live="polite"><i class="fa-regular fa-circle"></i> Awaiting input
+        </div>
         <div id="spfContent" class="list"></div>
       </article>
 
       <article class="card" aria-labelledby="dmarcHeading">
         <h3 id="dmarcHeading"><i class="fa-solid fa-envelope-circle-check"></i> DMARC</h3>
-        <div id="dmarcStatus" class="badge muted" aria-live="polite"><i class="fa-regular fa-circle"></i> Awaiting input</div>
+        <div id="dmarcStatus" class="badge muted" aria-live="polite"><i class="fa-regular fa-circle"></i> Awaiting input
+        </div>
         <table>
           <tbody id="dmarcTable"></tbody>
         </table>
@@ -224,15 +415,15 @@
 
   <script defer>
     // ---------- DNS over HTTPS (Google) ----------
-    async function resolveTXT(name){
+    async function resolveTXT(name) {
       const res = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(name)}&type=TXT`,
-        {headers:{Accept:"application/dns-json"}});
-      if(!res.ok) throw new Error("DNS query failed");
+        { headers: { Accept: "application/dns-json" } });
+      if (!res.ok) throw new Error("DNS query failed");
       const data = await res.json();
       return (data.Answer || [])
         .filter(a => a.type === 16 && typeof a.data === "string")
-        .map(a => a.data.replace(/^"|"$/g,"").replace(/\\"/g,'"'))
-        .map(txt => txt.replace(/" "/g,"")); // merge broken TXT chunks
+        .map(a => a.data.replace(/^"|"$/g, "").replace(/\\"/g, '"'))
+        .map(txt => txt.replace(/" "/g, "")); // merge broken TXT chunks
     }
 
     // ---------- Helpers ----------
@@ -242,78 +433,78 @@
       node.innerHTML = `<i class="${icon}"></i> ${text}`;
     };
     const escapeHtml = s => String(s)
-      .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;").replaceAll("'","&#039;");
+      .replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;").replaceAll("'", "&#039;");
     const parseTagList = txt => Object.fromEntries(
-      txt.split(";").map(s=>s.trim()).filter(Boolean).map(kv=>{
-        const i = kv.indexOf("="); return i===-1 ? [kv,""] : [kv.slice(0,i).toLowerCase(), kv.slice(i+1)];
+      txt.split(";").map(s => s.trim()).filter(Boolean).map(kv => {
+        const i = kv.indexOf("="); return i === -1 ? [kv, ""] : [kv.slice(0, i).toLowerCase(), kv.slice(i + 1)];
       })
     );
 
     // ---------- SPF ----------
-    function parseSPF(records){
+    function parseSPF(records) {
       const spf = records.find(r => /^v=spf1\s/i.test(r));
-      if(!spf) return {found:false};
+      if (!spf) return { found: false };
       const parts = spf.split(/\s+/).slice(1);
       return {
-        found:true,
-        raw:spf,
+        found: true,
+        raw: spf,
         parts,
-        includes: parts.filter(p=>p.startsWith("include:")).map(p=>p.slice(8)),
-        a: parts.some(p=>/^([+~\-?])?a(:|$)/i.test(p)),
-        mx: parts.some(p=>/^([+~\-?])?mx(:|$)/i.test(p)),
-        all: parts.find(p=>/^([+~\-?])?all$/i.test(p)) || null,
-        ips: parts.filter(p=>/^ip[46]:/i.test(p)),
-        redirects: parts.filter(p=>/^redirect=/i.test(p)).map(p=>p.split("=")[1]),
-        exists: parts.filter(p=>/^exists:/i.test(p)).map(p=>p.slice(7)),
-        ptrs: parts.filter(p=>/^ptr(:|$)/i.test(p))
+        includes: parts.filter(p => p.startsWith("include:")).map(p => p.slice(8)),
+        a: parts.some(p => /^([+~\-?])?a(:|$)/i.test(p)),
+        mx: parts.some(p => /^([+~\-?])?mx(:|$)/i.test(p)),
+        all: parts.find(p => /^([+~\-?])?all$/i.test(p)) || null,
+        ips: parts.filter(p => /^ip[46]:/i.test(p)),
+        redirects: parts.filter(p => /^redirect=/i.test(p)).map(p => p.split("=")[1]),
+        exists: parts.filter(p => /^exists:/i.test(p)).map(p => p.slice(7)),
+        ptrs: parts.filter(p => /^ptr(:|$)/i.test(p))
       };
     }
 
-    async function computeSpfLookups(domain, spfObj, seen=new Set(), depth=0){
+    async function computeSpfLookups(domain, spfObj, seen = new Set(), depth = 0) {
       const MAX_DEPTH = 10;
-      if(!spfObj.found || depth>MAX_DEPTH) return {total:0, breakdown:[]};
+      if (!spfObj.found || depth > MAX_DEPTH) return { total: 0, breakdown: [] };
 
-      let total = 0; const breakdown=[];
-      const add = (type, detail, count=1) => { total+=count; breakdown.push({type, detail, count}); };
-      const domOf = (token, def=domain) => (token.includes(":") ? token.split(":")[1] : def).split("/")[0];
+      let total = 0; const breakdown = [];
+      const add = (type, detail, count = 1) => { total += count; breakdown.push({ type, detail, count }); };
+      const domOf = (token, def = domain) => (token.includes(":") ? token.split(":")[1] : def).split("/")[0];
 
-      for(const raw of spfObj.parts){
-        const token = raw.replace(/^[+\-~\?]/,"");
-        if(token.startsWith("include:")){
+      for (const raw of spfObj.parts) {
+        const token = raw.replace(/^[+\-~\?]/, "");
+        if (token.startsWith("include:")) {
           const d = token.slice(8); add("include", d);
-          if(!seen.has(`include:${d}`)){
+          if (!seen.has(`include:${d}`)) {
             seen.add(`include:${d}`);
-            try{
+            try {
               const recs = await resolveTXT(d);
-              const child = await computeSpfLookups(d, parseSPF(recs), seen, depth+1);
+              const child = await computeSpfLookups(d, parseSPF(recs), seen, depth + 1);
               total += child.total; breakdown.push(...child.breakdown);
-            }catch{}
+            } catch { }
           }
-        } else if(/^a(:|$)/i.test(token)){ add("a", domOf(token)); }
-          else if(/^mx(:|$)/i.test(token)){ add("mx", domOf(token)); }
-          else if(/^exists:/i.test(token)){ add("exists", domOf(token)); }
-          else if(/^ptr(:|$)/i.test(token)){ add("ptr", domOf(token)); }
-          else if(/^redirect=/i.test(token)){
-            const d = token.split("=")[1]; add("redirect", d);
-            if(!seen.has(`redirect:${d}`)){
-              seen.add(`redirect:${d}`);
-              try{
-                const recs = await resolveTXT(d);
-                const child = await computeSpfLookups(d, parseSPF(recs), seen, depth+1);
-                total += child.total; breakdown.push(...child.breakdown);
-              }catch{}
-            }
+        } else if (/^a(:|$)/i.test(token)) { add("a", domOf(token)); }
+        else if (/^mx(:|$)/i.test(token)) { add("mx", domOf(token)); }
+        else if (/^exists:/i.test(token)) { add("exists", domOf(token)); }
+        else if (/^ptr(:|$)/i.test(token)) { add("ptr", domOf(token)); }
+        else if (/^redirect=/i.test(token)) {
+          const d = token.split("=")[1]; add("redirect", d);
+          if (!seen.has(`redirect:${d}`)) {
+            seen.add(`redirect:${d}`);
+            try {
+              const recs = await resolveTXT(d);
+              const child = await computeSpfLookups(d, parseSPF(recs), seen, depth + 1);
+              total += child.total; breakdown.push(...child.breakdown);
+            } catch { }
           }
+        }
       }
-      return {total, breakdown};
+      return { total, breakdown };
     }
 
-    function renderSPF(spfObj, lookup){
+    function renderSPF(spfObj, lookup) {
       const status = $("spfStatus"), content = $("spfContent");
       content.innerHTML = "";
 
-      if(!spfObj.found){
+      if (!spfObj.found) {
         setStatus(status, "err", "No SPF record found", "fa-solid fa-circle-xmark");
         content.innerHTML = `<div class="muteborder helper">Expected TXT on root: <span class="mono">v=spf1 …</span></div>`;
         return;
@@ -321,29 +512,29 @@
 
       const rows = [
         ["Raw", `<span class="mono break">${escapeHtml(spfObj.raw)}</span>`, true],
-        ["Includes", spfObj.includes.length ? spfObj.includes.map(i=>`<span class="badge">${escapeHtml(i)}</span>`).join(" ") : "<span class='muted'>None</span>", true],
+        ["Includes", spfObj.includes.length ? spfObj.includes.map(i => `<span class="badge">${escapeHtml(i)}</span>`).join(" ") : "<span class='muted'>None</span>", true],
         ["A / MX", `${spfObj.a ? "<span class='badge ok'>a</span>" : "<span class='badge muted'>a</span>"} ${spfObj.mx ? "<span class='badge ok'>mx</span>" : "<span class='badge muted'>mx</span>"}${spfObj.ptrs?.length ? " <span class='badge warn'>ptr</span>" : ""}`, true],
-        ["IPs", spfObj.ips.length ? spfObj.ips.map(i=>`<span class="badge">${escapeHtml(i)}</span>`).join(" ") : "<span class='muted'>None</span>", true],
-        ["Redirect", spfObj.redirects.length ? spfObj.redirects.map(r=>`<span class="badge">${escapeHtml(r)}</span>`).join(" ") : "<span class='muted'>None</span>", true],
-        ["Exists", spfObj.exists.length ? spfObj.exists.map(r=>`<span class="badge">${escapeHtml(r)}</span>`).join(" ") : "<span class='muted'>None</span>", true],
-        ["All Policy", spfObj.all ? `<span class="badge ${/^-all$/i.test(spfObj.all)?"ok":/~all/i.test(spfObj.all)?"warn":"muted"}">${escapeHtml(spfObj.all)}</span>` : "<span class='muted'>Not set</span>", true]
+        ["IPs", spfObj.ips.length ? spfObj.ips.map(i => `<span class="badge">${escapeHtml(i)}</span>`).join(" ") : "<span class='muted'>None</span>", true],
+        ["Redirect", spfObj.redirects.length ? spfObj.redirects.map(r => `<span class="badge">${escapeHtml(r)}</span>`).join(" ") : "<span class='muted'>None</span>", true],
+        ["Exists", spfObj.exists.length ? spfObj.exists.map(r => `<span class="badge">${escapeHtml(r)}</span>`).join(" ") : "<span class='muted'>None</span>", true],
+        ["All Policy", spfObj.all ? `<span class="badge ${/^-all$/i.test(spfObj.all) ? "ok" : /~all/i.test(spfObj.all) ? "warn" : "muted"}">${escapeHtml(spfObj.all)}</span>` : "<span class='muted'>Not set</span>", true]
       ];
 
       const frag = document.createDocumentFragment();
-      rows.forEach(([k,v,isHtml])=>{
-        const div=document.createElement("div");
-        div.innerHTML = isHtml ? `<strong>${k}:</strong> ${v}` : `<strong>${k}:</strong> <span class="mono break">${escapeHtml(v||"")}</span>`;
+      rows.forEach(([k, v, isHtml]) => {
+        const div = document.createElement("div");
+        div.innerHTML = isHtml ? `<strong>${k}:</strong> ${v}` : `<strong>${k}:</strong> <span class="mono break">${escapeHtml(v || "")}</span>`;
         frag.appendChild(div);
       });
 
-      if(lookup){
-        const over = lookup.total>10;
-        const details = lookup.breakdown.map(b=>`<span class="badge ${b.type==='ptr'?'warn':''}"><span class="mono">${escapeHtml(b.type)}</span>: ${escapeHtml(b.detail)}</span>`).join(" ");
-        const wrap=document.createElement("div");
+      if (lookup) {
+        const over = lookup.total > 10;
+        const details = lookup.breakdown.map(b => `<span class="badge ${b.type === 'ptr' ? 'warn' : ''}"><span class="mono">${escapeHtml(b.type)}</span>: ${escapeHtml(b.detail)}</span>`).join(" ");
+        const wrap = document.createElement("div");
         wrap.innerHTML = `
           <strong>Lookups:</strong>
-          <span class="badge ${over?'err':lookup.total===10?'warn':'ok'}">
-            <i class="fa-solid ${over?'fa-circle-xmark':lookup.total===10?'fa-triangle-exclamation':'fa-circle-check'}"></i>
+          <span class="badge ${over ? 'err' : lookup.total === 10 ? 'warn' : 'ok'}">
+            <i class="fa-solid ${over ? 'fa-circle-xmark' : lookup.total === 10 ? 'fa-triangle-exclamation' : 'fa-circle-check'}"></i>
             ${lookup.total} / 10
           </span>
           <div class="helper" style="margin-top:.4rem">${details || "<span class='muted'>No DNS-lookup mechanisms found</span>"}</div>
@@ -353,60 +544,60 @@
 
       content.appendChild(frag);
 
-      if(/^-all$/i.test(spfObj.all)) setStatus(status,"ok","SPF present (enforcing)","fa-solid fa-circle-check");
-      else if(/~all/i.test(spfObj.all)) setStatus(status,"warn","SPF present (softfail)","fa-solid fa-triangle-exclamation");
-      else setStatus(status,"warn","SPF present (no ~all / -all)","fa-solid fa-triangle-exclamation");
+      if (/^-all$/i.test(spfObj.all)) setStatus(status, "ok", "SPF present (enforcing)", "fa-solid fa-circle-check");
+      else if (/~all/i.test(spfObj.all)) setStatus(status, "warn", "SPF present (softfail)", "fa-solid fa-triangle-exclamation");
+      else setStatus(status, "warn", "SPF present (no ~all / -all)", "fa-solid fa-triangle-exclamation");
 
-      if(lookup && lookup.total>10) setStatus(status,"err","SPF exceeds 10-DNS-lookup limit","fa-solid fa-circle-xmark");
+      if (lookup && lookup.total > 10) setStatus(status, "err", "SPF exceeds 10-DNS-lookup limit", "fa-solid fa-circle-xmark");
     }
 
     // ---------- DMARC ----------
-    function parseDMARC(records){
-      const r = records.find(s=>/^v=DMARC1;?/i.test(s));
-      return r ? {found:true, raw:r, tags:parseTagList(r)} : {found:false};
+    function parseDMARC(records) {
+      const r = records.find(s => /^v=DMARC1;?/i.test(s));
+      return r ? { found: true, raw: r, tags: parseTagList(r) } : { found: false };
     }
 
     // badges for policy
-    function badgeForPolicy(raw){
+    function badgeForPolicy(raw) {
       const txt = (raw || "").trim();
       const v = txt.toLowerCase();
-      if(v === "reject"){
+      if (v === "reject") {
         return `<span class="badge ok"><i class="fa-solid fa-circle-check"></i> Reject</span>`;
       }
-      if(v === "none"){
+      if (v === "none") {
         return `<span class="badge err">none</span>`;
       }
-      if(v === "quarantine"){
+      if (v === "quarantine") {
         return `<span class="badge info">Quarantine</span>`;
       }
       return `<span class="mono break">${escapeHtml(txt)}</span>`;
     }
 
     // NEW: badges for alignment (adkim/aspf)
-    function badgeForAlignment(raw){
+    function badgeForAlignment(raw) {
       const v = (raw || "").trim().toLowerCase();
-      if(v === "s"){
+      if (v === "s") {
         return `<span class="badge ok"><i class="fa-solid fa-circle-check"></i> Strict</span>`;
       }
-      if(v === "r" || v === ""){
+      if (v === "r" || v === "") {
         return `<span class="badge info">Relaxed</span>`;
       }
       // unknown value fallback
       return `<span class="mono break">${escapeHtml(raw)}</span>`;
     }
 
-    function renderDMARC(dm){
-      const status=$("dmarcStatus"), table=$("dmarcTable"), notes=$("dmarcNotes");
-      table.innerHTML=""; notes.textContent="";
+    function renderDMARC(dm) {
+      const status = $("dmarcStatus"), table = $("dmarcTable"), notes = $("dmarcNotes");
+      table.innerHTML = ""; notes.textContent = "";
 
-      if(!dm.found){
-        setStatus(status,"err","No DMARC record found","fa-solid fa-circle-xmark");
+      if (!dm.found) {
+        setStatus(status, "err", "No DMARC record found", "fa-solid fa-circle-xmark");
         notes.innerHTML = `<div class="muteborder helper">Expected TXT at <span class="mono">_dmarc.&lt;domain&gt;</span> like <span class="mono">v=DMARC1; p=reject; rua=mailto:…</span></div>`;
         return;
       }
 
-      const addRow=(k,v,asHtml=false)=>{
-        const tr=document.createElement("tr");
+      const addRow = (k, v, asHtml = false) => {
+        const tr = document.createElement("tr");
         tr.innerHTML = asHtml
           ? `<th style="width:210px">${k}</th><td>${v || "<span class='muted'>—</span>"}</td>`
           : `<th style="width:210px">${k}</th><td class="mono break">${v || "<span class='muted'>—</span>"}</td>`;
@@ -422,53 +613,53 @@
 
       // NEW: adkim / aspf with alignment badges
       const adkimBadge = badgeForAlignment(dm.tags.adkim || "");
-      const aspfBadge  = badgeForAlignment(dm.tags.aspf  || "");
+      const aspfBadge = badgeForAlignment(dm.tags.aspf || "");
       addRow("adkim / aspf", `${adkimBadge} / ${aspfBadge}`, true);
 
       addRow("rua (Aggregate reports)", dm.tags.rua || "");
       addRow("ruf (Forensic reports)", dm.tags.ruf || "");
       addRow("pct (Percent)", dm.tags.pct || "");
       addRow("fo (Failure options)", dm.tags.fo || "");
-      addRow("ri (Reporting interval)",dm.tags.ri);
+      addRow("ri (Reporting interval)", dm.tags.ri);
 
-      if(policy==="reject" || policy==="quarantine"){
-        setStatus(status,"ok",`DMARC present (${policy})`,"fa-solid fa-circle-check");
-      }else if(policy==="none"){
-        setStatus(status,"warn","DMARC present (monitoring only)","fa-solid fa-triangle-exclamation");
-      }else{
-        setStatus(status,"warn","DMARC present (unknown policy)","fa-solid fa-triangle-exclamation");
+      if (policy === "reject" || policy === "quarantine") {
+        setStatus(status, "ok", `DMARC present (${policy})`, "fa-solid fa-circle-check");
+      } else if (policy === "none") {
+        setStatus(status, "warn", "DMARC present (monitoring only)", "fa-solid fa-triangle-exclamation");
+      } else {
+        setStatus(status, "warn", "DMARC present (unknown policy)", "fa-solid fa-triangle-exclamation");
       }
 
-      const tips=[];
-      if(!dm.tags.rua) tips.push(`Consider adding <span class='mono'>rua=mailto:…</span> for aggregate reports.`);
-      if(policy==="none") tips.push(`Plan to move to <span class='mono'>p=quarantine</span> or <span class='mono'>p=reject</span> after monitoring.`);
-      if(!dm.tags.adkim) tips.push(`Set <span class='mono'>adkim=s</span> for strict DKIM alignment where possible.`);
-      if(!dm.tags.aspf) tips.push(`Set <span class='mono'>aspf=s</span> for strict SPF alignment where possible.`);
+      const tips = [];
+      if (!dm.tags.rua) tips.push(`Consider adding <span class='mono'>rua=mailto:…</span> for aggregate reports.`);
+      if (policy === "none") tips.push(`Plan to move to <span class='mono'>p=quarantine</span> or <span class='mono'>p=reject</span> after monitoring.`);
+      if (!dm.tags.adkim) tips.push(`Set <span class='mono'>adkim=s</span> for strict DKIM alignment where possible.`);
+      if (!dm.tags.aspf) tips.push(`Set <span class='mono'>aspf=s</span> for strict SPF alignment where possible.`);
       notes.innerHTML = tips.length ? "• " + tips.join("<br>• ") : "";
     }
 
     // ---------- DKIM ----------
-    function parseDKIM(records){
-      const r = records.find(s=>/^v=DKIM1;?/i.test(s));
-      if(!r) return {found:false};
-      const tags=parseTagList(r);
-      let bits=null;
-      if(tags.p){
-        const b64=tags.p.replace(/\s+/g,"");
-        const approxBytes=Math.floor((b64.length*3)/4);
-        bits=approxBytes*8;
+    function parseDKIM(records) {
+      const r = records.find(s => /^v=DKIM1;?/i.test(s));
+      if (!r) return { found: false };
+      const tags = parseTagList(r);
+      let bits = null;
+      if (tags.p) {
+        const b64 = tags.p.replace(/\s+/g, "");
+        const approxBytes = Math.floor((b64.length * 3) / 4);
+        bits = approxBytes * 8;
       }
-      return {found:true, raw:r, tags, bits};
+      return { found: true, raw: r, tags, bits };
     }
 
-    function renderDKIM(selector, dk, fqdn){
-      const rows=$("dkimRows");
-      const wrap=document.createElement("div");
-      wrap.className="muteborder";
+    function renderDKIM(selector, dk, fqdn) {
+      const rows = $("dkimRows");
+      const wrap = document.createElement("div");
+      wrap.className = "muteborder";
 
-      const t=dk.tags;
+      const t = dk.tags;
       const keyBits = dk.bits ? `${dk.bits} bits (approx)` : "<span class='muted'>n/a</span>";
-      const badge=`<span class="badge ok"><i class="fa-solid fa-circle-check"></i> Found</span>`;
+      const badge = `<span class="badge ok"><i class="fa-solid fa-circle-check"></i> Found</span>`;
       const body = `
         <div><strong>Selector:</strong> <span class="mono">${escapeHtml(selector)}</span></div>
         <div><strong>Domain:</strong> <span class="mono break">${escapeHtml(fqdn)}</span></div>
@@ -488,52 +679,52 @@
     }
 
     // ---------- Main ----------
-    async function checkRecords(){
-      const btn=$("checkBtn");
-      const card=$("inputCard");
-      const domain=$("domain").value.trim().toLowerCase();
-      const selector=$("selector").value.trim();
+    async function checkRecords() {
+      const btn = $("checkBtn");
+      const card = $("inputCard");
+      const domain = $("domain").value.trim().toLowerCase();
+      const selector = $("selector").value.trim();
 
       // reset
-      $("spfContent").innerHTML="";
-      $("dmarcTable").innerHTML="";
-      $("dkimRows").innerHTML="";
-      $("dmarcNotes").textContent="";
-      $("dkimNotes").textContent="";
-      setStatus($("spfStatus"),"muted","Working…","fa-solid fa-spinner fa-spin");
-      setStatus($("dmarcStatus"),"muted","Working…","fa-solid fa-spinner fa-spin");
+      $("spfContent").innerHTML = "";
+      $("dmarcTable").innerHTML = "";
+      $("dkimRows").innerHTML = "";
+      $("dmarcNotes").textContent = "";
+      $("dkimNotes").textContent = "";
+      setStatus($("spfStatus"), "muted", "Working…", "fa-solid fa-spinner fa-spin");
+      setStatus($("dmarcStatus"), "muted", "Working…", "fa-solid fa-spinner fa-spin");
 
-      btn.disabled=true; card.classList.add("calculating");
+      btn.disabled = true; card.classList.add("calculating");
 
-      if(!domain || !/^[a-z0-9.-]+\.[a-z]{2,}$/i.test(domain)){
-        setStatus($("spfStatus"),"err","Invalid domain","fa-solid fa-circle-xmark");
-        setStatus($("dmarcStatus"),"err","Invalid domain","fa-solid fa-circle-xmark");
-        btn.disabled=false; card.classList.remove("calculating"); return;
+      if (!domain || !/^[a-z0-9.-]+\.[a-z]{2,}$/i.test(domain)) {
+        setStatus($("spfStatus"), "err", "Invalid domain", "fa-solid fa-circle-xmark");
+        setStatus($("dmarcStatus"), "err", "Invalid domain", "fa-solid fa-circle-xmark");
+        btn.disabled = false; card.classList.remove("calculating"); return;
       }
 
-      try{
+      try {
         const spfTxt = await resolveTXT(domain);
         const spfParsed = parseSPF(spfTxt);
-        let lookup=null; try{ lookup = await computeSpfLookups(domain, spfParsed); }catch{}
+        let lookup = null; try { lookup = await computeSpfLookups(domain, spfParsed); } catch { }
         renderSPF(spfParsed, lookup);
-      }catch(e){
-        setStatus($("spfStatus"),"err","Lookup error","fa-solid fa-circle-xmark");
+      } catch (e) {
+        setStatus($("spfStatus"), "err", "Lookup error", "fa-solid fa-circle-xmark");
         $("spfContent").innerHTML = `<div class="helper">${escapeHtml(e.message || String(e))}</div>`;
       }
 
-      try{
+      try {
         const dmarcTxt = await resolveTXT(`_dmarc.${domain}`);
         renderDMARC(parseDMARC(dmarcTxt));
-      }catch(e){
-        setStatus($("dmarcStatus"),"err","Lookup error","fa-solid fa-circle-xmark");
+      } catch (e) {
+        setStatus($("dmarcStatus"), "err", "Lookup error", "fa-solid fa-circle-xmark");
         $("dmarcNotes").innerHTML = `<div class="helper">${escapeHtml(e.message || String(e))}</div>`;
       }
 
       // DKIM: only show found + dimming logic for select
       const selEl = $("commonSelectors");
       const selectors = new Set();
-      if(selector) selectors.add(selector);
-      Array.from(selEl.selectedOptions).map(o=>o.value.trim()).filter(Boolean).forEach(s=>selectors.add(s));
+      if (selector) selectors.add(selector);
+      Array.from(selEl.selectedOptions).map(o => o.value.trim()).filter(Boolean).forEach(s => selectors.add(s));
 
       // update dimming + count
       const selCount = $("selCount");
@@ -544,36 +735,36 @@
       const tried = [];
       const found = [];
 
-      if(selectors.size===0){
+      if (selectors.size === 0) {
         $("dkimNotes").innerHTML = `No DKIM selectors specified. Add one (e.g. <span class="mono">default</span>) or enable common selectors.`;
       }
 
-      for(const sel of selectors){
+      for (const sel of selectors) {
         tried.push(sel);
         const fqdn = `${sel}._domainkey.${domain}`;
-        try{
+        try {
           const dkimTxt = await resolveTXT(fqdn);
           const parsed = parseDKIM(dkimTxt);
-          if(parsed.found){
+          if (parsed.found) {
             renderDKIM(sel, parsed, fqdn);
             found.push(sel);
           }
-        }catch{ /* skip */ }
+        } catch { /* skip */ }
       }
 
-      if(found.length===0){
+      if (found.length === 0) {
         $("dkimNotes").innerHTML = `No DKIM records found for selectors: <span class="mono break">${escapeHtml(tried.join(", "))}</span>`;
-      }else{
+      } else {
         $("dkimNotes").innerHTML = `Found selectors: <span class="mono">${escapeHtml(found.join(", "))}</span>`;
       }
 
-      btn.disabled=false; card.classList.remove("calculating");
+      btn.disabled = false; card.classList.remove("calculating");
     }
 
     // wiring
     $("checkBtn").addEventListener("click", checkRecords);
-    $("domain").addEventListener("keydown", e => { if(e.key==="Enter") checkRecords(); });
-    $("selector").addEventListener("keydown", e => { if(e.key==="Enter") checkRecords(); });
+    $("domain").addEventListener("keydown", e => { if (e.key === "Enter") checkRecords(); });
+    $("selector").addEventListener("keydown", e => { if (e.key === "Enter") checkRecords(); });
     $("commonSelectors").addEventListener("change", () => {
       const el = $("commonSelectors");
       const selCount = $("selCount");
@@ -583,4 +774,5 @@
     });
   </script>
 </body>
+
 </html>
