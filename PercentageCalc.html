@@ -1,388 +1,385 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Percentage Calculator</title>
-    <link
-      rel="icon"
-      href="https://cdn4.iconfinder.com/data/icons/web-watercolour/512/sale.png"
-    />
 
-    <!-- Style from user -->
+    <link rel="icon" href="https://cdn4.iconfinder.com/data/icons/web-watercolour/512/sale.png" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-      :root {
-        --primary-color: #00d4aa;
-        --secondary-color: #0066ff;
-        --bg-dark: #0a0a0a;
-        --bg-card: #1a1a1a;
-        --bg-card-hover: #222222;
-        --text-primary: #ffffff;
-        --text-secondary: #a8a8a8;
-        --accent-gradient: linear-gradient(135deg, #00d4aa 0%, #0066ff 100%);
-        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-        --shadow-md: 0 8px 24px rgba(0, 212, 170, 0.15);
-      }
-
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      body {
-        font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
-        line-height: 1.6;
-        background: var(--bg-dark);
-        color: var(--text-primary);
-        overflow-x: hidden;
-        padding: 2rem 1.5rem;
-        min-height: 100vh;
-      }
-
-      .container {
-        max-width: 1000px;
-        margin: 0 auto;
-      }
-
-      h1 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        background: var(--accent-gradient);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin-bottom: 0.5rem;
-        text-align: center;
-        letter-spacing: -0.02em;
-      }
-
-      .tagline {
-        text-align: center;
-        color: var(--text-secondary);
-        margin-bottom: 3.5rem;
-        font-size: 1.05rem;
-        font-weight: 400;
-      }
-
-      .card {
-        background: var(--bg-card);
-        padding: 2rem;
-        border-radius: 16px;
-        margin-bottom: 2rem;
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-          box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s ease;
-        position: relative;
-        overflow: hidden;
-        contain: layout style paint;
-        will-change: transform;
-      }
-
-      .card::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: var(--accent-gradient);
-        transform: scaleX(0);
-        transform-origin: left;
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-
-      .card:hover {
-        transform: translateY(-4px);
-        background: var(--bg-card-hover);
-        box-shadow: var(--shadow-md);
-      }
-
-      .card:hover::before {
-        transform: scaleX(1);
-      }
-
-      .card h3 {
-        font-size: 1.25rem;
-        margin-bottom: 1.25rem;
-        font-weight: 600;
-      }
-
-      .row {
-        display: grid;
-        grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
-        gap: 0.75rem;
-        align-items: center;
-      }
-      .row.short {
-        grid-template-columns: 1fr auto 1fr auto 1fr;
-      }
-      .row.slim {
-        grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
-      }
-      .row + .row {
-        margin-top: 0.75rem;
-      }
-
-      .btn {
-        background: var(--accent-gradient);
-        color: #fff;
-        border: 0;
-        padding: 0.75rem 1rem;
-        border-radius: 10px;
-        cursor: pointer;
-        font-weight: 600;
-      }
-      .btn:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-      }
-
-      input,
-      select {
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: var(--text-primary);
-        padding: 0.75rem 0.9rem;
-        border-radius: 10px;
-        font-size: 0.95rem;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        font-family: inherit;
-        width: 100%;
-      }
-
-      select option {
-        background-color: var(--bg-card);
-        color: var(--text-primary);
-      }
-
-      input[readonly] {
-        background: rgba(255, 255, 255, 0.02);
-        cursor: default;
-      }
-      .unit {
-        color: var(--text-secondary);
-      }
-
-      @media (max-width: 900px) {
-        .row,
-        .row.short,
-        .row.slim {
-          grid-template-columns: 1fr;
+        :root {
+            --primary-color: #00d4aa;
+            --bg-dark: #0a0a0a;
+            --bg-card: #1a1a1a;
+            --bg-card-hover: #222222;
+            --text-primary: #ffffff;
+            --text-secondary: #a8a8a8;
+            --accent-gradient: linear-gradient(135deg, #00d4aa 0%, #0066ff 100%);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 8px 24px rgba(0, 212, 170, 0.15);
         }
-      }
 
-      .note {
-        color: var(--text-secondary);
-        font-size: 0.9rem;
-        margin-top: 0.5rem;
-      }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            padding: 2rem 1.5rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            text-align: center;
+            letter-spacing: -0.02em;
+        }
+
+        .tagline {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 3.5rem;
+            font-size: 1.05rem;
+            font-weight: 400;
+        }
+
+        .card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            contain: layout style paint;
+            will-change: transform;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent-gradient);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            background: var(--bg-card-hover);
+            box-shadow: var(--shadow-md);
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1.25rem;
+            font-weight: 600;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .row.short {
+            grid-template-columns: 1fr auto 1fr auto 1fr;
+        }
+
+        .row.slim {
+            grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+        }
+
+        .row+.row {
+            margin-top: 0.75rem;
+        }
+
+        .btn {
+            background: var(--accent-gradient);
+            color: #fff;
+            border: 0;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        input,
+        select {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            padding: 0.75rem 0.9rem;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: inherit;
+            width: 100%;
+        }
+
+        select option {
+            background-color: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        input[readonly] {
+            background: rgba(255, 255, 255, 0.02);
+            cursor: default;
+        }
+
+        .unit {
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 900px) {
+
+            .row,
+            .row.short,
+            .row.slim {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .note {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
     </style>
-  </head>
-  <body>
+</head>
+
+<body>
     <div class="container">
-      <h1>Percentage Calculator</h1>
-      <p class="tagline">
-        Clean, fast, and accurate. Type values and hit <em>Calculate</em> — or
-        it updates as you type.
-      </p>
+        <h1>Percentage Calculator</h1>
+        <p class="tagline">
+            Clean, fast, and accurate. Type values and hit <em>Calculate</em> — or
+            it updates as you type.
+        </p>
 
-      <!-- 1) Percentage of a number -->
-      <section class="card" id="pct-of">
-        <h3>Percentage of a number</h3>
-        <div class="row short">
-          <input
-            inputmode="decimal"
-            placeholder="x"
-            id="pct1_x"
-            aria-label="x percent"
-          />
-          <span class="unit">% of</span>
-          <input
-            inputmode="decimal"
-            placeholder="y"
-            id="pct1_y"
-            aria-label="of y"
-          />
-          <button class="btn" id="pct1_btn">Calculate</button>
-          <input readonly id="pct1_out" aria-label="result" />
-        </div>
-        <p class="note">Computes: <code>x% × y</code></p>
-      </section>
+        <!-- 1) Percentage of a number -->
+        <section class="card" id="pct-of">
+            <h3>Percentage of a number</h3>
+            <div class="row short">
+                <input inputmode="decimal" placeholder="x" id="pct1_x" aria-label="x percent" />
+                <span class="unit">% of</span>
+                <input inputmode="decimal" placeholder="y" id="pct1_y" aria-label="of y" />
+                <button class="btn" id="pct1_btn">Calculate</button>
+                <input readonly id="pct1_out" aria-label="result" />
+            </div>
+            <p class="note">Computes: <code>x% × y</code></p>
+        </section>
 
-      <!-- 2) x is what percent of y -->
-      <section class="card" id="what-percent">
-        <h3>x is what percent of y?</h3>
-        <div class="row short">
-          <input inputmode="decimal" placeholder="x" id="pct2_x" />
-          <span class="unit">is what percent of</span>
-          <input inputmode="decimal" placeholder="y" id="pct2_y" />
-          <button class="btn" id="pct2_btn">Calculate</button>
-          <div style="display: flex; align-items: center; gap: 0.5rem">
-            <input readonly id="pct2_out" aria-label="percent" />
-            <span class="unit">%</span>
-          </div>
-        </div>
-        <p class="note">Computes: <code>(x ÷ y) × 100</code></p>
-      </section>
+        <!-- 2) x is what percent of y -->
+        <section class="card" id="what-percent">
+            <h3>x is what percent of y?</h3>
+            <div class="row short">
+                <input inputmode="decimal" placeholder="x" id="pct2_x" />
+                <span class="unit">is what percent of</span>
+                <input inputmode="decimal" placeholder="y" id="pct2_y" />
+                <button class="btn" id="pct2_btn">Calculate</button>
+                <div style="display: flex; align-items: center; gap: 0.5rem">
+                    <input readonly id="pct2_out" aria-label="percent" />
+                    <span class="unit">%</span>
+                </div>
+            </div>
+            <p class="note">Computes: <code>(x ÷ y) × 100</code></p>
+        </section>
 
-      <!-- 3) x is y% of what? -->
-      <section class="card">
-        <h3>x is y% of what?</h3>
-        <div class="row">
-          <input id="pct3_x" placeholder="x" inputmode="decimal" />
-          <span class="unit">is</span>
-          <input id="pct3_y" placeholder="y" inputmode="decimal" />
-          <span class="unit">% of what?</span>
-          <button class="btn" id="pct3_btn">Calculate</button>
-          <input id="pct3_out" readonly />
-        </div>
-        <p class="note">Computes: x ÷ (y / 100)</p>
-      </section>
+        <!-- 3) x is y% of what? -->
+        <section class="card">
+            <h3>x is y% of what?</h3>
+            <div class="row">
+                <input id="pct3_x" placeholder="x" inputmode="decimal" />
+                <span class="unit">is</span>
+                <input id="pct3_y" placeholder="y" inputmode="decimal" />
+                <span class="unit">% of what?</span>
+                <button class="btn" id="pct3_btn">Calculate</button>
+                <input id="pct3_out" readonly />
+            </div>
+            <p class="note">Computes: <code>x ÷ (y / 100)</code></p>
+        </section>
 
-      <!-- 4) Percentage increase/decrease -->
-      <section class="card">
-        <h3>What is the percentage increase/decrease?</h3>
-        <div class="row">
-          <span class="unit">from</span>
-          <input id="pct4_x" placeholder="x" inputmode="decimal" />
-          <span class="unit">to</span>
-          <input id="pct4_y" placeholder="y" inputmode="decimal" />
-          <button class="btn" id="pct4_btn">Calculate</button>
-          <input id="pct4_out" readonly />
-          <span class="unit">%</span>
-        </div>
-        <p class="note">Computes: ((y − x) ÷ x) × 100</p>
-      </section>
+        <!-- 4) Percentage increase/decrease -->
+        <section class="card">
+            <h3>What is the percentage increase/decrease?</h3>
+            <div class="row">
+                <span class="unit">from</span>
+                <input id="pct4_x" placeholder="x" inputmode="decimal" />
+                <span class="unit">to</span>
+                <input id="pct4_y" placeholder="y" inputmode="decimal" />
+                <button class="btn" id="pct4_btn">Calculate</button>
+                <input id="pct4_out" readonly />
+                <span class="unit">%</span>
+            </div>
+            <p class="note">Computes: <code>((y − x) ÷ x) × 100</code></p>
+        </section>
 
-      <!-- 5) Add/Subtract percent -->
-      <section class="card" id="addsub">
-        <h3>Add / subtract percent</h3>
-        <div class="row slim">
-          <input inputmode="decimal" placeholder="x" id="pct5_x" />
-          <select id="pct5_op" aria-label="add or subtract">
-            <option value="add">add</option>
-            <option value="sub">subtract</option>
-          </select>
-          <input inputmode="decimal" placeholder="y" id="pct5_y" />
-          <span class="unit">%</span>
-          <button class="btn" id="pct5_btn">Calculate</button>
-          <input readonly id="pct5_out" aria-label="result" />
-        </div>
-        <p class="note">Computes: <code>x × (1 ± y/100)</code></p>
-      </section>
+        <!-- 5) Add/Subtract percent -->
+        <section class="card" id="addsub">
+            <h3>Add / subtract percent</h3>
+            <div class="row slim">
+                <input inputmode="decimal" placeholder="x" id="pct5_x" />
+                <select id="pct5_op" aria-label="add or subtract">
+                    <option value="add">add</option>
+                    <option value="sub">subtract</option>
+                </select>
+                <input inputmode="decimal" placeholder="y" id="pct5_y" />
+                <span class="unit">%</span>
+                <button class="btn" id="pct5_btn">Calculate</button>
+                <input readonly id="pct5_out" aria-label="result" />
+            </div>
+            <p class="note">Computes: <code>x × (1 ± y/100)</code></p>
+        </section>
     </div>
 
     <script>
-      // Helpers
-      const num = (v) => {
-        if (v === null || v === undefined) return NaN;
-        const n = parseFloat(String(v).replace(/,/g, ""));
-        return Number.isFinite(n) ? n : NaN;
-      };
+        // Helpers
+        const num = (v) => {
+            if (v === null || v === undefined) return NaN;
+            const n = parseFloat(String(v).replace(/,/g, ""));
+            return Number.isFinite(n) ? n : NaN;
+        };
 
-      const fmt = (value) => {
-        if (!Number.isFinite(value)) return "";
-        // Show up to 6 decimals, trim trailing zeros
-        const str = value
-          .toFixed(6)
-          .replace(/\.0+$/, "")
-          .replace(/(\.\d*?[1-9])0+$/, "$1");
-        // Add thousands separators
-        const parts = str.split(".");
-        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        return parts.join(".");
-      };
+        const fmt = (value) => {
+            if (!Number.isFinite(value)) return "";
+            // Show up to 6 decimals, trim trailing zeros
+            const str = value
+                .toFixed(6)
+                .replace(/\.0+$/, "")
+                .replace(/(\.\d*?[1-9])0+$/, "$1");
+            // Add thousands separators
+            const parts = str.split(".");
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            return parts.join(".");
+        };
 
-      const set = (id, value) => {
-        document.getElementById(id).value = fmt(value);
-      };
+        const set = (id, value) => {
+            document.getElementById(id).value = fmt(value);
+        };
 
-      // 1) x% of y
-      const pct1 = () => {
-        const x = num(document.getElementById("pct1_x").value);
-        const y = num(document.getElementById("pct1_y").value);
-        set("pct1_out", (x / 100) * y);
-      };
+        // 1) x% of y
+        const pct1 = () => {
+            const x = num(document.getElementById("pct1_x").value);
+            const y = num(document.getElementById("pct1_y").value);
+            set("pct1_out", (x / 100) * y);
+        };
 
-      // 2) x is what percent of y
-      const pct2 = () => {
-        const x = num(document.getElementById("pct2_x").value);
-        const y = num(document.getElementById("pct2_y").value);
-        const out = y === 0 ? NaN : (x / y) * 100;
-        set("pct2_out", out);
-      };
+        // 2) x is what percent of y
+        const pct2 = () => {
+            const x = num(document.getElementById("pct2_x").value);
+            const y = num(document.getElementById("pct2_y").value);
+            const out = y === 0 ? NaN : (x / y) * 100;
+            set("pct2_out", out);
+        };
 
-      // 3) x is y% of what
-      const pct3 = () => {
-        const x = num(document.getElementById("pct3_x").value);
-        const y = num(document.getElementById("pct3_y").value);
-        const out = y === 0 ? NaN : x / (y / 100);
-        set("pct3_out", out);
-      };
+        // 3) x is y% of what
+        const pct3 = () => {
+            const x = num(document.getElementById("pct3_x").value);
+            const y = num(document.getElementById("pct3_y").value);
+            const out = y === 0 ? NaN : x / (y / 100);
+            set("pct3_out", out);
+        };
 
-      // 4) percentage change from x to y
-      const pct4 = () => {
-        const x = num(document.getElementById("pct4_x").value);
-        const y = num(document.getElementById("pct4_y").value);
-        const out = x === 0 ? NaN : ((y - x) / x) * 100;
-        set("pct4_out", out);
-      };
+        // 4) percentage change from x to y
+        const pct4 = () => {
+            const x = num(document.getElementById("pct4_x").value);
+            const y = num(document.getElementById("pct4_y").value);
+            const out = x === 0 ? NaN : ((y - x) / x) * 100;
+            set("pct4_out", out);
+        };
 
-      // 5) add/subtract percent
-      const pct5 = () => {
-        const x = num(document.getElementById("pct5_x").value);
-        const y = num(document.getElementById("pct5_y").value);
-        const op = document.getElementById("pct5_op").value;
-        const factor = 1 + (op === "add" ? 1 : -1) * (y / 100);
-        set("pct5_out", x * factor);
-      };
+        // 5) add/subtract percent
+        const pct5 = () => {
+            const x = num(document.getElementById("pct5_x").value);
+            const y = num(document.getElementById("pct5_y").value);
+            const op = document.getElementById("pct5_op").value;
+            const factor = 1 + (op === "add" ? 1 : -1) * (y / 100);
+            set("pct5_out", x * factor);
+        };
 
-      // Auto-calc everything at once
-      const recalcAll = () => {
-        pct1();
-        pct2();
-        pct3();
-        pct4();
-        pct5();
-      };
+        // Auto-calc everything at once
+        const recalcAll = () => {
+            pct1();
+            pct2();
+            pct3();
+            pct4();
+            pct5();
+        };
 
-      // Wire up buttons
-      document.getElementById("pct1_btn").addEventListener("click", pct1);
-      document.getElementById("pct2_btn").addEventListener("click", pct2);
-      document.getElementById("pct3_btn").addEventListener("click", pct3);
-      document.getElementById("pct4_btn").addEventListener("click", pct4);
-      document.getElementById("pct5_btn").addEventListener("click", pct5);
+        // Wire up buttons
+        document.getElementById("pct1_btn").addEventListener("click", pct1);
+        document.getElementById("pct2_btn").addEventListener("click", pct2);
+        document.getElementById("pct3_btn").addEventListener("click", pct3);
+        document.getElementById("pct4_btn").addEventListener("click", pct4);
+        document.getElementById("pct5_btn").addEventListener("click", pct5);
 
-      // Live update as user types
-      [
-        ["pct1_x", "input", pct1],
-        ["pct1_y", "input", pct1],
-        ["pct2_x", "input", pct2],
-        ["pct2_y", "input", pct2],
-        ["pct3_x", "input", pct3],
-        ["pct3_y", "input", pct3],
-        ["pct4_x", "input", pct4],
-        ["pct4_y", "input", pct4],
-        ["pct5_x", "input", pct5],
-        ["pct5_y", "input", pct5],
-        ["pct5_op", "change", pct5],
-      ].forEach(([id, ev, fn]) =>
-        document.getElementById(id).addEventListener(ev, fn)
-      );
+        // Live update as user types
+        [
+            ["pct1_x", "input", pct1],
+            ["pct1_y", "input", pct1],
+            ["pct2_x", "input", pct2],
+            ["pct2_y", "input", pct2],
+            ["pct3_x", "input", pct3],
+            ["pct3_y", "input", pct3],
+            ["pct4_x", "input", pct4],
+            ["pct4_y", "input", pct4],
+            ["pct5_x", "input", pct5],
+            ["pct5_y", "input", pct5],
+            ["pct5_op", "change", pct5],
+        ].forEach(([id, ev, fn]) =>
+            document.getElementById(id).addEventListener(ev, fn)
+        );
 
-      // Allow Enter key to trigger the closest Calculate
-      document.addEventListener("keydown", (e) => {
-        if (e.key !== "Enter") return;
-        const btn = e.target?.closest(".card")?.querySelector(".btn");
-        if (btn) {
-          e.preventDefault();
-          btn.click();
-        }
-      });
+        // Allow Enter key to trigger the closest Calculate
+        document.addEventListener("keydown", (e) => {
+            if (e.key !== "Enter") return;
+            const btn = e.target?.closest(".card")?.querySelector(".btn");
+            if (btn) {
+                e.preventDefault();
+                btn.click();
+            }
+        });
 
-      // Run once on page load so results are filled without clicking
-      window.addEventListener("DOMContentLoaded", recalcAll);
+        // Run once on page load so results are filled without clicking
+        window.addEventListener("DOMContentLoaded", recalcAll);
     </script>
-  </body>
+</body>
+
 </html>
