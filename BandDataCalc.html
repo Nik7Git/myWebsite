@@ -1,711 +1,549 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Bandwidth & Data Unit Calculator</title>
-    <link
-      rel="icon"
-      href="https://cdn2.iconfinder.com/data/icons/5g-technology-flat/60/Fast-Bandwidth-speed-performance-timer-256.png"
-    />
 
-    <!-- === Your style block (unchanged) === -->
+    <link rel="icon" href="https://cdn2.iconfinder.com/data/icons/5g-technology-flat/60/Fast-Bandwidth-speed-performance-timer-256.png" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-      :root {
-        --primary-color: #00d4aa;
-        --secondary-color: #0066ff;
-        --bg-dark: #0a0a0a;
-        --bg-card: #1a1a1a;
-        --bg-card-hover: #222222;
-        --text-primary: #ffffff;
-        --text-secondary: #a8a8a8;
-        --accent-gradient: linear-gradient(135deg, #00d4aa 0%, #0066ff 100%);
-        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-        --shadow-md: 0 8px 24px rgba(0, 212, 170, 0.15);
-      }
+        :root {
+            --primary-color: #00d4aa;
+            --secondary-color: #0066ff;
+            --bg-dark: #0a0a0a;
+            --bg-card: #1a1a1a;
+            --bg-card-hover: #222222;
+            --text-primary: #ffffff;
+            --text-secondary: #a8a8a8;
+            --accent-gradient: linear-gradient(135deg, #00d4aa 0%, #0066ff 100%);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 8px 24px rgba(0, 212, 170, .15);
+            
+        }
 
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
 
-      body {
-        font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
-        line-height: 1.6;
-        background: var(--bg-dark);
-        color: var(--text-primary);
-        overflow-x: hidden;
-        padding: 2rem 1.5rem;
-        min-height: 100vh;
-      }
+        body {
+            font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            padding: 2rem 1.5rem;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
 
-      .container {
-        max-width: 1400px;
-        margin: 0 auto;
-      }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto
+        }
 
-      h1 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        background: var(--accent-gradient);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin-bottom: 0.5rem;
-        text-align: center;
-        letter-spacing: -0.02em;
-      }
-      .tagline {
-        text-align: center;
-        color: var(--text-secondary);
-        margin-bottom: 3.5rem;
-        font-size: 1.05rem;
-        font-weight: 400;
-      }
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
 
-      .card {
-        background: var(--bg-card);
-        padding: 2.5rem;
-        border-radius: 16px;
-        margin-bottom: 2rem;
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-          box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s ease;
-        position: relative;
-        overflow: hidden;
-        contain: layout style paint;
-        will-change: transform;
-      }
-      .card::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: var(--accent-gradient);
-        transform: scaleX(0);
-        transform-origin: left;
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-      .card:hover {
-        transform: translateY(-4px);
-        background: var(--bg-card-hover);
-        box-shadow: var(--shadow-md);
-      }
-      .card:hover::before {
-        transform: scaleX(1);
-      }
-      .card h3 {
-        font-size: 1.35rem;
-        color: var(--text-primary);
-        margin-bottom: 1.75rem;
-        font-weight: 600;
-        letter-spacing: -0.01em;
-      }
+        .tagline {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 3.5rem;
+            font-size: 1.05rem;
+            font-weight: 400
+        }
 
-      .input-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 1.25rem;
-        margin-bottom: 2rem;
-      }
-      .input-group {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-      label {
-        color: var(--primary-color);
-        font-weight: 500;
-        font-size: 0.875rem;
-        letter-spacing: 0.01em;
-      }
+        .card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, .06);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            contain: layout style paint;
+            will-change: transform;
+        }
 
-      input,
-      select {
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: var(--text-primary);
-        padding: 0.875rem 1rem;
-        border-radius: 10px;
-        font-size: 0.95rem;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        font-family: inherit;
-      }
-      input:focus,
-      select:focus {
-        outline: none;
-        border-color: var(--primary-color);
-        background: rgba(255, 255, 255, 0.06);
-        box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.12);
-      }
-      input[readonly] {
-        background: rgba(255, 255, 255, 0.02);
-        cursor: not-allowed;
-        color: var(--text-primary);
-      }
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent-gradient);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-      select {
-        cursor: pointer;
-        appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2300d4aa' d='M10.293 3.293L6 7.586 1.707 3.293A1 1 0 00.293 4.707l5 5a1 1 0 001.414 0l5-5a1 1 0 10-1.414-1.414z'/%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 1rem center;
-        padding-right: 2.75rem;
-      }
-      select option {
-        background: var(--bg-card);
-        color: var(--text-primary);
-      }
+        .card:hover::before {
+            transform: scaleX(1)
+        }
 
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 0.5rem;
-      }
-      th,
-      td {
-        padding: 1rem 0.5rem;
-        text-align: left;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      }
-      th {
-        background: rgba(0, 212, 170, 0.08);
-        color: var(--primary-color);
-        font-weight: 600;
-        font-size: 0.875rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-      }
-      tr {
-        transition: background 0.15s ease;
-      }
-      tbody tr:hover {
-        background: rgba(255, 255, 255, 0.03);
-      }
+        .card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.75rem;
+            color: var(--text-primary);
+            font-weight: 600;
+            letter-spacing: -0.01em
+        }
 
-      .bits {
-        letter-spacing: 0.3rem;
-        font-family: "Courier New", monospace;
-        font-size: 1rem;
-        white-space: nowrap;
-        line-height: 1.8;
-      }
-      .bit {
-        display: inline-block;
-        width: 1.1ch;
-        text-align: center;
-      }
-      .bit.net {
-        color: #00d4aa;
-        font-weight: 600;
-      }
-      .bit.host {
-        color: #ff6b6b;
-        font-weight: 600;
-      }
-      .bit.dim {
-        color: rgba(255, 255, 255, 0.15);
-      }
-      .octet-space {
-        display: inline-block;
-        width: 0.6rem;
-      }
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2rem
+        }
 
-      .card-container {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr); /* ⬅ three cards side-by-side */
-        gap: 2rem;
-        margin-bottom: 2rem;
-      }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: .5rem
+        }
 
-      @media (max-width: 1280px) {
+        label {
+            color: var(--primary-color);
+            font-weight: 500;
+            font-size: .875rem;
+            letter-spacing: 0.01em
+        }
+
+        input,
+        select {
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .1);
+            color: var(--text-primary);
+            padding: .875rem 1rem;
+            border-radius: 10px;
+            font-size: .95rem;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: inherit;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 0 0 3px rgba(0, 212, 170, .12);
+        }
+
+        input[readonly] {
+            background: rgba(255, 255, 255, .02);
+            cursor: not-allowed;
+            color: var(--text-primary);
+        }
+
+        select {
+            appearance: none;
+            cursor: pointer;
+            padding-right: 2.75rem;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2300d4aa' d='M10.293 3.293L6 7.586 1.707 3.293A1 1 0 00.293 4.707l5 5a1 1 0 001.414 0l5-5a1 1 0 10-1.414-1.414z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+        }
+
+        select option,
+    select optgroup {
+      background-color: #0e0e0e;
+      color: var(--text-primary);
+    }
+
+        .result {
+            padding: 1rem;
+            background: rgba(255, 255, 255, .03);
+            border: 1px solid rgba(255, 255, 255, .06);
+            border-radius: 12px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: .8rem 1.1rem;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            letter-spacing: .02em;
+            color: #0b0b0b;
+            background: var(--accent-gradient);
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md)
+        }
+
+        .muted {
+            color: var(--text-secondary);
+            font-size: .95rem
+        }
+
         .card-container {
-          grid-template-columns: 1fr 1fr;
-        } /* two columns */
-      }
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem
+        }
 
-      @media (max-width: 1024px) {
-        .card-container {
-          grid-template-columns: 1fr;
-        } /* one column */
-      }
+        @media(max-width:1280px) {
+            .card-container {
+                grid-template-columns: 1fr 1fr
+            }
+        }
 
-      .calculating {
-        opacity: 0.6;
-        pointer-events: none;
-      }
+        @media(max-width:1024px) {
+            .card-container {
+                grid-template-columns: 1fr
+            }
+        }
 
-      /* Small button style to match your theme */
-      .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0.8rem 1.1rem;
-        border-radius: 12px;
-        border: none;
-        cursor: pointer;
-        font-weight: 600;
-        letter-spacing: 0.02em;
-        color: #0b0b0b;
-        background: var(--accent-gradient);
-        box-shadow: var(--shadow-sm);
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
-      }
-      .btn:hover {
-        transform: translateY(-1px);
-        box-shadow: var(--shadow-md);
-      }
-      .muted {
-        color: var(--text-secondary);
-        font-size: 0.95rem;
-      }
-      .result {
-        padding: 1rem;
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        border-radius: 12px;
-      }
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0
+        }
 
-      /* Hide number spinners only on the four fields you named */
-      #dataValue,
-      #fileSize,
-      #pairValue,
-      #bandwidth {
-        -moz-appearance: textfield; /* Firefox */
-        appearance: textfield; /* future-friendly */
-      }
-
-      /* Chrome/Edge/Safari (WebKit) */
-      #dataValue::-webkit-outer-spin-button,
-      #dataValue::-webkit-inner-spin-button,
-      #fileSize::-webkit-outer-spin-button,
-      #fileSize::-webkit-inner-spin-button,
-      #pairValue::-webkit-outer-spin-button,
-      #pairValue::-webkit-inner-spin-button,
-      #bandwidth::-webkit-outer-spin-button,
-      #bandwidth::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-      }
-      /* === Vertical-compact tweaks (no width changes) === */
-      body {
-        line-height: 1.5;
-      } /* text a touch closer */
-      h1 {
-        margin-bottom: 0.4rem;
-        line-height: 1.2;
-      }
-      .tagline {
-        margin-bottom: 2.6rem;
-      }
-
-      /* Reduce vertical padding, keep horizontal comfortable */
-      .card {
-        padding: 1.6rem 2.2rem;
-        margin-bottom: 1.5rem;
-      }
-      .card h3 {
-        margin-bottom: 1.1rem;
-      }
-
-      /* Inputs: shrink vertical rhythm only */
-      .input-grid {
-        gap: 0.9rem; /* rows closer */
-        margin-bottom: 1.1rem; /* less space below fields */
-      }
-      .input-group {
-        gap: 0.35rem;
-      } /* label closer to input */
-      label {
-        margin-bottom: 0;
-      } /* rely on gap above */
-
-      input,
-      select {
-        padding: 0.65rem 1rem; /* less tall, same width feel */
-      }
-      select {
-        padding-right: 2.5rem;
-      }
-
-      .result {
-        padding: 0.8rem 1rem;
-      }
-
-      /* Tables (if shown) */
-      th,
-      td {
-        padding: 0.65rem 0.5rem;
-      }
-
-      /* Buttons: slightly shorter */
-      .btn {
-        padding: 0.7rem 1rem;
-      }
-
-      /* Keep 3 cards across as-is: no width/grid changes */
+        input[type=number] {
+            appearance: textfield
+        }
     </style>
-  </head>
-  <body>
+</head>
+
+<body>
     <div class="container">
-      <h1>Bandwidth & Data Unit Calculator</h1>
-      <p class="tagline">
-        Fast SI-based conversions (decimal units) and time-to-transfer
-        estimates.
-      </p>
+        <h1>Bandwidth & Data Unit Calculator</h1>
+        <p class="tagline">
+            Fast SI-based conversions (decimal units) and time-to-transfer
+            estimates.
+        </p>
 
-      <div class="card-container">
-        <!-- Data Unit Converter -->
-        <section class="card" id="unit-card">
-          <h3>Data Unit Converter</h3>
+        <div class="card-container">
+            <!-- Data Unit Converter -->
+            <section class="card" id="unit-card">
+                <h3>Data Unit Converter</h3>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="dataValue">Amount</label>
+                        <input id="dataValue" type="number" inputmode="decimal" value="500" min="0" step="any" />
+                    </div>
+                    <div class="input-group">
+                        <label for="dataUnit">Unit</label>
+                        <select id="dataUnit">
+                            <option value="B">Bytes (B)</option>
+                            <option value="KB">Kilobytes (KB)</option>
+                            <option value="MB" selected>Megabytes (MB)</option>
+                            <option value="GB">Gigabytes (GB)</option>
+                            <option value="TB">Terabytes (TB)</option>
+                            <option value="b">bits (b)</option>
+                            <option value="kb">kilobits (kb)</option>
+                            <option value="mb">megabits (mb)</option>
+                            <option value="gb">gigabits (gb)</option>
+                            <option value="tb">terabits (tb)</option>
+                        </select>
+                    </div>
+                    <div class="input-group" style="align-self: end">
+                        <button class="btn" id="convertBtn">Calculate</button>
+                    </div>
+                </div>
+                <div class="result" id="unitResultBox">
+                    <div class="muted" style="margin-bottom: 0.35rem">Result</div>
+                    <div id="unitResultLines" style="white-space: pre-line"></div>
+                </div>
+            </section>
 
-          <div class="input-grid">
-            <div class="input-group">
-              <label for="dataValue">Amount</label>
-              <input
-                id="dataValue"
-                type="number"
-                inputmode="decimal"
-                value="500"
-                min="0"
-                step="any"
-              />
-            </div>
+            <!-- Download / Upload Time Calculator -->
+            <section class="card" id="time-card">
+                <h3>Download/Upload Time Calculator</h3>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="fileSize">File Size</label>
+                        <input id="fileSize" type="number" inputmode="decimal" value="500" min="0" step="any" />
+                    </div>
+                    <div class="input-group">
+                        <label for="fileUnit">File Unit</label>
+                        <select id="fileUnit">
+                            <option value="B">Bytes (B)</option>
+                            <option value="KB">Kilobytes (KB)</option>
+                            <option value="MB" selected>Megabytes (MB)</option>
+                            <option value="GB">Gigabytes (GB)</option>
+                            <option value="TB">Terabytes (TB)</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="bandwidth">Bandwidth</label>
+                        <input id="bandwidth" type="number" inputmode="decimal" value="5" min="0" step="any" />
+                    </div>
+                    <div class="input-group">
+                        <label for="bwUnit">Bandwidth Unit</label>
+                        <select id="bwUnit">
+                            <option value="kbitps">kbit/s</option>
+                            <option value="Mbitps" selected>Mbit/s</option>
+                            <option value="Gbitps">Gbit/s</option>
+                            <option value="Bps">B/s</option>
+                            <option value="KBps">KB/s</option>
+                            <option value="MBps">MB/s</option>
+                            <option value="GBps">GB/s</option>
+                        </select>
+                    </div>
+                    <div class="input-group" style="align-self: end">
+                        <button class="btn" id="timeBtn">Calculate</button>
+                    </div>
+                </div>
+                <div class="result" id="timeResultBox">
+                    <div class="muted" style="margin-bottom: 0.35rem">Result</div>
+                    <div id="timeResultText"></div>
+                </div>
+            </section>
 
-            <div class="input-group">
-              <label for="dataUnit">Unit</label>
-              <select id="dataUnit">
-                <option value="B">Bytes (B)</option>
-                <option value="KB">Kilobytes (KB)</option>
-                <option value="MB" selected>Megabytes (MB)</option>
-                <option value="GB">Gigabytes (GB)</option>
-                <option value="TB">Terabytes (TB)</option>
-                <option value="b">bits (b)</option>
-                <option value="kb">kilobits (kb)</option>
-                <option value="mb">megabits (mb)</option>
-                <option value="gb">gigabits (gb)</option>
-                <option value="tb">terabits (tb)</option>
-              </select>
-            </div>
-
-            <div class="input-group" style="align-self: end">
-              <button class="btn" id="convertBtn">Calculate</button>
-            </div>
-          </div>
-
-          <div class="result" id="unitResultBox">
-            <div class="muted" style="margin-bottom: 0.35rem">Result</div>
-            <div id="unitResultLines" style="white-space: pre-line"></div>
-          </div>
-        </section>
-
-        <!-- Download / Upload Time Calculator -->
-        <section class="card" id="time-card">
-          <h3>Download/Upload Time Calculator</h3>
-
-          <div class="input-grid">
-            <div class="input-group">
-              <label for="fileSize">File Size</label>
-              <input
-                id="fileSize"
-                type="number"
-                inputmode="decimal"
-                value="500"
-                min="0"
-                step="any"
-              />
-            </div>
-
-            <div class="input-group">
-              <label for="fileUnit">File Unit</label>
-              <select id="fileUnit">
-                <option value="B">Bytes (B)</option>
-                <option value="KB">Kilobytes (KB)</option>
-                <option value="MB" selected>Megabytes (MB)</option>
-                <option value="GB">Gigabytes (GB)</option>
-                <option value="TB">Terabytes (TB)</option>
-              </select>
-            </div>
-
-            <div class="input-group">
-              <label for="bandwidth">Bandwidth</label>
-              <input
-                id="bandwidth"
-                type="number"
-                inputmode="decimal"
-                value="5"
-                min="0"
-                step="any"
-              />
-            </div>
-
-            <div class="input-group">
-              <label for="bwUnit">Bandwidth Unit</label>
-              <select id="bwUnit">
-                <option value="kbitps">kbit/s</option>
-                <option value="Mbitps" selected>Mbit/s</option>
-                <option value="Gbitps">Gbit/s</option>
-                <option value="Bps">B/s</option>
-                <option value="KBps">KB/s</option>
-                <option value="MBps">MB/s</option>
-                <option value="GBps">GB/s</option>
-              </select>
-            </div>
-
-            <div class="input-group" style="align-self: end">
-              <button class="btn" id="timeBtn">Calculate</button>
-            </div>
-          </div>
-
-          <div class="result" id="timeResultBox">
-            <div class="muted" style="margin-bottom: 0.35rem">Result</div>
-            <div id="timeResultText"></div>
-          </div>
-        </section>
-
-        <!-- Pairwise Converter (X -> Y) -->
-        <section class="card" id="pair-card">
-          <h3>Convert X → Y</h3>
-
-          <div class="input-grid">
-            <div class="input-group">
-              <label for="pairValue">Amount</label>
-              <input
-                id="pairValue"
-                type="number"
-                inputmode="decimal"
-                value="500"
-                min="0"
-                step="any"
-              />
-            </div>
-
-            <div class="input-group">
-              <label for="pairFrom">From</label>
-              <select id="pairFrom">
-                <option value="B">Bytes (B)</option>
-                <option value="KB">Kilobytes (KB)</option>
-                <option value="MB" selected>Megabytes (MB)</option>
-                <option value="GB">Gigabytes (GB)</option>
-                <option value="TB">Terabytes (TB)</option>
-                <option value="b">bits (b)</option>
-                <option value="kb">kilobits (kb)</option>
-                <option value="mb">megabits (mb)</option>
-                <option value="gb">gigabits (gb)</option>
-                <option value="tb">terabits (tb)</option>
-              </select>
-            </div>
-
-            <div class="input-group">
-              <label for="pairTo">To</label>
-              <select id="pairTo">
-                <option value="B">Bytes (B)</option>
-                <option value="KB">Kilobytes (KB)</option>
-                <option value="MB">Megabytes (MB)</option>
-                <option value="GB">Gigabytes (GB)</option>
-                <option value="TB">Terabytes (TB)</option>
-                <option value="b">bits (b)</option>
-                <option value="kb">kilobits (kb)</option>
-                <option value="mb" selected>megabits (mb)</option>
-                <option value="gb">gigabits (gb)</option>
-                <option value="tb">terabits (tb)</option>
-              </select>
-            </div>
-
-            <div class="input-group" style="align-self: end">
-              <button class="btn" id="pairBtn">Convert</button>
-            </div>
-          </div>
-
-          <div class="result" id="pairResultBox">
-            <div class="muted" style="margin-bottom: 0.35rem">Result</div>
-            <div id="pairResultText"></div>
-          </div>
-        </section>
-      </div>
+            <!-- Pairwise Converter (X -> Y) -->
+            <section class="card" id="pair-card">
+                <h3>Convert X → Y</h3>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="pairValue">Amount</label>
+                        <input id="pairValue" type="number" inputmode="decimal" value="500" min="0" step="any" />
+                    </div>
+                    <div class="input-group">
+                        <label for="pairFrom">From</label>
+                        <select id="pairFrom">
+                            <option value="B">Bytes (B)</option>
+                            <option value="KB">Kilobytes (KB)</option>
+                            <option value="MB" selected>Megabytes (MB)</option>
+                            <option value="GB">Gigabytes (GB)</option>
+                            <option value="TB">Terabytes (TB)</option>
+                            <option value="b">bits (b)</option>
+                            <option value="kb">kilobits (kb)</option>
+                            <option value="mb">megabits (mb)</option>
+                            <option value="gb">gigabits (gb)</option>
+                            <option value="tb">terabits (tb)</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="pairTo">To</label>
+                        <select id="pairTo">
+                            <option value="B">Bytes (B)</option>
+                            <option value="KB">Kilobytes (KB)</option>
+                            <option value="MB">Megabytes (MB)</option>
+                            <option value="GB">Gigabytes (GB)</option>
+                            <option value="TB">Terabytes (TB)</option>
+                            <option value="b">bits (b)</option>
+                            <option value="kb">kilobits (kb)</option>
+                            <option value="mb" selected>megabits (mb)</option>
+                            <option value="gb">gigabits (gb)</option>
+                            <option value="tb">terabits (tb)</option>
+                        </select>
+                    </div>
+                    <div class="input-group" style="align-self: end">
+                        <button class="btn" id="pairBtn">Convert</button>
+                    </div>
+                </div>
+                <div class="result" id="pairResultBox">
+                    <div class="muted" style="margin-bottom: 0.35rem">Result</div>
+                    <div id="pairResultText"></div>
+                </div>
+            </section>
+        </div>
     </div>
 
     <script>
-      /* ---------- Helpers (SI/decimal, not IEC) ---------- */
-      const SI = {
-        // base 10 factors
-        B: 1,
-        KB: 1e3,
-        MB: 1e6,
-        GB: 1e9,
-        TB: 1e12,
-        // bits
-        b: 1 / 8,
-        kb: 1e3 / 8,
-        mb: 1e6 / 8,
-        gb: 1e9 / 8,
-        tb: 1e12 / 8,
-      };
+        /* ---------- Helpers (SI/decimal, not IEC) ---------- */
+        const SI = {
+            // base 10 factors
+            B: 1,
+            KB: 1e3,
+            MB: 1e6,
+            GB: 1e9,
+            TB: 1e12,
+            // bits
+            b: 1 / 8,
+            kb: 1e3 / 8,
+            mb: 1e6 / 8,
+            gb: 1e9 / 8,
+            tb: 1e12 / 8,
+        };
 
-      function toBytes(value, unit) {
-        // convert any supported unit to Bytes (SI)
-        return value * SI[unit];
-      }
-      function fromBytes(bytes, unit) {
-        return bytes / SI[unit];
-      }
-      function toBits(value, unit) {
-        // convenience: convert any unit to bits
-        return toBytes(value, unit) * 8;
-      }
-      function pluralize(n, word) {
-        return `${n} ${word}${n === 1 ? "" : "s"}`;
-      }
-      function formatNumber(n) {
-        // pretty formatting without trailing zeros
-        const s =
-          Math.abs(n) >= 1000
-            ? n.toLocaleString(undefined, { maximumFractionDigits: 0 })
-            : n.toLocaleString(undefined, { maximumFractionDigits: 6 });
-        return s;
-      }
-      function formatDuration(seconds) {
-        seconds = Math.max(0, Math.round(seconds));
-        const h = Math.floor(seconds / 3600);
-        const m = Math.floor((seconds % 3600) / 60);
-        const s = seconds % 60;
+        function toBytes(value, unit) {
+            // convert any supported unit to Bytes (SI)
+            return value * SI[unit];
+        }
+        function fromBytes(bytes, unit) {
+            return bytes / SI[unit];
+        }
+        function toBits(value, unit) {
+            // convenience: convert any unit to bits
+            return toBytes(value, unit) * 8;
+        }
+        function pluralize(n, word) {
+            return `${n} ${word}${n === 1 ? "" : "s"}`;
+        }
+        function formatNumber(n) {
+            // pretty formatting without trailing zeros
+            const s =
+                Math.abs(n) >= 1000
+                    ? n.toLocaleString(undefined, { maximumFractionDigits: 0 })
+                    : n.toLocaleString(undefined, { maximumFractionDigits: 6 });
+            return s;
+        }
+        function formatDuration(seconds) {
+            seconds = Math.max(0, Math.round(seconds));
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = seconds % 60;
 
-        const parts = [];
-        if (h) parts.push(pluralize(h, "hour"));
-        if (m) parts.push(pluralize(m, "minute"));
-        if (s || parts.length === 0) parts.push(pluralize(s, "second"));
-        return "~" + parts.join(" ");
-      }
-
-      /* ---------- Data Unit Converter ---------- */
-      function renderUnitResults() {
-        const val = parseFloat(
-          document.getElementById("dataValue").value || "0"
-        );
-        const unit = document.getElementById("dataUnit").value;
-        if (isNaN(val)) return;
-
-        // convert the input to Bytes (SI)
-        const bytes = toBytes(val, unit);
-
-        const lines = [
-          `${formatNumber(fromBytes(bytes, "b"))} bits (b)`,
-          `${formatNumber(fromBytes(bytes, "kb"))} kilobits (kb)`,
-          `${formatNumber(fromBytes(bytes, "mb"))} megabits (mb)`,
-          `${formatNumber(fromBytes(bytes, "gb"))} gigabits (gb)`,
-          `${formatNumber(fromBytes(bytes, "tb"))} terabits (tb)`,
-          `${formatNumber(fromBytes(bytes, "B"))} Bytes (B)`,
-          `${formatNumber(fromBytes(bytes, "KB"))} Kilobytes (KB)`,
-          `${formatNumber(fromBytes(bytes, "MB"))} Megabytes (MB)`,
-          `${formatNumber(fromBytes(bytes, "GB"))} Gigabytes (GB)`,
-          `${formatNumber(fromBytes(bytes, "TB"))} Terabytes (TB)`,
-        ];
-
-        document.getElementById("unitResultLines").textContent =
-          lines.join("\n");
-      }
-
-      /* ---------- Download/Upload Time Calculator ---------- */
-      function renderTimeResult() {
-        const sizeVal = parseFloat(
-          document.getElementById("fileSize").value || "0"
-        );
-        const sizeUnit = document.getElementById("fileUnit").value;
-
-        const bwVal = parseFloat(
-          document.getElementById("bandwidth").value || "0"
-        );
-        const bwUnit = document.getElementById("bwUnit").value;
-
-        if (isNaN(sizeVal) || isNaN(bwVal) || bwVal <= 0) {
-          document.getElementById("timeResultText").textContent =
-            "Please enter valid numbers.";
-          return;
+            const parts = [];
+            if (h) parts.push(pluralize(h, "hour"));
+            if (m) parts.push(pluralize(m, "minute"));
+            if (s || parts.length === 0) parts.push(pluralize(s, "second"));
+            return "~" + parts.join(" ");
         }
 
-        // File size → bits
-        const fileBits = toBits(sizeVal, sizeUnit);
+        /* ---------- Data Unit Converter ---------- */
+        function renderUnitResults() {
+            const val = parseFloat(
+                document.getElementById("dataValue").value || "0"
+            );
+            const unit = document.getElementById("dataUnit").value;
+            if (isNaN(val)) return;
 
-        // Bandwidth → bits per second
-        const bwBitsPerSec =
-          (function () {
-            switch (bwUnit) {
-              case "kbitps":
-                return 1e3;
-              case "Mbitps":
-                return 1e6;
-              case "Gbitps":
-                return 1e9;
-              case "Bps":
-                return 8;
-              case "KBps":
-                return 8e3;
-              case "MBps":
-                return 8e6;
-              case "GBps":
-                return 8e9;
-              default:
-                return 1e6;
+            // convert the input to Bytes (SI)
+            const bytes = toBytes(val, unit);
+
+            const lines = [
+                `${formatNumber(fromBytes(bytes, "b"))} bits (b)`,
+                `${formatNumber(fromBytes(bytes, "kb"))} kilobits (kb)`,
+                `${formatNumber(fromBytes(bytes, "mb"))} megabits (mb)`,
+                `${formatNumber(fromBytes(bytes, "gb"))} gigabits (gb)`,
+                `${formatNumber(fromBytes(bytes, "tb"))} terabits (tb)`,
+                `${formatNumber(fromBytes(bytes, "B"))} Bytes (B)`,
+                `${formatNumber(fromBytes(bytes, "KB"))} Kilobytes (KB)`,
+                `${formatNumber(fromBytes(bytes, "MB"))} Megabytes (MB)`,
+                `${formatNumber(fromBytes(bytes, "GB"))} Gigabytes (GB)`,
+                `${formatNumber(fromBytes(bytes, "TB"))} Terabytes (TB)`,
+            ];
+
+            document.getElementById("unitResultLines").textContent =
+                lines.join("\n");
+        }
+
+        /* ---------- Download/Upload Time Calculator ---------- */
+        function renderTimeResult() {
+            const sizeVal = parseFloat(
+                document.getElementById("fileSize").value || "0"
+            );
+            const sizeUnit = document.getElementById("fileUnit").value;
+
+            const bwVal = parseFloat(
+                document.getElementById("bandwidth").value || "0"
+            );
+            const bwUnit = document.getElementById("bwUnit").value;
+
+            if (isNaN(sizeVal) || isNaN(bwVal) || bwVal <= 0) {
+                document.getElementById("timeResultText").textContent =
+                    "Please enter valid numbers.";
+                return;
             }
-          })() * bwVal;
 
-        const seconds = fileBits / bwBitsPerSec;
-        const text = `Download or upload time needed is: ${formatDuration(
-          seconds
-        )}`;
-        document.getElementById("timeResultText").textContent = text;
-      }
+            // File size → bits
+            const fileBits = toBits(sizeVal, sizeUnit);
 
-      /* ---------- Pairwise Converter (X -> Y) ---------- */
-      function renderPairResult() {
-        const v = parseFloat(document.getElementById("pairValue").value || "0");
-        const from = document.getElementById("pairFrom").value;
-        const to = document.getElementById("pairTo").value;
+            // Bandwidth → bits per second
+            const bwBitsPerSec =
+                (function () {
+                    switch (bwUnit) {
+                        case "kbitps":
+                            return 1e3;
+                        case "Mbitps":
+                            return 1e6;
+                        case "Gbitps":
+                            return 1e9;
+                        case "Bps":
+                            return 8;
+                        case "KBps":
+                            return 8e3;
+                        case "MBps":
+                            return 8e6;
+                        case "GBps":
+                            return 8e9;
+                        default:
+                            return 1e6;
+                    }
+                })() * bwVal;
 
-        if (isNaN(v)) {
-          document.getElementById("pairResultText").textContent =
-            "Please enter a valid number.";
-          return;
+            const seconds = fileBits / bwBitsPerSec;
+            const text = `Download or upload time needed is: ${formatDuration(
+                seconds
+            )}`;
+            document.getElementById("timeResultText").textContent = text;
         }
-        const bytes = toBytes(v, from); // normalize to bytes (SI)
-        const out = fromBytes(bytes, to); // convert to target unit
-        const pretty = out.toLocaleString(undefined, {
-          maximumFractionDigits: 6,
-        });
-        document.getElementById("pairResultText").textContent = `${pretty} ${
-          document.querySelector(`#pairTo option[value="${to}"]`).textContent
-        }`;
-      }
 
-      /* ---------- Wire up ---------- */
-      document
-        .getElementById("convertBtn")
-        .addEventListener("click", renderUnitResults);
-      document
-        .getElementById("timeBtn")
-        .addEventListener("click", renderTimeResult);
-      document
-        .getElementById("pairBtn")
-        .addEventListener("click", renderPairResult);
-      ["pairValue", "pairFrom", "pairTo"].forEach((id) =>
-        document.getElementById(id).addEventListener("input", renderPairResult)
-      );
+        /* ---------- Pairwise Converter (X -> Y) ---------- */
+        function renderPairResult() {
+            const v = parseFloat(document.getElementById("pairValue").value || "0");
+            const from = document.getElementById("pairFrom").value;
+            const to = document.getElementById("pairTo").value;
 
-      // Auto-update on change/typing
-      ["dataValue", "dataUnit"].forEach((id) =>
-        document.getElementById(id).addEventListener("input", renderUnitResults)
-      );
-      ["fileSize", "fileUnit", "bandwidth", "bwUnit"].forEach((id) =>
-        document.getElementById(id).addEventListener("input", renderTimeResult)
-      );
+            if (isNaN(v)) {
+                document.getElementById("pairResultText").textContent =
+                    "Please enter a valid number.";
+                return;
+            }
+            const bytes = toBytes(v, from); // normalize to bytes (SI)
+            const out = fromBytes(bytes, to); // convert to target unit
+            const pretty = out.toLocaleString(undefined, {
+                maximumFractionDigits: 6,
+            });
+            document.getElementById("pairResultText").textContent = `${pretty} ${document.querySelector(`#pairTo option[value="${to}"]`).textContent
+                }`;
+        }
 
-      // Initial render (matches your screenshot defaults: 500 MB & 5 Mbit/s)
-      renderUnitResults();
-      renderTimeResult();
-      renderPairResult();
+        /* ---------- Wire up ---------- */
+        document
+            .getElementById("convertBtn")
+            .addEventListener("click", renderUnitResults);
+        document
+            .getElementById("timeBtn")
+            .addEventListener("click", renderTimeResult);
+        document
+            .getElementById("pairBtn")
+            .addEventListener("click", renderPairResult);
+        ["pairValue", "pairFrom", "pairTo"].forEach((id) =>
+            document.getElementById(id).addEventListener("input", renderPairResult)
+        );
+
+        // Auto-update on change/typing
+        ["dataValue", "dataUnit"].forEach((id) =>
+            document.getElementById(id).addEventListener("input", renderUnitResults)
+        );
+        ["fileSize", "fileUnit", "bandwidth", "bwUnit"].forEach((id) =>
+            document.getElementById(id).addEventListener("input", renderTimeResult)
+        );
+
+        // Initial render (matches your screenshot defaults: 500 MB & 5 Mbit/s)
+        renderUnitResults();
+        renderTimeResult();
+        renderPairResult();
     </script>
-  </body>
+</body>
+
 </html>
