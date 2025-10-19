@@ -7,11 +7,11 @@
     <meta name="description"
         content="Nik B. - IT Engineer portfolio showcasing Microsoft 365, networking, Windows Server, and IT certifications." />
     <title>Nik B. - IT Engineer | Cloud Infrastructure Specialist</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <link rel="icon" type="image/x-icon" href="https://computercapriccioso.it/wp-content/uploads/2019/05/favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* ---------- Modern Variables ---------- */
         :root {
             --primary-color: #00d4aa;
             --secondary-color: #0066ff;
@@ -23,11 +23,14 @@
             --accent-gradient: linear-gradient(135deg, #00d4aa 0%, #0066ff 100%);
         }
 
-        /* ---------- General Styles ---------- */
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            box-sizing: border-box
+        }
+
+        html {
+            scroll-behavior: smooth
         }
 
         body {
@@ -38,11 +41,6 @@
             overflow-x: hidden;
         }
 
-        /* Smooth scroll */
-        html {
-            scroll-behavior: smooth;
-        }
-
         a {
             color: var(--primary-color);
             text-decoration: none;
@@ -51,14 +49,14 @@
 
         a:hover {
             color: var(--secondary-color);
-            transform: translateX(2px);
+            transform: translateX(2px)
         }
 
         .container {
             width: 90%;
             max-width: 1200px;
             margin: auto;
-            padding: 0 20px;
+            padding: 0 20px
         }
 
         /* ---------- Typography ---------- */
@@ -92,7 +90,7 @@
         }
 
         section:hover h2::after {
-            width: 100%;
+            width: 100%
         }
 
         /* ---------- Header ---------- */
@@ -100,36 +98,36 @@
             position: fixed;
             top: 0;
             width: 100%;
-            background: rgba(10, 10, 10, 0.95);
+            background: rgba(10, 10, 10, .95);
             backdrop-filter: blur(10px);
             padding: 1rem 0;
             z-index: 1000;
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, .5);
             transition: all 0.3s ease;
         }
 
         header.scrolled {
-            padding: 0.5rem 0;
-            background: rgba(10, 10, 10, 0.98);
+            padding: .5rem 0;
+            background: rgba(10, 10, 10, .98)
         }
 
         .header-flex {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: center
         }
 
         nav ul {
             list-style: none;
             display: flex;
-            gap: 2rem;
+            gap: 2rem
         }
 
         nav a {
             color: var(--text-primary);
             font-weight: 500;
             position: relative;
-            padding: 5px 0;
+            padding: 5px 0
         }
 
         nav a::after {
@@ -144,12 +142,12 @@
         }
 
         nav a:hover::after {
-            width: 100%;
+            width: 100%
         }
 
         /* Dropdown */
         .dropdown {
-            position: relative;
+            position: relative
         }
 
         .dropdown-content {
@@ -164,14 +162,14 @@
             visibility: hidden;
             transform: translateY(-10px);
             transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .5);
             margin-top: 10px;
         }
 
         .dropdown:hover .dropdown-content {
             opacity: 1;
             visibility: visible;
-            transform: translateY(0);
+            transform: translateY(0)
         }
 
         .dropdown-content a {
@@ -180,35 +178,29 @@
             color: var(--text-primary);
             transition: all 0.3s ease;
             position: relative;
-            /* Needed for underline */
         }
 
         .dropdown-content a::after {
             content: '';
             position: absolute;
             bottom: 6px;
-            /* adjust to align with text */
             left: 20px;
-            /* match padding */
             width: 0;
             height: 2px;
             background: var(--accent-gradient);
-            transition: width 0.3s ease;
+            transition: width .3s ease;
         }
 
         .dropdown-content a:hover::after {
-            width: calc(100% - 40px);
-            /* full width minus padding */
+            width: calc(100% - 40px)
         }
 
-
-        /* ---------- Hero Section ---------- */
         .hero {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, rgba(0, 212, 170, 0.1) 0%, rgba(0, 102, 255, 0.1) 100%);
+            background: linear-gradient(135deg, rgba(0, 212, 170, .1) 0%, rgba(0, 102, 255, .1) 100%);
             position: relative;
             margin-top: -80px;
             padding-top: 80px;
@@ -216,71 +208,71 @@
 
         .hero-content {
             text-align: center;
-            animation: fadeInUp 1s ease;
+            animation: fadeInUp 1s ease
         }
 
         .hero h1 {
             font-size: 3.5rem;
-            margin-bottom: 1rem;
+            margin-bottom: 1rem
         }
 
-        .hero .tagline {
+        .tagline {
             font-size: 1.5rem;
             color: var(--text-secondary);
-            margin-bottom: 2rem;
+            margin-bottom: 2rem
         }
 
         .hero-buttons {
             display: flex;
             gap: 1rem;
             justify-content: center;
-            flex-wrap: wrap;
+            flex-wrap: wrap
         }
 
         .btn {
             padding: 12px 30px;
             border-radius: 30px;
             font-weight: 600;
-            transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
             gap: 10px;
             cursor: pointer;
             border: 2px solid transparent;
+            transition: all 0.3s ease;
         }
 
         .btn-primary {
             background: var(--accent-gradient);
-            color: #000;
+            color: #000
         }
 
         .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(0, 212, 170, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 212, 170, .3)
         }
 
         .btn-secondary {
             background: transparent;
             color: var(--primary-color);
-            border-color: var(--primary-color);
+            border-color: var(--primary-color)
         }
 
         .btn-secondary:hover {
             background: var(--primary-color);
             color: #000;
-            transform: translateY(-3px);
+            transform: translateY(-3px)
         }
 
         /* ---------- Sections ---------- */
         section {
             padding: 80px 0;
-            position: relative;
+            position: relative
         }
 
         .section-header {
             text-align: center;
             margin-bottom: 3rem;
-            animation: fadeIn 0.8s ease;
+            animation: fadeIn .8s ease
         }
 
         /* ---------- Cards ---------- */
@@ -289,7 +281,7 @@
             padding: 2rem;
             border-radius: 15px;
             margin-bottom: 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, .05);
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
@@ -304,17 +296,17 @@
             height: 2px;
             background: var(--accent-gradient);
             transform: scaleX(0);
-            transition: transform 0.3s ease;
+            transition: transform .3s ease
         }
 
         .card:hover {
             transform: translateY(-5px);
             background: var(--bg-card-hover);
-            box-shadow: 0 20px 40px rgba(0, 212, 170, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 212, 170, .1)
         }
 
         .card:hover::before {
-            transform: scaleX(1);
+            transform: scaleX(1)
         }
 
         /* ---------- Skills Grid ---------- */
@@ -322,20 +314,20 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 1rem;
-            margin-top: 2rem;
+            margin-top: 2rem
         }
 
         .skill-category {
             background: var(--bg-card);
             padding: 1.5rem;
             border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, .05);
             transition: all 0.3s ease;
         }
 
         .skill-category:hover {
             transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 212, 170, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 212, 170, .1)
         }
 
         .skill-category h3 {
@@ -343,7 +335,7 @@
             margin-bottom: 1rem;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 10px
         }
 
         .skill-category h3 i {
@@ -353,28 +345,28 @@
         .skill-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 10px
         }
 
         .skill-tag {
-            background: rgba(0, 212, 170, 0.1);
+            background: rgba(0, 212, 170, .1);
             color: var(--primary-color);
             padding: 5px 15px;
             border-radius: 20px;
-            font-size: 0.9rem;
-            border: 1px solid rgba(0, 212, 170, 0.3);
+            font-size: .9rem;
+            border: 1px solid rgba(0, 212, 170, .3);
             transition: all 0.3s ease;
         }
 
         .skill-tag:hover {
-            background: rgba(0, 212, 170, 0.2);
-            transform: translateY(-2px);
+            background: rgba(0, 212, 170, .2);
+            transform: translateY(-2px)
         }
 
         /* ---------- Timeline ---------- */
         .timeline {
             position: relative;
-            padding-left: 40px;
+            padding-left: 40px
         }
 
         .timeline::before {
@@ -384,13 +376,13 @@
             top: 0;
             height: 100%;
             width: 2px;
-            background: var(--accent-gradient);
+            background: var(--accent-gradient)
         }
 
         .timeline-item {
             position: relative;
             padding-bottom: 2rem;
-            animation: fadeInLeft 0.8s ease;
+            animation: fadeInLeft .8s ease
         }
 
         .timeline-item::before {
@@ -402,25 +394,25 @@
             height: 12px;
             border-radius: 50%;
             background: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.3);
+            box-shadow: 0 0 0 3px rgba(0, 212, 170, .3);
         }
 
         .timeline-item h3 {
             color: var(--primary-color);
-            margin-bottom: 0.5rem;
+            margin-bottom: .5rem
         }
 
         .timeline-item .date {
             color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
+            font-size: .9rem;
+            margin-bottom: .5rem
         }
 
         /* ---------- Certifications ---------- */
         .cert-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
+            gap: 1.5rem
         }
 
         .cert-item {
@@ -433,18 +425,18 @@
 
         .cert-item:hover {
             transform: translateX(5px);
-            box-shadow: 0 10px 30px rgba(0, 212, 170, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 212, 170, .1)
         }
 
-        .cert-item .cert-name {
+        .cert-name {
             font-weight: 600;
             color: var(--text-primary);
-            margin-bottom: 0.5rem;
+            margin-bottom: .5rem
         }
 
-        .cert-item .cert-details {
+        .cert-details {
             color: var(--text-secondary);
-            font-size: 0.9rem;
+            font-size: .9rem
         }
 
         /* ---------- Contact Section ---------- */
@@ -453,7 +445,7 @@
             justify-content: center;
             gap: 3rem;
             flex-wrap: wrap;
-            margin-top: 2rem;
+            margin-top: 2rem
         }
 
         .contact-item {
@@ -466,12 +458,12 @@
 
         .contact-item:hover {
             color: var(--primary-color);
-            transform: translateY(-3px);
+            transform: translateY(-3px)
         }
 
         .contact-item i {
             font-size: 1.5rem;
-            color: var(--primary-color);
+            color: var(--primary-color)
         }
 
         /* ---------- Back to Top ---------- */
@@ -491,80 +483,80 @@
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0, 212, 170, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 212, 170, .3);
         }
 
         .back-to-top.visible {
             opacity: 1;
-            visibility: visible;
+            visibility: visible
         }
 
         .back-to-top:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 212, 170, 0.4);
+            box-shadow: 0 15px 40px rgba(0, 212, 170, .4)
         }
 
         /* ---------- Animations ---------- */
         @keyframes fadeIn {
             from {
-                opacity: 0;
+                opacity: 0
             }
 
             to {
-                opacity: 1;
+                opacity: 1
             }
         }
 
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(30px)
             }
 
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0)
             }
         }
 
         @keyframes fadeInLeft {
             from {
                 opacity: 0;
-                transform: translateX(-30px);
+                transform: translateX(-30px)
             }
 
             to {
                 opacity: 1;
-                transform: translateX(0);
+                transform: translateX(0)
             }
         }
 
         /* ---------- Responsive ---------- */
-        @media (max-width: 768px) {
+        @media (max-width:768px) {
             .hero h1 {
-                font-size: 2.5rem;
+                font-size: 2.5rem
             }
 
-            .hero .tagline {
-                font-size: 1.2rem;
+            .tagline {
+                font-size: 1.2rem
             }
 
             nav ul {
                 flex-direction: column;
-                gap: 1rem;
+                gap: 1rem
             }
 
             .header-flex {
-                flex-direction: column;
+                flex-direction: column
             }
 
             .contact-info {
                 flex-direction: column;
-                gap: 1rem;
+                gap: 1rem
             }
 
             .skills-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr
             }
         }
 
@@ -572,17 +564,17 @@
         .animate-on-scroll {
             opacity: 0;
             transform: translateY(30px);
-            transition: all 0.6s ease;
+            transition: all .6s ease;
         }
 
         .animate-on-scroll.animated {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0)
         }
 
         /* ---------- Helps to fit text in dropdown list in one line ---------- */
         .dropdown-content a {
-            white-space: nowrap;
+            white-space: nowrap
         }
     </style>
 </head>
@@ -600,41 +592,41 @@
                     <li><a href="#about">About</a></li>
                     <li><a href="#skills">Skills</a></li>
                     <li><a href="#experience">Experience</a></li>
-                    <li><a href="#certifications">Certifications</a></li>
+                    <li><a href="#education">Certifications</a></li>
                     <li class="dropdown">
                         <a href="#">Tools <i class="fas fa-chevron-down"></i></a>
                         <div class="dropdown-content">
-                            <a href="https://nik7git.github.io/myWebsite/PassGen.html">
+                            <a href="https://Name7git.github.io/myWebsite/PassGen.html">
                                 <i class="fas fa-key"></i> Password Generator
                             </a>
-                            <a href="https://nik7git.github.io/myWebsite/PWStrength">
+                            <a href="https://Name7git.github.io/myWebsite/PWStrength">
                                 <i class="fas fa-shield-alt"></i> Password Strength
                             </a>
-                            <a href="https://nik7git.github.io/myWebsite/HashConverter.html">
+                            <a href="https://Name7git.github.io/myWebsite/HashConverter.html">
                                 <i class="fas fa-hashtag"></i> Text Hashing
                             </a>
-                            <a href="https://nik7git.github.io/myWebsite/QRGenerator.html">
+                            <a href="https://Name7git.github.io/myWebsite/QRGenerator.html">
                                 <i class="fas fa-qrcode"></i> QR Generator
                             </a>
-                            <a href="https://nik7git.github.io/myWebsite/SubCalculator.html">
+                            <a href="https://Name7git.github.io/myWebsite/SubCalculator.html">
                                 <i class="fas fa-calculator"></i> Subnet Calculator
                             </a>
-                            <a href="https://nik7git.github.io/myWebsite/PasteBin.html">
+                            <a href="https://Name7git.github.io/myWebsite/PasteBin.html">
                                 <i class="fa-solid fa-clipboard-list"></i> Paste Bin
                             </a>
-                            <a href="https://nik7git.github.io/myWebsite/Encrypt.html">
+                            <a href="https://Name7git.github.io/myWebsite/Encrypt.html">
                                 <i class="fa-solid fa-vault"></i> Encrypt & Decrypt
                             </a>
-                            <a href="https://nik7git.github.io/myWebsite/PercentageCalc.html">
+                            <a href="https://Name7git.github.io/myWebsite/PercentageCalc.html">
                                 <i class="fa-solid fa-percent"></i> Percentage Calculator
                             </a>
-                            <a href="https://nik7git.github.io/myWebsite/BandDataCalc.html">
+                            <a href="https://Name7git.github.io/myWebsite/BandDataCalc.html">
                                 <i class="fa-solid fa-gauge"></i> Bandwidth & Data Calculator
                             </a>
-                            <a href="https://nik7git.github.io/myWebsite/Base64EncDec.html">
+                            <a href="https://Name7git.github.io/myWebsite/Base64EncDec.html">
                                 <i class="fa-solid fa-code"></i> Base64 Encoder / Decoder
                             </a>
-                            <a href="https://nik7git.github.io/myWebsite/Steganography.html">
+                            <a href="https://Name7git.github.io/myWebsite/Steganography.html">
                                 <i class="fa-solid fa-user-secret"></i> Steganography
                             </a>
                         </div>
@@ -676,6 +668,7 @@
                     optimizing systems for peak efficiency through automation and strategic implementation.
                     Additional experience in IT networks, CISCO/Unifi networking devices, and Windows systems.
                 </p>
+
                 <h3 style="color: var(--primary-color); margin-top: 1.5rem; margin-bottom: 1rem;">
                     <i class="fas fa-trophy"></i> Key Achievements
                 </h3>
@@ -738,6 +731,7 @@
             <div class="section-header">
                 <h2>Technical Skills</h2>
             </div>
+
             <div class="skills-grid animate-on-scroll">
                 <div class="skill-category">
                     <h3><i class="fas fa-cloud"></i> Cloud & Infrastructure</h3>
@@ -757,6 +751,7 @@
                         <span class="skill-tag">Azure Virtual Machines</span>
                     </div>
                 </div>
+
                 <div class="skill-category">
                     <h3><i class="fas fa-network-wired"></i> Networking</h3>
                     <div class="skill-tags">
@@ -779,6 +774,7 @@
                         <span class="skill-tag">ComLaude/Cloudflare/Route53</span>
                     </div>
                 </div>
+
                 <div class="skill-category">
                     <h3><i class="fas fa-server"></i> Server Administration</h3>
                     <div class="skill-tags">
@@ -797,6 +793,7 @@
                         <span class="skill-tag">Windows Admin Center</span>
                     </div>
                 </div>
+
                 <div class="skill-category">
                     <h3><i class="fas fa-code"></i> Automation & Scripting</h3>
                     <div class="skill-tags">
@@ -807,6 +804,7 @@
                         <span class="skill-tag">Batch Processing</span>
                     </div>
                 </div>
+
                 <div class="skill-category">
                     <h3><i class="fas fa-desktop"></i> Systems & Software</h3>
                     <div class="skill-tags">
@@ -831,6 +829,7 @@
                         <span class="skill-tag">LiquidFiles</span>
                     </div>
                 </div>
+
                 <div class="skill-category">
                     <h3><i class="fas fa-shield-alt"></i> Security</h3>
                     <div class="skill-tags">
@@ -856,8 +855,7 @@
                     <h3>Four Marketing Group</h3>
                     <div class="date">Aug 2024 - Present</div>
                     <p><strong>2nd/3rd Line IT Support Analyst</strong></p>
-                    <p>Managing cloud infrastructure and providing advanced technical support for enterprise systems.
-                    </p>
+                    <p>Managing cloud infrastructure and providing advanced technical support for enterprise systems.</p>
                 </div>
                 <div class="timeline-item">
                     <h3>General Dental Council</h3>
@@ -894,7 +892,7 @@
                 <h2>Education</h2>
             </div>
             <div class="card animate-on-scroll">
-                <h3 style="color: var(--primary-color); margin-bottom: 0.5rem;">
+                <h3 style="color: var(--primary-color); margin-bottom: .5rem;">
                     <i class="fas fa-graduation-cap"></i> University of Ioannina, Greece
                 </h3>
                 <p>Bachelor's Degree in Accounting and Finance</p>
@@ -949,11 +947,24 @@
         </div>
     </section>
 
+    <!-- ---------- Contact ---------- -->
+  <section id="contact" aria-label="Contact">
+    <div class="container">
+      <div class="section-header">
+        <h2>Contact</h2>
+      </div>
+      <div class="contact-info">
+        <div class="contact-item"><i class="fa-solid fa-envelope"></i><span>name@example.com</span></div>
+        <div class="contact-item"><i class="fa-brands fa-linkedin"></i><span>linkedin.com/in/name</span></div>
+      </div>
+    </div>
+  </section>
+
     <!-- ---------- Footer ---------- -->
-    <footer style="background: #000; padding: 2rem 0; text-align: center; color: var(--text-secondary);">
+    <footer style="background:#000; padding:2rem 0; text-align:center; color:var(--text-secondary)">
         <div class="container">
             <p>&copy; 2024 Nik B. | IT Engineer</p>
-            <p style="margin-top: 0.5rem;">Built with passion for technology</p>
+            <p style="margin-top:.5rem;">Built with passion for technology</p>
         </div>
     </footer>
 
@@ -1091,6 +1102,5 @@
         });
     </script>
 </body>
-
 
 </html>
