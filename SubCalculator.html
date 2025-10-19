@@ -1,708 +1,633 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>IPv4 Subnet Calculator</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link
-      rel="icon"
-      href="https://cdn3.iconfinder.com/data/icons/education-209/64/calculator-math-tool-school-256.png" />
 
-    <style>
-      :root {
-        --primary-color: #00d4aa;
-        --secondary-color: #0066ff;
-        --bg-dark: #0a0a0a;
-        --bg-card: #1a1a1a;
-        --bg-card-hover: #222222;
-        --text-primary: #ffffff;
-        --text-secondary: #a8a8a8;
-        --accent-gradient: linear-gradient(135deg, #00d4aa 0%, #0066ff 100%);
-        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-        --shadow-md: 0 8px 24px rgba(0, 212, 170, 0.15);
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>IPv4 Subnet Calculator</title>
+
+  <link rel="icon" href="https://cdn3.iconfinder.com/data/icons/education-209/64/calculator-math-tool-school-256.png" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --primary-color: #00d4aa;
+      --secondary-color: #0066ff;
+      --bg-dark: #0a0a0a;
+      --bg-card: #1a1a1a;
+      --bg-card-hover: #222222;
+      --text-primary: #ffffff;
+      --text-secondary: #a8a8a8;
+      --accent-gradient: linear-gradient(135deg, #00d4aa 0%, #0066ff 100%);
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 8px 24px rgba(0, 212, 170, 0.15);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      padding: 2rem 1.5rem;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+      text-align: center;
+      letter-spacing: -0.02em;
+    }
+
+    .tagline {
+      text-align: center;
+      color: var(--text-secondary);
+      margin-bottom: 3.5rem;
+      font-size: 1.05rem;
+      font-weight: 400;
+    }
+
+    .card {
+      background: var(--bg-card);
+      padding: 2.5rem;
+      border-radius: 16px;
+      margin-bottom: 2rem;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+        background 0.2s ease;
+      position: relative;
+      overflow: hidden;
+      contain: layout style paint;
+      will-change: transform;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--accent-gradient);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      background: var(--bg-card-hover);
+      box-shadow: var(--shadow-md);
+    }
+
+    .card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .card h3 {
+      font-size: 1.35rem;
+      color: var(--text-primary);
+      margin-bottom: 1.75rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .input-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    label {
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 0.875rem;
+      letter-spacing: 0.01em;
+    }
+
+    input,
+    select {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-primary);
+      padding: 0.875rem 1rem;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      font-family: inherit;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      background: rgba(255, 255, 255, 0.06);
+      box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.12);
+    }
+
+    input[readonly] {
+      background: rgba(255, 255, 255, 0.02);
+      cursor: not-allowed;
+    }
+
+    select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2300d4aa' d='M10.293 3.293L6 7.586 1.707 3.293A1 1 0 00.293 4.707l5 5a1 1 0 001.414 0l5-5a1 1 0 10-1.414-1.414z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      padding-right: 2.75rem;
+    }
+
+    select option {
+      background: var(--bg-card);
+      color: var(--text-primary);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.5rem;
+    }
+
+    th,
+    td {
+      padding: 1rem 0.5rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    th {
+      background: rgba(0, 212, 170, 0.08);
+      color: var(--primary-color);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    tr {
+      transition: background 0.15s ease;
+    }
+
+    tbody tr:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .bits {
+      letter-spacing: 0.3rem;
+      font-family: 'Courier New', monospace;
+      font-size: 1rem;
+      white-space: nowrap;
+      line-height: 1.8;
+    }
+
+    .bit {
+      display: inline-block;
+      width: 1.1ch;
+      text-align: center;
+    }
+
+    .bit.net {
+      color: #00d4aa;
+      font-weight: 600;
+    }
+
+    .bit.host {
+      color: #ff6b6b;
+      font-weight: 600;
+    }
+
+    .bit.dim {
+      color: rgba(255, 255, 255, 0.15);
+    }
+
+    .octet-space {
+      display: inline-block;
+      width: 0.6rem;
+    }
+
+    .card-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 1024px) {
+      .card-container {
+        grid-template-columns: 1fr;
       }
+    }
 
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
+    @media (max-width: 768px) {
       body {
-        font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
-        line-height: 1.6;
-        background: var(--bg-dark);
-        color: var(--text-primary);
-        overflow-x: hidden;
-        padding: 2rem 1.5rem;
-        min-height: 100vh;
-      }
-
-      .container {
-        max-width: 1400px;
-        margin: 0 auto;
+        padding: 1.5rem 1rem;
       }
 
       h1 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        background: var(--accent-gradient);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin-bottom: 0.5rem;
-        text-align: center;
-        letter-spacing: -0.02em;
-      }
-
-      .tagline {
-        text-align: center;
-        color: var(--text-secondary);
-        margin-bottom: 3.5rem;
-        font-size: 1.05rem;
-        font-weight: 400;
+        font-size: 2rem;
       }
 
       .card {
-        background: var(--bg-card);
-        padding: 2.5rem;
-        border-radius: 16px;
-        margin-bottom: 2rem;
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-                    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-                    background 0.2s ease;
-        position: relative;
-        overflow: hidden;
-        contain: layout style paint;
-        will-change: transform;
-      }
-
-      .card::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: var(--accent-gradient);
-        transform: scaleX(0);
-        transform-origin: left;
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-
-      .card:hover {
-        transform: translateY(-4px);
-        background: var(--bg-card-hover);
-        box-shadow: var(--shadow-md);
-      }
-
-      .card:hover::before {
-        transform: scaleX(1);
-      }
-
-      .card h3 {
-        font-size: 1.35rem;
-        color: var(--text-primary);
-        margin-bottom: 1.75rem;
-        font-weight: 600;
-        letter-spacing: -0.01em;
+        padding: 1.75rem;
       }
 
       .input-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 1.25rem;
-        margin-bottom: 2rem;
-      }
-
-      .input-group {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-
-      label {
-        color: var(--primary-color);
-        font-weight: 500;
-        font-size: 0.875rem;
-        letter-spacing: 0.01em;
-      }
-
-      input,
-      select {
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: var(--text-primary);
-        padding: 0.875rem 1rem;
-        border-radius: 10px;
-        font-size: 0.95rem;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        font-family: inherit;
-      }
-
-      input:focus,
-      select:focus {
-        outline: none;
-        border-color: var(--primary-color);
-        background: rgba(255, 255, 255, 0.06);
-        box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.12);
-      }
-
-      input[readonly] {
-        background: rgba(255, 255, 255, 0.02);
-        cursor: not-allowed;
-        color: var(--text-primary);
-      }
-
-      select {
-        cursor: pointer;
-        appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2300d4aa' d='M10.293 3.293L6 7.586 1.707 3.293A1 1 0 00.293 4.707l5 5a1 1 0 001.414 0l5-5a1 1 0 10-1.414-1.414z'/%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 1rem center;
-        padding-right: 2.75rem;
-      }
-
-      select option {
-        background: var(--bg-card);
-        color: var(--text-primary);
+        grid-template-columns: 1fr;
       }
 
       table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 0.5rem;
+        font-size: 0.85rem;
       }
 
       th,
       td {
-        padding: 1rem 0.5rem;
-        text-align: left;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      }
-
-      th {
-        background: rgba(0, 212, 170, 0.08);
-        color: var(--primary-color);
-        font-weight: 600;
-        font-size: 0.875rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-      }
-
-      tr {
-        transition: background 0.15s ease;
-      }
-
-      tbody tr:hover {
-        background: rgba(255, 255, 255, 0.03);
+        padding: 0.75rem 0.5rem;
       }
 
       .bits {
-        letter-spacing: 0.3rem;
-        font-family: 'Courier New', monospace;
-        font-size: 1rem;
-        white-space: nowrap;
-        line-height: 1.8;
+        font-size: 0.8rem;
+        letter-spacing: 0.25rem;
       }
+    }
+  </style>
+</head>
 
-      .bit {
-        display: inline-block;
-        width: 1.1ch;
-        text-align: center;
-      }
+<body>
+  <div class="container">
+    <h1><i class="fa-solid fa-calculator"></i> IPv4 Subnet Calculator</h1>
 
-      .bit.net {
-        color: #00d4aa;
-        font-weight: 600;
-      }
+    <div class="card-container">
+      <!-- Network Input Card -->
+      <div class="card" id="networkCard">
+        <h3>Network Configuration</h3>
 
-      .bit.host {
-        color: #ff6b6b;
-        font-weight: 600;
-      }
-
-      .bit.dim {
-        color: rgba(255, 255, 255, 0.15);
-      }
-
-      .octet-space {
-        display: inline-block;
-        width: 0.6rem;
-      }
-
-      .card-container {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 2rem;
-        margin-bottom: 2rem;
-      }
-
-      @media (max-width: 1024px) {
-        .card-container {
-          grid-template-columns: 1fr;
-        }
-      }
-
-      @media (max-width: 768px) {
-        body {
-          padding: 1.5rem 1rem;
-        }
-
-        h1 {
-          font-size: 2rem;
-        }
-
-        .card {
-          padding: 1.75rem;
-        }
-
-        .input-grid {
-          grid-template-columns: 1fr;
-        }
-
-        table {
-          font-size: 0.85rem;
-        }
-
-        th,
-        td {
-          padding: 0.75rem 0.5rem;
-        }
-
-        .bits {
-          font-size: 0.8rem;
-          letter-spacing: 0.25rem;
-        }
-      }
-
-      /* Loading state */
-      .calculating {
-        opacity: 0.6;
-        pointer-events: none;
-      }
-    </style>
-  </head>
-
-  <body>
-    <div class="container">
-      <h1><i class="fa-solid fa-calculator"></i> IPv4 Subnet Calculator</h1>
-
-      <div class="card-container">
-        <!-- Network Input Card -->
-        <div class="card" id="networkCard">
-          <h3>Network Configuration</h3>
-          <div class="input-grid">
-            <div class="input-group">
-              <label for="networkAddress">Network Address Block</label>
-              <input
-                type="text"
-                id="networkAddress"
-                placeholder="e.g. 10.0.0.0/8"
-                value="10.0.0.0/8" />
-            </div>
-            <div class="input-group">
-              <label for="subnetMask">Subnet Mask</label>
-              <select
-                id="subnetMask"
-                title="Hover here and use mouse wheel to cycle subnets (/8 - /30)">
-                <option value="8">255.0.0.0 (/8)</option>
-                <option value="9">255.128.0.0 (/9)</option>
-                <option value="10" selected>255.192.0.0 (/10)</option>
-                <option value="11">255.224.0.0 (/11)</option>
-                <option value="12">255.240.0.0 (/12)</option>
-                <option value="13">255.248.0.0 (/13)</option>
-                <option value="14">255.252.0.0 (/14)</option>
-                <option value="15">255.254.0.0 (/15)</option>
-                <option value="16">255.255.0.0 (/16)</option>
-                <option value="17">255.255.128.0 (/17)</option>
-                <option value="18">255.255.192.0 (/18)</option>
-                <option value="19">255.255.224.0 (/19)</option>
-                <option value="20">255.255.240.0 (/20)</option>
-                <option value="21">255.255.248.0 (/21)</option>
-                <option value="22">255.255.252.0 (/22)</option>
-                <option value="23">255.255.254.0 (/23)</option>
-                <option value="24">255.255.255.0 (/24)</option>
-                <option value="25">255.255.255.128 (/25)</option>
-                <option value="26">255.255.255.192 (/26)</option>
-                <option value="27">255.255.255.224 (/27)</option>
-                <option value="28">255.255.255.240 (/28)</option>
-                <option value="29">255.255.255.248 (/29)</option>
-                <option value="30">255.255.255.252 (/30)</option>
-              </select>
-            </div>
-            <div class="input-group">
-              <label for="hostsPerSubnet">Hosts per Subnet</label>
-              <input
-                type="text"
-                id="hostsPerSubnet"
-                readonly
-                value="16777216" />
-            </div>
-            <div class="input-group">
-              <label for="numberOfSubnets">Number of Subnets</label>
-              <input type="text" id="numberOfSubnets" readonly value="1" />
-            </div>
+        <div class="input-grid">
+          <div class="input-group">
+            <label for="networkAddress">Network Address Block</label>
+            <input type="text" id="networkAddress" placeholder="e.g. 10.0.0.0/8" value="10.0.0.0/8" />
           </div>
 
-          <div class="input-grid">
-            <div class="input-group">
-              <label for="hostRange">Host Address Range</label>
-              <input
-                type="text"
-                id="hostRange"
-                readonly
-                value="10.0.0.1 - 10.255.255.254" />
-            </div>
-            <div class="input-group">
-              <label for="broadcastAddress">Broadcast Address</label>
-              <input
-                type="text"
-                id="broadcastAddress"
-                readonly
-                value="10.255.255.255" />
-            </div>
-            <div class="input-group">
-              <label for="wildcardMask">Wildcard Mask</label>
-              <input
-                type="text"
-                id="wildcardMask"
-                readonly
-                value="0.255.255.255" />
-            </div>
-            <div class="input-group">
-              <label for="cidrNotation">CIDR Notation</label>
-              <input
-                type="text"
-                id="cidrNotation"
-                readonly
-                value="10.0.0.0/8" />
-            </div>
+          <div class="input-group">
+            <label for="subnetMask">Subnet Mask</label>
+            <select id="subnetMask" title="Hover here and use mouse wheel to cycle subnets (/8 - /30)">
+              <option value="8">255.0.0.0 (/8)</option>
+              <option value="9">255.128.0.0 (/9)</option>
+              <option value="10" selected>255.192.0.0 (/10)</option>
+              <option value="11">255.224.0.0 (/11)</option>
+              <option value="12">255.240.0.0 (/12)</option>
+              <option value="13">255.248.0.0 (/13)</option>
+              <option value="14">255.252.0.0 (/14)</option>
+              <option value="15">255.254.0.0 (/15)</option>
+              <option value="16">255.255.0.0 (/16)</option>
+              <option value="17">255.255.128.0 (/17)</option>
+              <option value="18">255.255.192.0 (/18)</option>
+              <option value="19">255.255.224.0 (/19)</option>
+              <option value="20">255.255.240.0 (/20)</option>
+              <option value="21">255.255.248.0 (/21)</option>
+              <option value="22">255.255.252.0 (/22)</option>
+              <option value="23">255.255.254.0 (/23)</option>
+              <option value="24">255.255.255.0 (/24)</option>
+              <option value="25">255.255.255.128 (/25)</option>
+              <option value="26">255.255.255.192 (/26)</option>
+              <option value="27">255.255.255.224 (/27)</option>
+              <option value="28">255.255.255.240 (/28)</option>
+              <option value="29">255.255.255.248 (/29)</option>
+              <option value="30">255.255.255.252 (/30)</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label for="hostsPerSubnet">Hosts per Subnet</label>
+            <input type="text" id="hostsPerSubnet" readonly value="16777216" />
+          </div>
+
+          <div class="input-group">
+            <label for="numberOfSubnets">Number of Subnets</label>
+            <input type="text" id="numberOfSubnets" readonly value="1" />
           </div>
         </div>
 
-        <!-- Binary Card -->
-        <div class="card" id="binaryDetails" aria-live="polite">
-          <h3>Binary Representation</h3>
-          <div style="overflow-x: auto">
-            <table id="binaryTable">
-              <tbody>
-                <tr>
-                  <th>IP Address</th>
-                  <td id="binaryIp" class="bits"></td>
-                </tr>
-                <tr>
-                  <th>Subnet Mask</th>
-                  <td id="binaryMask" class="bits"></td>
-                </tr>
-                <tr>
-                  <th>Network Portion</th>
-                  <td id="binaryNetwork" class="bits"></td>
-                </tr>
-                <tr>
-                  <th>Host Portion</th>
-                  <td id="binaryHost" class="bits"></td>
-                </tr>
-                <tr>
-                  <th>1st Host</th>
-                  <td id="binaryFirstHost" class="bits"></td>
-                </tr>
-                <tr>
-                  <th>Last Host</th>
-                  <td id="binaryLastHost" class="bits"></td>
-                </tr>
-                <tr>
-                  <th>Broadcast</th>
-                  <td id="binaryBroadcast" class="bits"></td>
-                </tr>
-              </tbody>
-            </table>
+        <div class="input-grid">
+          <div class="input-group">
+            <label for="hostRange">Host Address Range</label>
+            <input type="text" id="hostRange" readonly value="10.0.0.1 - 10.255.255.254" />
+          </div>
+
+          <div class="input-group">
+            <label for="broadcastAddress">Broadcast Address</label>
+            <input type="text" id="broadcastAddress" readonly value="10.255.255.255" />
+          </div>
+
+          <div class="input-group">
+            <label for="wildcardMask">Wildcard Mask</label>
+            <input type="text" id="wildcardMask" readonly value="0.255.255.255" />
+          </div>
+
+          <div class="input-group">
+            <label for="cidrNotation">CIDR Notation</label>
+            <input type="text" id="cidrNotation" readonly value="10.0.0.0/8" />
           </div>
         </div>
       </div>
 
-      <!-- Subnet Details Card -->
-      <div class="card" id="subnetDetails" style="display: none">
-        <h3>Subnet Details</h3>
+      <!-- Binary Card -->
+      <div class="card" id="binaryDetails" aria-live="polite">
+        <h3>Binary Representation</h3>
         <div style="overflow-x: auto">
-          <table id="subnetTable">
-            <thead>
+          <table id="binaryTable">
+            <tbody>
               <tr>
-                <th>Subnet ID</th>
-                <th>Subnet Address</th>
-                <th>Host Address Range</th>
-                <th>Broadcast Address</th>
+                <th>IP Address</th>
+                <td id="binaryIp" class="bits"></td>
               </tr>
-            </thead>
-            <tbody id="subnetTableBody"></tbody>
+              <tr>
+                <th>Subnet Mask</th>
+                <td id="binaryMask" class="bits"></td>
+              </tr>
+              <tr>
+                <th>Network Portion</th>
+                <td id="binaryNetwork" class="bits"></td>
+              </tr>
+              <tr>
+                <th>Host Portion</th>
+                <td id="binaryHost" class="bits"></td>
+              </tr>
+              <tr>
+                <th>1st Host</th>
+                <td id="binaryFirstHost" class="bits"></td>
+              </tr>
+              <tr>
+                <th>Last Host</th>
+                <td id="binaryLastHost" class="bits"></td>
+              </tr>
+              <tr>
+                <th>Broadcast</th>
+                <td id="binaryBroadcast" class="bits"></td>
+              </tr>
+            </tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <script>
-      /* ---------- Helper functions ---------- */
-      function toBinaryOctets(num) {
-        return ("00000000" + (num >>> 0).toString(2)).slice(-8);
+    <!-- Subnet Details Card -->
+    <div class="card" id="subnetDetails" style="display: none">
+      <h3>Subnet Details</h3>
+      <div style="overflow-x: auto">
+        <table id="subnetTable">
+          <thead>
+            <tr>
+              <th>Subnet ID</th>
+              <th>Subnet Address</th>
+              <th>Host Address Range</th>
+              <th>Broadcast Address</th>
+            </tr>
+          </thead>
+          <tbody id="subnetTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ---------- Helper functions ---------- */
+    function toBinaryOctets(num) {
+      return ("00000000" + (num >>> 0).toString(2)).slice(-8);
+    }
+
+    function ipToBinaryOctets(ip) {
+      return ip.split(".").map(o => toBinaryOctets(parseInt(o, 10) || 0));
+    }
+
+    function bitsHtmlFromOctets(octetsArray, prefix, dimMode) {
+      const bits = octetsArray.join("");
+      const parts = [];
+      for (let i = 0; i < bits.length; i++) {
+        const bit = bits[i];
+        const cls = i < prefix ? "net" : "host";
+        if (dimMode) {
+          // dimMode: dim host bits, keep network bits emphasized
+          parts.push(`<span class="bit ${i < prefix ? "net" : "dim"}">${bit}</span>`);
+        } else {
+          parts.push(`<span class="bit ${cls}">${bit}</span>`);
+        }
+        if ((i + 1) % 8 === 0 && i !== bits.length - 1) {
+          parts.push('<span class="octet-space"></span>');
+        }
+      }
+      return parts.join("");
+    }
+
+    function ipToNumber(ip) {
+      const parts = ip.split(".").map(Number);
+      return ((((parts[0] * 256 + parts[1]) * 256 + parts[2]) * 256 + (parts[3] || 0)) >>> 0);
+    }
+
+    function numberToIp(num) {
+      return [
+        (num >>> 24) & 255,
+        (num >>> 16) & 255,
+        (num >>> 8) & 255,
+        num & 255
+      ].join(".");
+    }
+
+    /* ---------- Debounce for performance ---------- */
+    function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
+    }
+
+    /* ---------- Main calculation ---------- */
+    function calculateSubnet() {
+      const networkInput = document.getElementById("networkAddress").value.trim();
+      const cidrMatch = networkInput.match(/^(\d+\.\d+\.\d+\.\d+)(?:\/(\d+))?$/);
+      if (!cidrMatch) return;
+
+      const networkIp = cidrMatch[1];
+      const originalPrefix = cidrMatch[2] ? parseInt(cidrMatch[2], 10) : null;
+
+      // Determine base (classful) prefix if not provided
+      let basePrefix;
+      if (originalPrefix !== null) {
+        basePrefix = originalPrefix;
+      } else {
+        const firstOctet = parseInt(networkIp.split(".")[0], 10);
+        basePrefix = 8;
+        if (firstOctet >= 128 && firstOctet < 192) basePrefix = 16;
+        else if (firstOctet >= 192) basePrefix = 24;
       }
 
-      function ipToBinaryOctets(ip) {
-        return ip.split(".").map((o) => toBinaryOctets(parseInt(o, 10) || 0));
-      }
+      // Selected CIDR from UI, clamped to not be less specific than the base prefix
+      let selectedCidr = parseInt(document.getElementById("subnetMask").value, 10) || basePrefix;
+      if (selectedCidr < basePrefix) selectedCidr = basePrefix;
+      document.getElementById("subnetMask").value = selectedCidr;
 
-      function bitsHtmlFromOctets(octetsArray, prefix, dimMode) {
-        const bits = octetsArray.join("");
+      const networkNum = ipToNumber(networkIp);
+
+      // Masks and addresses
+      const baseMask = (0xffffffff << (32 - basePrefix)) >>> 0;
+      const baseNetworkAddress = (networkNum & baseMask) >>> 0;
+
+      const hostBits = 32 - selectedCidr;
+      const maxHosts = hostBits > 0 ? Math.pow(2, hostBits) - 2 : 0;
+
+      const selectedMask = (0xffffffff << hostBits) >>> 0;
+      const wildcardMask = (~selectedMask) >>> 0;
+
+      const selectedNetworkAddress = (networkNum & selectedMask) >>> 0;
+      const broadcastAddress = (selectedNetworkAddress | (~selectedMask >>> 0)) >>> 0;
+
+      const firstHost = hostBits > 0 ? (selectedNetworkAddress + 1) >>> 0 : selectedNetworkAddress;
+      const lastHost = hostBits > 0 ? (broadcastAddress - 1) >>> 0 : broadcastAddress;
+
+      const subnetBits = selectedCidr - basePrefix;
+      const numberOfSubnets = subnetBits > 0 ? Math.pow(2, subnetBits) : 1;
+
+      // Batch DOM updates
+      requestAnimationFrame(() => {
+        document.getElementById("hostsPerSubnet").value = maxHosts > 0 ? maxHosts.toLocaleString() : "0";
+        document.getElementById("numberOfSubnets").value = numberOfSubnets.toLocaleString();
+        document.getElementById("hostRange").value = `${numberToIp(firstHost)} - ${numberToIp(lastHost)}`;
+        document.getElementById("broadcastAddress").value = numberToIp(broadcastAddress);
+        document.getElementById("wildcardMask").value = numberToIp(wildcardMask);
+        document.getElementById("cidrNotation").value = `${numberToIp(selectedNetworkAddress)}/${selectedCidr}`;
+
+        const ipOctets = ipToBinaryOctets(networkIp);
+        const maskOctets = ipToBinaryOctets(numberToIp(selectedMask));
+        const networkOctets = ipToBinaryOctets(numberToIp(selectedNetworkAddress));
+        const firstHostOctets = ipToBinaryOctets(numberToIp(firstHost));
+        const lastHostOctets = ipToBinaryOctets(numberToIp(lastHost));
+        const broadcastOctets = ipToBinaryOctets(numberToIp(broadcastAddress));
+
+        document.getElementById("binaryIp").innerHTML = bitsHtmlFromOctets(ipOctets, selectedCidr, false);
+        document.getElementById("binaryMask").innerHTML = bitsHtmlFromOctets(maskOctets, selectedCidr, false);
+        document.getElementById("binaryNetwork").innerHTML = bitsHtmlFromOctets(networkOctets, selectedCidr, true);
+        document.getElementById("binaryFirstHost").innerHTML = bitsHtmlFromOctets(firstHostOctets, selectedCidr, false);
+        document.getElementById("binaryLastHost").innerHTML = bitsHtmlFromOctets(lastHostOctets, selectedCidr, false);
+        document.getElementById("binaryBroadcast").innerHTML = bitsHtmlFromOctets(broadcastOctets, selectedCidr, false);
+
+        // For "Host Portion": dim network bits, emphasize host bits
+        const bits = networkOctets.join("");
         const parts = [];
         for (let i = 0; i < bits.length; i++) {
           const bit = bits[i];
-          const cls = i < prefix ? "net" : "host";
-          if (dimMode) {
-            parts.push(
-              `<span class="bit ${i < prefix ? "net" : "dim"}">${bit}</span>`
-            );
-          } else {
-            parts.push(`<span class="bit ${cls}">${bit}</span>`);
-          }
-          if ((i + 1) % 8 === 0 && i !== bits.length - 1)
+          parts.push(`<span class="bit ${i < selectedCidr ? "dim" : "host"}">${bit}</span>`);
+          if ((i + 1) % 8 === 0 && i !== bits.length - 1) {
             parts.push('<span class="octet-space"></span>');
-        }
-        return parts.join("");
-      }
-
-      function ipToNumber(ip) {
-        const parts = ip.split(".").map(Number);
-        return (
-          (((parts[0] * 256 + parts[1]) * 256 + parts[2]) * 256 +
-            (parts[3] || 0)) >>>
-          0
-        );
-      }
-
-      function numberToIp(num) {
-        return [
-          (num >>> 24) & 255,
-          (num >>> 16) & 255,
-          (num >>> 8) & 255,
-          num & 255,
-        ].join(".");
-      }
-
-      /* ---------- Debounce for performance ---------- */
-      function debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-          const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-          };
-          clearTimeout(timeout);
-          timeout = setTimeout(later, wait);
-        };
-      }
-
-      /* ---------- Main calculation ---------- */
-      function calculateSubnet() {
-        const networkInput = document
-          .getElementById("networkAddress")
-          .value.trim();
-        const cidrMatch = networkInput.match(
-          /^(\d+\.\d+\.\d+\.\d+)(?:\/(\d+))?$/
-        );
-        if (!cidrMatch) return;
-        const networkIp = cidrMatch[1];
-        const originalPrefix = cidrMatch[2] ? parseInt(cidrMatch[2], 10) : null;
-
-        let basePrefix;
-        if (originalPrefix !== null) {
-          basePrefix = originalPrefix;
-        } else {
-          const firstOctet = parseInt(networkIp.split(".")[0], 10);
-          basePrefix = 8;
-          if (firstOctet >= 128 && firstOctet < 192) basePrefix = 16;
-          else if (firstOctet >= 192) basePrefix = 24;
-        }
-
-        let selectedCidr =
-          parseInt(document.getElementById("subnetMask").value, 10) ||
-          basePrefix;
-        if (selectedCidr < basePrefix) selectedCidr = basePrefix;
-        document.getElementById("subnetMask").value = selectedCidr;
-
-        const networkNum = ipToNumber(networkIp);
-        const baseMask = (0xffffffff << (32 - basePrefix)) >>> 0;
-        const baseNetworkAddress = (networkNum & baseMask) >>> 0;
-
-        const hostBits = 32 - selectedCidr;
-        const maxHosts = hostBits > 0 ? Math.pow(2, hostBits) - 2 : 0;
-        const subnetMask = (0xffffffff << hostBits) >>> 0;
-        const wildcardMask = ~subnetMask >>> 0;
-
-        const firstSubnetNetwork = baseNetworkAddress;
-        const broadcastAddress =
-          (firstSubnetNetwork | (~subnetMask >>> 0)) >>> 0;
-        const firstHost =
-          hostBits > 0 ? (firstSubnetNetwork + 1) >>> 0 : firstSubnetNetwork;
-        const lastHost =
-          hostBits > 0 ? (broadcastAddress - 1) >>> 0 : broadcastAddress;
-
-        const subnetBits = selectedCidr - basePrefix;
-        const numberOfSubnets = subnetBits > 0 ? Math.pow(2, subnetBits) : 1;
-        const selectedMask = (0xffffffff << (32 - selectedCidr)) >>> 0;
-        const selectedNetworkAddress = (networkNum & selectedMask) >>> 0;
-
-        // Batch DOM updates
-        requestAnimationFrame(() => {
-          document.getElementById("hostsPerSubnet").value =
-            maxHosts > 0 ? maxHosts.toLocaleString() : "0";
-          document.getElementById("numberOfSubnets").value =
-            numberOfSubnets.toLocaleString();
-          document.getElementById("hostRange").value = `${numberToIp(
-            firstHost
-          )} - ${numberToIp(lastHost)}`;
-          document.getElementById("broadcastAddress").value =
-            numberToIp(broadcastAddress);
-          document.getElementById("wildcardMask").value =
-            numberToIp(wildcardMask);
-          document.getElementById("cidrNotation").value = `${numberToIp(
-            selectedNetworkAddress
-          )}/${selectedCidr}`;
-
-          const ipOctets = ipToBinaryOctets(networkIp);
-          const maskOctets = ipToBinaryOctets(numberToIp(subnetMask));
-          const networkOctets = ipToBinaryOctets(numberToIp(firstSubnetNetwork));
-          const firstHostOctets = ipToBinaryOctets(numberToIp(firstHost));
-          const lastHostOctets = ipToBinaryOctets(numberToIp(lastHost));
-          const broadcastOctets = ipToBinaryOctets(numberToIp(broadcastAddress));
-
-          document.getElementById("binaryIp").innerHTML = bitsHtmlFromOctets(
-            ipOctets,
-            selectedCidr,
-            false
-          );
-          document.getElementById("binaryMask").innerHTML = bitsHtmlFromOctets(
-            maskOctets,
-            selectedCidr,
-            false
-          );
-          document.getElementById("binaryNetwork").innerHTML = bitsHtmlFromOctets(
-            networkOctets,
-            selectedCidr,
-            true
-          );
-          document.getElementById("binaryFirstHost").innerHTML = bitsHtmlFromOctets(
-            firstHostOctets,
-            selectedCidr,
-            false
-          );
-          document.getElementById("binaryLastHost").innerHTML = bitsHtmlFromOctets(
-            lastHostOctets,
-            selectedCidr,
-            false
-          );
-          document.getElementById("binaryBroadcast").innerHTML = bitsHtmlFromOctets(
-            broadcastOctets,
-            selectedCidr,
-            false
-          );
-
-          const bits = networkOctets.join("");
-          const parts = [];
-          for (let i = 0; i < bits.length; i++) {
-            const bit = bits[i];
-            if (i < selectedCidr)
-              parts.push(`<span class="bit dim">${bit}</span>`);
-            else parts.push(`<span class="bit host">${bit}</span>`);
-            if ((i + 1) % 8 === 0 && i !== bits.length - 1)
-              parts.push('<span class="octet-space"></span>');
           }
-          document.getElementById("binaryHost").innerHTML = parts.join("");
-        });
+        }
+        document.getElementById("binaryHost").innerHTML = parts.join("");
+      });
 
-        generateSubnetTable(baseNetworkAddress, selectedCidr, numberOfSubnets);
+      // Build (or rebuild) the subnet table for the base block at the chosen CIDR
+      generateSubnetTable(baseNetworkAddress, selectedCidr, numberOfSubnets);
+    }
+
+    function generateSubnetTable(baseNetwork, cidr, totalSubnets) {
+      const tbody = document.getElementById("subnetTableBody");
+      const detailsCard = document.getElementById("subnetDetails");
+      detailsCard.style.display = "block";
+
+      const hostBits = 32 - cidr;
+      const subnetSize = Math.pow(2, hostBits);
+      const DISPLAY_CAP = 2048;
+      const subnetsToShow = Math.min(DISPLAY_CAP, totalSubnets);
+
+      const fragment = document.createDocumentFragment();
+
+      for (let i = 0; i < subnetsToShow; i++) {
+        const subnetAddress = (baseNetwork + i * subnetSize) >>> 0;
+        const broadcast = (subnetAddress + subnetSize - 1) >>> 0;
+        const firstHost = hostBits > 0 ? (subnetAddress + 1) >>> 0 : subnetAddress;
+        const lastHost = hostBits > 0 ? (broadcast - 1) >>> 0 : broadcast;
+
+        const row = document.createElement("tr");
+        row.innerHTML = `<td>${i + 1}</td>
+                         <td>${numberToIp(subnetAddress)}/${cidr}</td>
+                         <td>${numberToIp(firstHost)} - ${numberToIp(lastHost)}</td>
+                         <td>${numberToIp(broadcast)}</td>`;
+        fragment.appendChild(row);
       }
 
-      function generateSubnetTable(baseNetwork, cidr, totalSubnets) {
-        const tbody = document.getElementById("subnetTableBody");
-        const detailsCard = document.getElementById("subnetDetails");
-        
-        detailsCard.style.display = "block";
-        
-        const hostBits = 32 - cidr;
-        const subnetSize = Math.pow(2, hostBits);
-        const DISPLAY_CAP = 2048;
-        const subnetsToShow = Math.min(DISPLAY_CAP, totalSubnets);
-        
-        // Use DocumentFragment for better performance
-        const fragment = document.createDocumentFragment();
-        
-        for (let i = 0; i < subnetsToShow; i++) {
-          const subnetAddress = (baseNetwork + i * subnetSize) >>> 0;
-          const broadcast = (subnetAddress + subnetSize - 1) >>> 0;
-          const firstHost =
-            hostBits > 0 ? (subnetAddress + 1) >>> 0 : subnetAddress;
-          const lastHost = hostBits > 0 ? (broadcast - 1) >>> 0 : broadcast;
-          
-          const row = document.createElement('tr');
-          row.innerHTML = `<td>${i + 1}</td><td>${numberToIp(
-            subnetAddress
-          )}/${cidr}</td><td>${numberToIp(firstHost)} - ${numberToIp(
-            lastHost
-          )}</td><td>${numberToIp(broadcast)}</td>`;
-          fragment.appendChild(row);
-        }
-        
-        if (totalSubnets > DISPLAY_CAP) {
-          const row = document.createElement('tr');
-          row.innerHTML = `<td colspan="4" style="text-align:center; color:var(--text-secondary); padding:1rem;">Showing first ${DISPLAY_CAP.toLocaleString()} of ${totalSubnets.toLocaleString()} total subnets</td>`;
-          fragment.appendChild(row);
-        }
-        
-        // Single DOM update
-        requestAnimationFrame(() => {
-          tbody.innerHTML = "";
-          tbody.appendChild(fragment);
-        });
+      if (totalSubnets > DISPLAY_CAP) {
+        const row = document.createElement("tr");
+        row.innerHTML = `<td colspan="4" style="text-align:center; color:var(--text-secondary); padding:1rem;">
+                          Showing first ${DISPLAY_CAP.toLocaleString()} of ${totalSubnets.toLocaleString()} total subnets
+                         </td>`;
+        fragment.appendChild(row);
       }
 
-      /* ---------- Mouse wheel subnet cycling ---------- */
-      (function enableSubnetMaskScroll() {
-        const select = document.getElementById("subnetMask");
-        const MIN_CIDR = 8;
-        const MAX_CIDR = 30;
-        
-        function clamp(v) {
-          return Math.max(MIN_CIDR, Math.min(MAX_CIDR, v));
-        }
-        
-        function onWheel(e) {
-          e.preventDefault();
-          const step = e.deltaY < 0 ? -1 : 1;
-          const current = parseInt(select.value, 10) || MIN_CIDR;
-          const next = clamp(current + step);
-          if (next === current) return;
-          select.value = String(next);
-          calculateSubnet();
-        }
-        
-        select.addEventListener("wheel", onWheel, { passive: false });
-      })();
+      requestAnimationFrame(() => {
+        tbody.innerHTML = "";
+        tbody.appendChild(fragment);
+      });
+    }
 
-      /* ---------- Event listeners with debouncing ---------- */
-      const debouncedCalculate = debounce(calculateSubnet, 150);
-      
-      document
-        .getElementById("networkAddress")
-        .addEventListener("input", debouncedCalculate);
-      document
-        .getElementById("subnetMask")
-        .addEventListener("change", calculateSubnet);
-      
-      // Initial calculation
-      calculateSubnet();
-    </script>
-  </body>
+    /* ---------- Mouse wheel subnet cycling ---------- */
+    (function enableSubnetMaskScroll() {
+      const select = document.getElementById("subnetMask");
+      const MIN_CIDR = 8;
+      const MAX_CIDR = 30;
+
+      function clamp(v) { return Math.max(MIN_CIDR, Math.min(MAX_CIDR, v)); }
+
+      function onWheel(e) {
+        e.preventDefault();
+        const step = e.deltaY < 0 ? -1 : 1;
+        const current = parseInt(select.value, 10) || MIN_CIDR;
+        const next = clamp(current + step);
+        if (next === current) return;
+        select.value = String(next);
+        calculateSubnet();
+      }
+
+      select.addEventListener("wheel", onWheel, { passive: false });
+    })();
+
+    /* ---------- Event listeners with debouncing ---------- */
+    const debouncedCalculate = debounce(calculateSubnet, 150);
+    document.getElementById("networkAddress").addEventListener("input", debouncedCalculate);
+    document.getElementById("subnetMask").addEventListener("change", calculateSubnet);
+
+    // Initial calculation
+    calculateSubnet();
+  </script>
+</body>
+
 </html>
