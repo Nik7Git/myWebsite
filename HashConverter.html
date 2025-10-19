@@ -2,15 +2,15 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hash Converter</title>
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22cyan%22>%23</text></svg>">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon"
-        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22cyan%22>%23</text></svg>">
 
     <style>
-        /* Modern Variables matching portfolio style */
         :root {
             --primary-color: #00d4aa;
             --secondary-color: #0066ff;
@@ -27,16 +27,16 @@
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            box-sizing: border-box
         }
 
         body {
-            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: Inter, 'Segoe UI', system-ui, -apple-system, sans-serif;
             line-height: 1.7;
             background: var(--bg-dark);
             color: var(--text-primary);
             min-height: 100vh;
-            padding: 20px;
+            padding: 20px
         }
 
         .container {
@@ -45,20 +45,20 @@
             background: var(--bg-card);
             padding: 3rem;
             border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, .05);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .5);
             position: relative;
             overflow: hidden;
         }
 
         .container::before {
-            content: '';
+            content: "";
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             height: 3px;
-            background: var(--accent-gradient);
+            background: var(--accent-gradient)
         }
 
         h1 {
@@ -73,18 +73,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
-        }
-
-        h1 i {
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            gap: 15px
         }
 
         .input-section {
-            margin-bottom: 2rem;
+            margin-bottom: 2rem
         }
 
         .input-section label {
@@ -92,14 +85,14 @@
             color: var(--text-primary);
             font-weight: 500;
             margin-bottom: 1rem;
-            font-size: 1.1rem;
+            font-size: 1.1rem
         }
 
         #textInput {
             width: 100%;
             min-height: 120px;
-            background: rgba(0, 0, 0, 0.3);
-            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, .3);
+            border: 2px solid rgba(255, 255, 255, .1);
             border-radius: 15px;
             padding: 1.5rem;
             color: var(--text-primary);
@@ -112,11 +105,11 @@
         #textInput:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 20px rgba(0, 212, 170, 0.1);
+            box-shadow: 0 0 20px rgba(0, 212, 170, .1)
         }
 
         #textInput::placeholder {
-            color: var(--text-secondary);
+            color: var(--text-secondary)
         }
 
         .convert-btn {
@@ -134,12 +127,12 @@
             gap: 10px;
             background: var(--accent-gradient);
             color: #000;
-            margin-bottom: 2rem;
+            margin-bottom: 2rem
         }
 
         .convert-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0, 212, 170, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 212, 170, .3)
         }
 
         .convert-btn:active {
@@ -148,12 +141,12 @@
 
         .hash-results {
             display: grid;
-            gap: 1.5rem;
+            gap: 1.5rem
         }
 
         .hash-item {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, .3);
+            border: 1px solid rgba(255, 255, 255, .05);
             border-radius: 15px;
             padding: 1.5rem;
             transition: all 0.3s ease;
@@ -162,7 +155,7 @@
         }
 
         .hash-item::before {
-            content: '';
+            content: "";
             position: absolute;
             top: 0;
             left: 0;
@@ -170,18 +163,18 @@
             height: 2px;
             background: var(--accent-gradient);
             transform: scaleX(0);
-            transition: transform 0.3s ease;
+            transition: transform .3s ease;
         }
 
         .hash-item:hover {
             transform: translateY(-2px);
-            background: rgba(0, 212, 170, 0.05);
+            background: rgba(0, 212, 170, .05);
             border-color: var(--primary-color);
-            box-shadow: 0 10px 30px rgba(0, 212, 170, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 212, 170, .1)
         }
 
         .hash-item:hover::before {
-            transform: scaleX(1);
+            transform: scaleX(1)
         }
 
         .hash-header {
@@ -197,11 +190,11 @@
             font-size: 1.1rem;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 10px
         }
 
         .hash-type i {
-            color: var(--secondary-color);
+            color: var(--secondary-color)
         }
 
         .copy-hash-btn {
@@ -211,40 +204,40 @@
             padding: 8px 15px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: .9rem;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 5px
         }
 
         .copy-hash-btn:hover {
             background: var(--primary-color);
-            color: #000;
+            color: #000
         }
 
         .copy-hash-btn.copied {
             background: var(--success);
             color: #000;
-            border-color: var(--success);
+            border-color: var(--success)
         }
 
         .hash-value {
-            font-family: 'Courier New', monospace;
-            font-size: 0.95rem;
+            font-family: "Courier New", monospace;
+            font-size: .95rem;
             color: var(--text-primary);
             word-break: break-all;
             line-height: 1.5;
             padding: 10px;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, .4);
             border-radius: 8px;
-            border-left: 3px solid var(--primary-color);
+            border-left: 3px solid var(--primary-color)
         }
 
         .hash-info {
             margin-top: 10px;
             color: var(--text-secondary);
-            font-size: 0.85rem;
+            font-size: .85rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -257,25 +250,25 @@
             padding: 10px 20px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: .9rem;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
             gap: 8px;
-            margin: 1rem auto 0;
+            margin: 1rem auto 0
         }
 
         .clear-btn:hover {
             background: var(--warning);
             color: #000;
-            transform: translateY(-2px);
+            transform: translateY(-2px)
         }
 
         .empty-state {
             text-align: center;
             color: var(--text-secondary);
             font-style: italic;
-            padding: 2rem;
+            padding: 2rem
         }
 
         .stats-bar {
@@ -284,65 +277,63 @@
             gap: 2rem;
             margin: 1.5rem 0;
             padding: 1rem;
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, .2);
             border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, .05)
         }
 
         .stat-item {
-            text-align: center;
+            text-align: center
         }
 
         .stat-value {
             font-size: 1.2rem;
             font-weight: 700;
-            color: var(--primary-color);
+            color: var(--primary-color)
         }
 
         .stat-label {
-            font-size: 0.85rem;
+            font-size: .85rem;
             color: var(--text-secondary);
-            margin-top: 4px;
+            margin-top: 4px
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
+        @media(max-width:768px) {
             .container {
-                padding: 2rem;
+                padding: 2rem
             }
 
             h1 {
-                font-size: 1.8rem;
+                font-size: 1.8rem
             }
 
             .hash-header {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 10px;
+                gap: 10px
             }
 
             .hash-info {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 5px;
+                gap: 5px
             }
 
             .stats-bar {
                 flex-direction: column;
-                gap: 1rem;
+                gap: 1rem
             }
         }
 
-        /* Animation */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(20px)
             }
 
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0)
             }
         }
 
@@ -477,7 +468,6 @@
 
         function generateHashes() {
             const text = textInput.value.trim();
-
             if (!text) {
                 hashResults.innerHTML = '<div class="empty-state">Please enter some text to convert</div>';
                 return;
