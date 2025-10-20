@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DNS Lookup — All Records</title>
+
+  <link rel="icon" href="https://cdn3.iconfinder.com/data/icons/seo-flat-4/24/www-512.png" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    :root {
+      --primary: #00d4aa;
+      --secondary: #0066ff;
+      --bg: #0a0a0a;
+      --card: #151515;
+      --card-hover: #1d1d1d;
+      --text: #fff;
+      --muted: #a8a8a8;
+      --grad: linear-gradient(135deg, #00d4aa 0%, #0066ff 100%);
+      --border: rgba(255, 255, 255, .08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    html,
+    body {
+      height: 100%
+    }
+
+    body {
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2rem 1.25rem;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto
+    }
+
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: -.02em;
+      margin-bottom: .5rem;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .tagline {
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 2rem
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.75rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, .25);
+      margin-bottom: 1.25rem;
+    }
+
+    .grid {
+      display: grid;
+      gap: 1rem
+    }
+
+    .grid-2 {
+      grid-template-columns: 2fr 1fr
+    }
+
+    @media (max-width: 900px) {
+      .grid-2 {
+        grid-template-columns: 1fr
+      }
+    }
+
+    label {
+      font-weight: 600;
+      font-size: .9rem;
+      color: var(--primary)
+    }
+
+    input,
+    select {
+      width: 100%;
+      margin-top: .35rem;
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      padding: .8rem 1rem;
+      font-size: .95rem;
+      transition: border-color .15s, box-shadow .15s;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0, 212, 170, .12)
+    }
+
+    .helper {
+      color: var(--muted);
+      font-size: .9rem;
+      margin-top: .35rem
+    }
+
+    button {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      cursor: pointer;
+      background: var(--grad);
+      color: #001018;
+      border: 0;
+      border-radius: 12px;
+      padding: .85rem 1rem;
+      font-weight: 700;
+      letter-spacing: .01em;
+      box-shadow: 0 8px 24px rgba(0, 212, 170, .15);
+      transition: transform .12s ease, box-shadow .12s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px)
+    }
+
+    button:disabled {
+      opacity: .6;
+      cursor: not-allowed
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      margin-top: .5rem
+    }
+
+    .pill {
+      padding: .5rem .8rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .04);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: .9rem;
+      user-select: none;
+    }
+
+    .pill.active {
+      background: var(--card-hover);
+      border-color: var(--primary);
+      box-shadow: inset 0 0 0 1px rgba(0, 212, 170, .25)
+    }
+
+    .label-inline {
+      font-size: .85rem;
+      color: var(--muted);
+      margin-left: .35rem
+    }
+
+    [aria-live] {
+      min-height: 1.25rem
+    }
+
+    .muteborder {
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      padding: .9rem 1rem
+    }
+
+    /* --- Table --- */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: .5rem
+    }
+
+    th,
+    td {
+      padding: .75rem .5rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, .06)
+    }
+
+    th {
+      font-size: .8rem;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--primary);
+      background: rgba(0, 212, 170, .08)
+    }
+
+    .mono {
+      font-family: ui-monospace, Menlo, Consolas, monospace
+    }
+
+    .break {
+      word-break: break-word;
+      overflow-wrap: anywhere
+    }
+
+    /* --- Accordion --- */
+    .accordion {
+      display: grid;
+      gap: 1rem
+    }
+
+    .acc-item {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, .02)
+    }
+
+    .acc-head {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      padding: .9rem 1rem;
+      cursor: pointer;
+      user-select: none;
+      background: rgba(255, 255, 255, .03);
+    }
+
+    .acc-head:hover {
+      background: rgba(255, 255, 255, .05)
+    }
+
+    .acc-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: .02em
+    }
+
+    .acc-icons {
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: .75rem;
+      color: var(--muted)
+    }
+
+    .acc-body {
+      display: none;
+      padding: 1rem 1rem 1.25rem 1rem;
+      background: rgba(255, 255, 255, .02)
+    }
+
+    .acc-item.open .acc-body {
+      display: block
+    }
+
+    .empty-msg {
+      color: var(--muted);
+      padding: .75rem 0 0 0
+    }
+
+    .tiny-btn {
+      font-size: .85rem;
+      background: rgba(255, 255, 255, .06);
+      color: #d9fbf3;
+      padding: .35rem .55rem;
+      border-radius: 8px
+    }
+
+    .tiny-btn:hover {
+      transform: none
+    }
+
+    .badge-count {
+      margin-left: .5rem;
+      font-size: .8rem;
+      padding: .2rem .5rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .04);
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .rightRow {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      justify-content: space-between
+    }
+
+    .muted {
+      color: var(--muted)
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1><img src="https://cdn3.iconfinder.com/data/icons/seo-flat-4/24/www-512.png" alt="DNS Icon"
+        style="width:32px; height:32px; vertical-align:middle; margin-right:8px;">DNS Lookup</h1>
+
+    <!-- ===== SEARCH CARD ===== -->
+    <div class="card">
+      <div class="grid grid-2">
+        <div>
+          <label for="domain">Enter any valid URL or domain</label>
+          <input id="domain" type="text" placeholder="example.com" spellcheck="false" />
+          <div class="helper">Press <strong>Enter</strong> to search.</div>
+        </div>
+
+        <div>
+          <label for="resolver">DNS Server</label>
+          <select id="resolver">
+            <option value="google" selected>Google</option>
+            <option value="cloudflare">Cloudflare</option>
+          </select>
+          <div class="helper">Using DNS-over-HTTPS.</div>
+        </div>
+      </div>
+
+      <label style="display:block;margin-top:1rem;">Record Type</label>
+      <div class="pill-row" id="typePills"></div>
+
+      <div style="height:.75rem"></div>
+      <button id="lookupBtn"><i class="fa-solid fa-magnifying-glass"></i> Lookup DNS</button>
+      <span id="status" class="label-inline" aria-live="polite"></span>
+    </div>
+
+    <!-- ===== RESULTS CARD ===== -->
+    <div class="card">
+      <div class="rightRow" style="margin-bottom:.75rem;">
+        <h3>Results</h3>
+        <button id="toggleAllBtn" class="tiny-btn"><i class="fa-solid fa-compress"></i> Collapse all</button>
+      </div>
+      <div id="resultsSummary" class="helper" aria-live="polite"></div>
+
+      <div id="groupWrap" class="accordion" style="margin-top:1rem;"></div>
+      <div id="emptyState" class="muteborder" style="margin-top:1rem;">
+        No results yet. Enter a domain and click <strong>Lookup DNS</strong>.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===== Constants / UI refs =====
+    const RECORD_TYPES = ["ALL", "A", "AAAA", "CNAME", "MX", "NS", "PTR", "SRV", "SOA", "TXT", "CAA", "DS", "DNSKEY"];
+    const TYPE_ICONS = {
+      A: "fa-solid fa-square",
+      AAAA: "fa-regular fa-square",
+      CNAME: "fa-solid fa-link",
+      MX: "fa-solid fa-envelope",
+      NS: "fa-solid fa-server",
+      PTR: "fa-solid fa-arrow-rotate-left",
+      SRV: "fa-solid fa-diagram-project",
+      SOA: "fa-solid fa-file-lines",
+      TXT: "fa-solid fa-font",
+      CAA: "fa-solid fa-certificate",
+      DS: "fa-solid fa-shield-halved",
+      DNSKEY: "fa-solid fa-key"
+    };
+
+    const domainInput = document.getElementById('domain');
+    const resolverSel = document.getElementById('resolver');
+    const typePills = document.getElementById('typePills');
+    const lookupBtn = document.getElementById('lookupBtn');
+    const statusEl = document.getElementById('status');
+    const resultsSummary = document.getElementById('resultsSummary');
+    const groupWrap = document.getElementById('groupWrap');
+    const emptyState = document.getElementById('emptyState');
+    const toggleAllBtn = document.getElementById('toggleAllBtn');
+
+    // Press Enter to search
+    domainInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); lookupBtn.click(); }
+    });
+
+    // Build record-type pills
+    let currentType = "ALL";
+    function buildPills() {
+      typePills.innerHTML = "";
+      RECORD_TYPES.forEach(t => {
+        const b = document.createElement('button');
+        b.className = 'pill' + (t === currentType ? ' active' : '');
+        b.textContent = t;
+        b.addEventListener('click', () => {
+          document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+          b.classList.add('active');
+          currentType = t;
+        });
+        typePills.appendChild(b);
+      });
+    }
+    buildPills();
+
+    // ===== Helpers =====
+    function escapeHtml(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+    function normalizeHost(input) {
+      if (!input) return '';
+      try { if (/^[a-z]+:\/\//i.test(input)) { const u = new URL(input); return u.hostname.replace(/\.$/, ''); } }
+      catch (e) { }
+      return input.replace(/^[a-z]+:\/\//i, '').replace(/\/.*$/, '').replace(/\.$/, '').trim();
+    }
+    function dohEndpoint(resolver, name, type) {
+      if (resolver === 'cloudflare') {
+        return `https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(name)}&type=${encodeURIComponent(type)}`;
+      }
+      return `https://dns.google/resolve?name=${encodeURIComponent(name)}&type=${encodeURIComponent(type)}&random_padding=xyz`;
+    }
+    function rrTypeToString(num) {
+      const map = { 1: 'A', 2: 'NS', 5: 'CNAME', 6: 'SOA', 12: 'PTR', 15: 'MX', 16: 'TXT', 28: 'AAAA', 33: 'SRV', 43: 'DS', 48: 'DNSKEY', 257: 'CAA' };
+      return map[num] || String(num);
+    }
+    function formatData(type, data) {
+      if (type === 'TXT') return data.replace(/^"|"$/g, '');
+      if (['CNAME', 'NS', 'PTR', 'MX', 'SRV', 'SOA'].includes(type)) return data.replace(/\.$/, '');
+      return data;
+    }
+    function parseMx(data) {
+      const m = data.match(/^\s*(\d+)\s+(.+?)\s*$/);
+      return m ? { pref: Number(m[1]), host: m[2].replace(/\.$/, '') } : { pref: '', host: data.replace(/\.$/, '') };
+    }
+    async function resolveIPs(host, resolver) {
+      const types = ['A', 'AAAA'];
+      const ips = [];
+      await Promise.all(types.map(async t => {
+        const res = await fetch(dohEndpoint(resolver, host, t), { headers: { accept: 'application/dns-json' } });
+        if (!res.ok) return;
+        const json = await res.json();
+        (json.Answer || []).forEach(a => {
+          const typeStr = rrTypeToString(a.type);
+          if ((t === 'A' && typeStr === 'A') || (t === 'AAAA' && typeStr === 'AAAA')) {
+            if (a.data) ips.push(a.data);
+          }
+        });
+      }));
+      return [...new Set(ips)];
+    }
+
+    // ===== Accordion builder =====
+    function createAccItem(typeLabel, count, openDefault = true) {
+      const item = document.createElement('div');
+      item.className = 'acc-item';
+      if (openDefault) item.classList.add('open');
+
+      const head = document.createElement('div');
+      head.className = 'acc-head';
+      const icon = document.createElement('i');
+      icon.className = TYPE_ICONS[typeLabel] || 'fa-regular fa-circle';
+      const title = document.createElement('div');
+      title.className = 'acc-title';
+      title.textContent = typeLabel;
+      const sub = document.createElement('span');
+      sub.className = 'badge-count';
+      sub.textContent = count;
+      const icons = document.createElement('div');
+      icons.className = 'acc-icons';
+      const rawBtn = document.createElement('button');
+      rawBtn.className = 'tiny-btn';
+      rawBtn.type = 'button';
+      rawBtn.innerHTML = '<i class="fa-regular fa-circle-question"></i> Show raw';
+      const chev = document.createElement('i');
+      chev.className = 'fa-solid fa-chevron-down' + (openDefault ? ' fa-rotate-180' : '');
+
+      head.appendChild(icon);
+      head.appendChild(title);
+      head.appendChild(sub);
+      head.appendChild(icons);
+      icons.appendChild(rawBtn);
+      icons.appendChild(chev);
+
+      const body = document.createElement('div');
+      body.className = 'acc-body';
+      const raw = document.createElement('pre');
+      raw.className = 'mono break helper';
+      raw.style.display = 'none';
+      raw.style.marginTop = '.75rem';
+
+      head.addEventListener('click', (e) => {
+        if (e.target === rawBtn || rawBtn.contains(e.target)) return;
+        item.classList.toggle('open');
+        chev.classList.toggle('fa-rotate-180');
+      });
+      rawBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const open = raw.style.display === 'block';
+        raw.style.display = open ? 'none' : 'block';
+        rawBtn.innerHTML = open
+          ? '<i class="fa-regular fa-circle-question"></i> Show raw'
+          : '<i class="fa-regular fa-circle-question"></i> Hide raw';
+      });
+
+      item.appendChild(head);
+      item.appendChild(body);
+      item.appendChild(raw);
+      return { item, body, raw, head, chev };
+    }
+
+    function buildTable(rows) {
+      const table = document.createElement('table');
+      table.className = 'mono';
+      table.innerHTML = `
+        <thead>
+          <tr>
+            <th style="width:32%">Domain Name</th>
+            <th style="width:10%">Type</th>
+            <th style="width:10%">TTL</th>
+            <th>Data</th>
+          </tr>
+        </thead>
+        <tbody></tbody>`;
+      const tb = table.querySelector('tbody');
+      rows.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="break">${escapeHtml(r.name)}</td>
+          <td><strong>${escapeHtml(r.type)}</strong></td>
+          <td>${escapeHtml(r.TTL)}</td>
+          <td class="break">${r.dataHtml ?? escapeHtml(r.data)}</td>`;
+        tb.appendChild(tr);
+      });
+      return table;
+    }
+
+    function setAll(open) {
+      document.querySelectorAll('.acc-item').forEach(it => {
+        const chev = it.querySelector('.fa-chevron-down');
+        if (open) { it.classList.add('open'); chev && chev.classList.add('fa-rotate-180'); }
+        else { it.classList.remove('open'); chev && chev.classList.remove('fa-rotate-180'); }
+      });
+      toggleAllBtn.innerHTML = open
+        ? '<i class="fa-solid fa-compress"></i> Collapse all'
+        : '<i class="fa-solid fa-expand"></i> Expand all';
+    }
+    toggleAllBtn.addEventListener('click', () => {
+      const anyClosed = Array.from(document.querySelectorAll('.acc-item')).some(it => !it.classList.contains('open'));
+      setAll(anyClosed);
+    });
+
+    // ===== Lookup =====
+    lookupBtn.addEventListener('click', async () => {
+      const host = normalizeHost(domainInput.value);
+      if (!host) { statusEl.textContent = 'Please enter a domain.'; return; }
+
+      statusEl.textContent = 'Looking up…';
+      lookupBtn.disabled = true;
+      resultsSummary.textContent = '';
+      groupWrap.innerHTML = '';
+      emptyState.style.display = 'none';
+
+      const resolver = resolverSel.value;
+      const types = (currentType === 'ALL') ? RECORD_TYPES.filter(t => t !== 'ALL') : [currentType];
+
+      const grouped = {};
+      const rawByType = {};
+
+      try {
+        await Promise.all(types.map(async t => {
+          const res = await fetch(dohEndpoint(resolver, host, t), { headers: { accept: 'application/dns-json' } });
+          if (!res.ok) throw new Error(`${t} query failed (${res.status})`);
+          const json = await res.json();
+          rawByType[t] = json;
+
+          const sets = ['Answer', 'Authority', 'Additional'].flatMap(k => json[k] || []);
+          const rows = sets.map(ans => ({
+            name: (ans.name || host).replace(/\.$/, ''),
+            type: rrTypeToString(ans.type),
+            TTL: ans.TTL ?? '',
+            data: formatData(rrTypeToString(ans.type), ans.data ?? '')
+          }));
+
+          const filtered = currentType === 'ALL' ? rows : rows.filter(r => r.type === t);
+
+          // --- MX: "<pref> <host>" then next line "(IPs: ...)" ---
+          if (t === 'MX' && filtered.length) {
+            const uniqHosts = [...new Set(filtered.map(r => parseMx(r.data).host))];
+            const ipMap = {};
+            await Promise.all(uniqHosts.map(async h => { ipMap[h] = await resolveIPs(h, resolver); }));
+            filtered.forEach(r => {
+              const { pref, host: mxHost } = parseMx(r.data);
+              const ips = ipMap[mxHost] || [];
+              const line1 = `${pref} ${mxHost}`;
+              const line2 = ips.length ? `<br><span class="muted">(IPs: ${ips.map(escapeHtml).join(', ')})</span>` : '';
+              r.data = `${line1} ${ips.length ? '(IPs inline)' : ''}`; // unused but kept plain
+              r.dataHtml = `${escapeHtml(line1)}${line2}`;
+            });
+          }
+
+          grouped[t] = filtered;
+        }));
+
+        // Build accordion (expanded by default)
+        let total = 0;
+        const order = (currentType === 'ALL' ? RECORD_TYPES.filter(x => x !== 'ALL') : [currentType]);
+        order.forEach(t => {
+          const rows = grouped[t] || [];
+          total += rows.length;
+
+          const acc = createAccItem(t, rows.length, true);
+          if (rows.length === 0) {
+            const msg = document.createElement('div');
+            msg.className = 'empty-msg';
+            msg.textContent = 'Sorry, no record found!';
+            acc.body.appendChild(msg);
+          } else {
+            acc.body.appendChild(buildTable(rows));
+          }
+          acc.raw.textContent = JSON.stringify(rawByType[t] || {}, null, 2);
+          groupWrap.appendChild(acc.item);
+        });
+
+        setAll(true);
+        resultsSummary.textContent = `${total} record${total === 1 ? '' : 's'} found for “${host}”.`;
+        if (total === 0) emptyState.style.display = 'block';
+        statusEl.textContent = 'Done.';
+      } catch (err) {
+        resultsSummary.textContent = `Error: ${err.message}`;
+        emptyState.style.display = 'block';
+      } finally {
+        lookupBtn.disabled = false;
+      }
+    });
+
+    // Prefill for quick test
+    domainInput.value = 'example.com';
+  </script>
+</body>
+
+</html>
