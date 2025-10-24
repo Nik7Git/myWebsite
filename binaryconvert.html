@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- keep your head exactly as provided -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Binary Converter</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="icon"
+      href='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"%3E%3Cpath d="M262.8 65.8C271.8 62.1 282.1 64.1 289 71L345 127C354.4 136.4 354.4 151.6 345 160.9L289 216.9C282.1 223.8 271.8 225.8 262.8 222.1C253.8 218.4 248 209.7 248 200L248 176L224 176C206.3 176 192 190.3 192 208L192 422.7C220.3 435 240 463.2 240 496C240 540.2 204.2 576 160 576C115.8 576 80 540.2 80 496C80 463.2 99.7 435 128 422.7L128 208C128 155 171 112 224 112L248 112L248 88C248 78.3 253.8 69.5 262.8 65.8zM456 144C456 157.3 466.7 168 480 168C493.3 168 504 157.3 504 144C504 130.7 493.3 120 480 120C466.7 120 456 130.7 456 144zM448 217.3C419.7 205 400 176.8 400 144C400 99.8 435.8 64 480 64C524.2 64 560 99.8 560 144C560 176.8 540.3 205 512 217.3L512 432C512 485 469 528 416 528L392 528L392 552C392 561.7 386.2 570.5 377.2 574.2C368.2 577.9 357.9 575.9 351 569L295 513C285.6 503.6 285.6 488.4 295 479.1L351 423.1C357.9 416.2 368.2 414.2 377.2 417.9C386.2 421.6 392 430.3 392 440L392 464L416 464C433.7 464 448 449.7 448 432L448 217.3zM136 496C136 509.3 146.7 520 160 520C173.3 520 184 509.3 184 496C184 482.7 173.3 472 160 472C146.7 472 136 482.7 136 496z"/%3E%3C/svg%3E'
+    />
+
+    <style>
+      /* Modern Variables matching portfolio style */
+      :root {
+        --primary-color: #00d4aa;
+        --secondary-color: #0066ff;
+        --bg-dark: #0a0a0a;
+        --bg-card: #1a1a1a;
+        --bg-card-hover: #252525;
+        --text-primary: #e0e0e0;
+        --text-secondary: #a0a0a0;
+        --accent-gradient: linear-gradient(135deg, #00d4aa 0%, #0066ff 100%);
+        --success: #00d4aa;
+        --warning: #ff6b35;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+        line-height: 1.7;
+        background: var(--bg-dark);
+        color: var(--text-primary);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        background: var(--bg-card);
+        padding: 3rem;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        position: relative;
+        overflow: hidden;
+        animation: fadeInUp 0.6s ease;
+      }
+
+      .container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--accent-gradient);
+      }
+
+      h1 {
+        font-size: 2.2rem;
+        font-weight: 700;
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-align: center;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+      }
+
+      h1 i {
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .input-row {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 1rem;
+        align-items: end;
+        margin-bottom: 0.75rem;
+      }
+
+      .input-section {
+        margin-bottom: 1.2rem;
+      }
+
+      .input-section label {
+        display: block;
+        color: var(--text-primary);
+        font-weight: 500;
+        margin-bottom: 0.6rem;
+        font-size: 1.05rem;
+      }
+
+      .select-base,
+      .grouping-toggle {
+        background: rgba(0, 0, 0, 0.3);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        color: var(--text-primary);
+        padding: 12px 14px;
+        border-radius: 12px;
+        font-size: 0.95rem;
+      }
+
+      #textInput {
+        width: 100%;
+        min-height: 110px;
+        background: rgba(0, 0, 0, 0.3);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 1.2rem 1.4rem;
+        color: var(--text-primary);
+        font-family: "Inter", sans-serif;
+        font-size: 1rem;
+        resize: vertical;
+        transition: all 0.3s ease;
+      }
+
+      #textInput:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 20px rgba(0, 212, 170, 0.1);
+      }
+
+      #textInput::placeholder {
+        color: var(--text-secondary);
+      }
+
+      .convert-btn {
+        width: 100%;
+        padding: 14px 22px;
+        border: none;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: var(--accent-gradient);
+        color: #000;
+        margin-bottom: 1.2rem;
+      }
+
+      .convert-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(0, 212, 170, 0.3);
+      }
+
+      .convert-btn:active {
+        transform: translateY(0);
+      }
+
+      .error {
+        color: #ff7979;
+        font-size: 0.95rem;
+        margin: 0.2rem 0 0.8rem;
+      }
+
+      .stats-bar {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin: 1.2rem 0 1.6rem;
+        padding: 0.9rem;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .stat-item {
+        text-align: center;
+      }
+
+      .stat-value {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--primary-color);
+      }
+
+      .stat-label {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin-top: 4px;
+      }
+
+      .hash-results {
+        display: grid;
+        gap: 1.2rem;
+      }
+
+      .hash-item {
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 15px;
+        padding: 1.2rem;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        animation: fadeInUp 0.4s ease;
+        animation-fill-mode: both;
+      }
+
+      .hash-item::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: var(--accent-gradient);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+      }
+
+      .hash-item:hover::before {
+        transform: scaleX(1);
+      }
+
+      .hash-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.6rem;
+      }
+
+      .hash-type {
+        font-weight: 600;
+        color: var(--primary-color);
+        font-size: 1.05rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .hash-type i {
+        color: var(--secondary-color);
+      }
+
+      .copy-hash-btn {
+        background: transparent;
+        border: 1px solid var(--primary-color);
+        color: var(--primary-color);
+        padding: 8px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .copy-hash-btn:hover {
+        background: var(--primary-color);
+        color: #000;
+      }
+
+      .copy-hash-btn.copied {
+        background: var(--success);
+        color: #000;
+        border-color: var(--success);
+      }
+
+      .hash-value {
+        font-family: "Courier New", monospace;
+        font-size: 1rem;
+        color: var(--text-primary);
+        line-height: 1.6;
+        padding: 12px 16px;
+        background: rgba(0, 0, 0, 0.4);
+        border-radius: 10px;
+        border-left: 3px solid var(--primary-color);
+        width: 100%;
+        /* ✅ makes it span the card */
+        box-sizing: border-box;
+        /* ✅ prevents overflow */
+        display: block;
+      }
+
+      .hash-info {
+        margin-top: 8px;
+        color: var(--text-secondary);
+        font-size: 0.82rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .clear-btn {
+        background: transparent;
+        border: 2px solid var(--warning);
+        color: var(--warning);
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 1rem auto 0;
+      }
+
+      .clear-btn:hover {
+        background: var(--warning);
+        color: #000;
+        transform: translateY(-2px);
+      }
+
+      .empty-state {
+        text-align: center;
+        color: var(--text-secondary);
+        font-style: italic;
+        padding: 1.4rem;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .container {
+          padding: 2rem;
+        }
+
+        h1 {
+          font-size: 1.8rem;
+        }
+
+        .input-row {
+          grid-template-columns: 1fr;
+        }
+
+        .hash-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+        }
+
+        .hash-info {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 5px;
+        }
+
+        .stats-bar {
+          flex-direction: column;
+          gap: 0.8rem;
+        }
+      }
+
+      /* Animation */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .hash-item:nth-child(1) {
+        animation-delay: 0.1s;
+      }
+
+      .hash-item:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+
+      .hash-item:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+
+      .hash-item:nth-child(4) {
+        animation-delay: 0.4s;
+      }
+
+      .hash-item:nth-child(5) {
+        animation-delay: 0.5s;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1><i class="fa-solid fa-code-compare"></i> Binary Converter</h1>
+
+      <!-- tiny control bar just for the nibble-group toggle -->
+      <div class="input-row" style="margin-bottom: 1rem">
+        <div></div>
+        <label
+          class="grouping-toggle"
+          style="display: flex; align-items: center; gap: 10px; cursor: pointer"
+        >
+          <input
+            id="groupToggle"
+            type="checkbox"
+            checked
+            style="accent-color: #00d4aa; width: 18px; height: 18px"
+          />
+          Group binary in nibbles
+        </label>
+      </div>
+
+      <!-- Stats (base, bits, bytes) -->
+      <div class="stats-bar" aria-live="polite">
+        <div class="stat-item">
+          <div class="stat-value" id="statBase">—</div>
+          <div class="stat-label">Detected Base</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="statBits">—</div>
+          <div class="stat-label">Bits</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="statBytes">—</div>
+          <div class="stat-label">Bytes (min)</div>
+        </div>
+      </div>
+
+      <!-- Results: just the 3 fields, all editable -->
+      <div id="results" class="hash-results" aria-live="polite">
+        <!-- Decimal -->
+        <div class="hash-item">
+          <div class="hash-header">
+            <div class="hash-type">
+              <i class="fa-solid fa-hashtag"></i>Decimal
+            </div>
+            <button class="copy-hash-btn" data-type="dec">
+              <i class="fa-regular fa-copy"></i> Copy
+            </button>
+          </div>
+          <input
+            id="decInput"
+            class="hash-value"
+            placeholder="e.g. 3857"
+            aria-label="Decimal input"
+          />
+          <div
+            class="error"
+            id="decError"
+            role="alert"
+            style="display: none"
+          ></div>
+        </div>
+
+        <!-- Binary -->
+        <div class="hash-item">
+          <div class="hash-header">
+            <div class="hash-type">
+              <i class="fa-solid fa-binary"></i>Binary
+            </div>
+            <button class="copy-hash-btn" data-type="bin">
+              <i class="fa-regular fa-copy"></i> Copy
+            </button>
+          </div>
+          <input
+            id="binInput"
+            class="hash-value"
+            placeholder="e.g. 111100010001 or 0b1111..."
+            aria-label="Binary input"
+          />
+          <div
+            class="error"
+            id="binError"
+            role="alert"
+            style="display: none"
+          ></div>
+        </div>
+
+        <!-- Hex -->
+        <div class="hash-item">
+          <div class="hash-header">
+            <div class="hash-type">
+              <i class="fa-solid fa-hexagon-nodes"></i>Hex
+            </div>
+            <button class="copy-hash-btn" data-type="hex">
+              <i class="fa-regular fa-copy"></i> Copy
+            </button>
+          </div>
+          <input
+            id="hexInput"
+            class="hash-value"
+            placeholder="e.g. F11 or 0xF11"
+            aria-label="Hex input"
+          />
+          <div
+            class="error"
+            id="hexError"
+            role="alert"
+            style="display: none"
+          ></div>
+        </div>
+      </div>
+
+      <button id="clearBtn" class="clear-btn">
+        <i class="fa-regular fa-trash-can"></i> Clear
+      </button>
+    </div>
+
+    <script>
+      // Elements
+      const decInput = document.getElementById("decInput");
+      const binInput = document.getElementById("binInput");
+      const hexInput = document.getElementById("hexInput");
+
+      const decError = document.getElementById("decError");
+      const binError = document.getElementById("binError");
+      const hexError = document.getElementById("hexError");
+
+      const clearBtn = document.getElementById("clearBtn");
+      const groupToggle = document.getElementById("groupToggle");
+
+      const statBase = document.getElementById("statBase");
+      const statBits = document.getElementById("statBits");
+      const statBytes = document.getElementById("statBytes");
+
+      // Keep the last valid number so we can re-render when toggling nibble grouping
+      let lastParsed = null; // BigInt or null
+      let updating = false; // prevent event loops
+
+      // Helpers
+      function showError(el, msg) {
+        el.textContent = msg;
+        el.style.display = "block";
+      }
+      function clearError(el) {
+        el.textContent = "";
+        el.style.display = "none";
+      }
+
+      function bitsNeeded(nBig) {
+        if (nBig === 0n) return 1;
+        let n = nBig < 0n ? -nBig : nBig;
+        let bits = 0;
+        while (n > 0n) {
+          n >>= 1n;
+          bits++;
+        }
+        return bits;
+      }
+
+      function formatBinaryNibbles(bitsStr) {
+        // groups from the right: 1111 0001 0001
+        const rev = bitsStr.split("").reverse();
+        const out = [];
+        for (let i = 0; i < rev.length; i += 4) {
+          out.push(
+            rev
+              .slice(i, i + 4)
+              .reverse()
+              .join("")
+          );
+        }
+        return out.reverse().join(" ");
+      }
+
+      function sanitizeForBase(raw, base) {
+        let v = (raw || "").trim();
+        // accept prefixes + separators
+        v = v.replace(/^0x/i, "").replace(/^0b/i, "").replace(/[\s_]/g, "");
+        if (v === "") return v;
+
+        const sign = v[0] === "-" || v[0] === "+" ? v[0] : "";
+        v = sign ? sign + v.slice(1) : v;
+
+        if (base === 10) {
+          return sign + v.slice(sign ? 1 : 0).replace(/[^0-9]/g, "");
+        } else if (base === 2) {
+          return sign + v.slice(sign ? 1 : 0).replace(/[^01]/g, "");
+        } else {
+          // 16
+          return (
+            sign + v.slice(sign ? 1 : 0).replace(/[^0-9a-fA-F]/g, "")
+          ).toUpperCase();
+        }
+      }
+
+      function parseBigIntFrom(base, value) {
+        if (!value || value === "+" || value === "-") return null;
+        const sign = value[0] === "-" ? "-" : value[0] === "+" ? "+" : "";
+        const core = value.slice(sign ? 1 : 0);
+        try {
+          if (base === 10) return BigInt(value);
+          if (base === 2) return BigInt((sign || "") + "0b" + core);
+          if (base === 16) return BigInt((sign || "") + "0x" + core);
+        } catch {
+          return null;
+        }
+        return null;
+      }
+
+      function updateStats(fromBase, n) {
+        if (n === null) {
+          statBase.textContent = "—";
+          statBits.textContent = "—";
+          statBytes.textContent = "—";
+          return;
+        }
+        const abs = n < 0n ? -n : n;
+        const bits = bitsNeeded(abs);
+        const bytes = Math.ceil(bits / 8);
+
+        statBase.textContent = fromBase;
+        statBits.textContent = (n === 0n ? 1 : bits).toString();
+        statBytes.textContent = bytes.toString();
+      }
+
+      function renderBinaryFieldFromBigInt(n) {
+        const sign = n < 0n ? "-" : "";
+        const abs = n < 0n ? -n : n;
+        const raw = abs.toString(2);
+        binInput.value = groupToggle.checked
+          ? (sign ? "-" : "") + formatBinaryNibbles(raw)
+          : (sign ? "-" : "") + raw;
+      }
+
+      function setAllFromBigInt(n, source) {
+        updating = true;
+
+        lastParsed = n;
+
+        const sign = n < 0n ? "-" : "";
+        const abs = n < 0n ? -n : n;
+
+        const decStr = sign + abs.toString(10);
+        const hexStr = sign + abs.toString(16).toUpperCase();
+
+        if (source !== "dec") decInput.value = decStr;
+        if (source !== "hex") hexInput.value = hexStr;
+        if (source !== "bin") renderBinaryFieldFromBigInt(n);
+
+        updating = false;
+      }
+
+      function convertFrom(which) {
+        if (updating) return;
+
+        // Clear all errors first
+        clearError(decError);
+        clearError(binError);
+        clearError(hexError);
+
+        let raw = "";
+        let base = 10;
+
+        if (which === "dec") {
+          raw = sanitizeForBase(decInput.value, 10);
+          decInput.value = raw;
+          base = 10;
+        } else if (which === "bin") {
+          // remove spaces but keep optional leading sign
+          raw = sanitizeForBase(binInput.value, 2);
+          base = 2;
+        } else {
+          raw = sanitizeForBase(hexInput.value, 16);
+          hexInput.value = raw;
+          base = 16;
+        }
+
+        // Empty => clear
+        if (!raw) {
+          updating = true;
+          if (which !== "dec") decInput.value = "";
+          if (which !== "bin") binInput.value = "";
+          if (which !== "hex") hexInput.value = "";
+          updating = false;
+          lastParsed = null;
+          updateStats("—", null);
+          return;
+        }
+
+        const n = parseBigIntFrom(base, raw);
+        if (n === null) {
+          const el =
+            which === "dec" ? decError : which === "bin" ? binError : hexError;
+          showError(el, "Invalid number for this base.");
+          updateStats("—", null);
+          return;
+        }
+
+        setAllFromBigInt(n, which);
+        updateStats(
+          which === "dec" ? "Decimal" : which === "bin" ? "Binary" : "Hex",
+          n
+        );
+
+        // If user typed into Binary and grouping is on, reformat Binary with grouped nibbles
+        if (which === "bin") renderBinaryFieldFromBigInt(n);
+      }
+
+      // Events (live conversion)
+      decInput.addEventListener("input", () => convertFrom("dec"));
+      binInput.addEventListener("input", () => convertFrom("bin"));
+      hexInput.addEventListener("input", () => convertFrom("hex"));
+
+      // Re-render binary field when toggling group mode
+      groupToggle.addEventListener("change", () => {
+        if (lastParsed !== null) {
+          renderBinaryFieldFromBigInt(lastParsed);
+        } else if (binInput.value) {
+          // regroup whatever is in the field
+          const sanitized = sanitizeForBase(binInput.value, 2);
+          const sign =
+            sanitized[0] === "-" ? "-" : sanitized[0] === "+" ? "+" : "";
+          const core = sanitized.slice(sign ? 1 : 0);
+          binInput.value = groupToggle.checked
+            ? (sign ? "-" : "") + formatBinaryNibbles(core)
+            : (sign ? "-" : "") + core;
+        }
+      });
+
+      // Copy buttons:
+      // - Decimal & Hex: copy what's visible
+      // - Binary: copy UNGROUPED (raw) for convenience
+      document.querySelectorAll(".copy-hash-btn").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          const type = btn.getAttribute("data-type");
+          let toCopy = "";
+          if (type === "dec") toCopy = decInput.value || "";
+          else if (type === "hex") toCopy = hexInput.value || "";
+          else {
+            if (lastParsed === null) {
+              // fall back to visible without spaces
+              const s = sanitizeForBase(binInput.value, 2);
+              const sign = s[0] === "-" ? "-" : s[0] === "+" ? "+" : "";
+              toCopy = sign + s.slice(sign ? 1 : 0);
+            } else {
+              const sign = lastParsed < 0n ? "-" : "";
+              const abs = lastParsed < 0n ? -lastParsed : lastParsed;
+              toCopy = sign + abs.toString(2); // ungrouped
+            }
+          }
+
+          try {
+            await navigator.clipboard.writeText(toCopy);
+            btn.classList.add("copied");
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied';
+            setTimeout(() => {
+              btn.classList.remove("copied");
+              btn.innerHTML = '<i class="fa-regular fa-copy"></i> Copy';
+            }, 1200);
+          } catch {
+            alert("Copy failed. Your browser may block clipboard access.");
+          }
+        });
+      });
+
+      // Clear
+      clearBtn.addEventListener("click", () => {
+        updating = true;
+        decInput.value = "";
+        binInput.value = "";
+        hexInput.value = "";
+        updating = false;
+        clearError(decError);
+        clearError(binError);
+        clearError(hexError);
+        lastParsed = null;
+        updateStats("—", null);
+        decInput.focus();
+      });
+
+      // Initial
+      updateStats("—", null);
+    </script>
+  </body>
+</html>
