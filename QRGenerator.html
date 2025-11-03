@@ -2,593 +2,793 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>QR Generator</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QR Generator</title>
 
-    <link rel="icon" href="https://cdn4.iconfinder.com/data/icons/protection-and-security-flat/64/scanner_scan_qr_code_barcode_reader-512.png">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon"
+    href="https://cdn4.iconfinder.com/data/icons/protection-and-security-flat/64/scanner_scan_qr_code_barcode_reader-512.png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <style>
-        :root {
-            --primary-color: #00d4aa;
-            --bg-dark: #0a0a0a;
-            --bg-card: #1a1a1a;
-            --bg-card-hover: #252525;
-            --text-primary: #e0e0e0;
-            --text-secondary: #a0a0a0;
-            --accent-gradient: linear-gradient(135deg, #00d4aa 0%, #0066ff 100%);
-            --transition-speed: .3s;
-        }
+  <style>
+    :root {
+      --primary-color: #00d4aa;
+      --bg-dark: #0a0a0a;
+      --bg-card: #1a1a1a;
+      --bg-card-hover: #252525;
+      --text-primary: #e0e0e0;
+      --text-secondary: #a0a0a0;
+      --accent-gradient: linear-gradient(135deg, #00d4aa 0%, #0066ff 100%);
+      --transition-speed: .3s;
+    }
 
-        body {
-            font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-            background: var(--bg-dark);
-            color: var(--text-primary);
-            padding: 2rem;
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-        }
+    body {
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
 
-        .container {
-            max-width: 900px;
-            width: 100%
-        }
+    .container {
+      max-width: 900px;
+      width: 100%
+    }
 
-        h1 {
-            text-align: center;
-            font-size: 2.5rem;
-            font-weight: 700;
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: .5rem;
-        }
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: .5rem;
+    }
 
-        .tagline {
-            text-align: center;
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-            font-size: 1rem;
-        }
+    .tagline {
+      text-align: center;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      font-size: 1rem;
+    }
 
-        .card {
-            background: var(--bg-card);
-            padding: 2rem;
-            border-radius: 15px;
-            margin-bottom: 2rem;
-            border: 1px solid rgba(255, 255, 255, .05);
-            transition: all var(--transition-speed) ease;
-        }
+    .card {
+      background: var(--bg-card);
+      padding: 2rem;
+      border-radius: 15px;
+      margin-bottom: 2rem;
+      border: 1px solid rgba(255, 255, 255, .05);
+      transition: all var(--transition-speed) ease;
+    }
 
-        .card:hover {
-            background: var(--bg-card-hover);
-            box-shadow: 0 20px 40px rgba(0, 212, 170, .1)
-        }
+    .mode-switch {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem
+    }
 
-        .mode-switch {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem
-        }
+    .mode-switch button {
+      flex: 1;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, .05);
+      background: rgba(255, 255, 255, .02);
+      color: var(--text-secondary);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-speed) ease;
+    }
 
-        .mode-switch button {
-            flex: 1;
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, .05);
-            background: rgba(255, 255, 255, .02);
-            color: var(--text-secondary);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all var(--transition-speed) ease;
-        }
+    .mode-switch button.active {
+      background: var(--bg-card-hover);
+      border: 1px solid var(--primary-color);
+      color: var(--primary-color)
+    }
 
-        .mode-switch button.active {
-            background: var(--bg-card-hover);
-            border: 1px solid var(--primary-color);
-            color: var(--primary-color)
-        }
+    .input-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
 
-        .input-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
+    .input-group {
+      display: flex;
+      flex-direction: column
+    }
 
-        .input-group {
-            display: flex;
-            flex-direction: column
-        }
+    label {
+      color: var(--primary-color);
+      margin-bottom: .5rem;
+      font-weight: 500;
+      font-size: .9rem
+    }
 
-        label {
-            color: var(--primary-color);
-            margin-bottom: .5rem;
-            font-weight: 500;
-            font-size: .9rem
-        }
+    input,
+    select {
+      background: rgba(255, 255, 255, .05);
+      border: 1px solid rgba(255, 255, 255, .1);
+      color: var(--text-primary);
+      padding: .8rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: all var(--transition-speed) ease;
+    }
 
-        input,
-        select {
-            background: rgba(255, 255, 255, .05);
-            border: 1px solid rgba(255, 255, 255, .1);
-            color: var(--text-primary);
-            padding: .8rem;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all var(--transition-speed) ease;
-        }
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(0, 212, 170, .15)
+    }
 
-        input:focus,
-        select:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(0, 212, 170, .15)
-        }
+    button {
+      cursor: pointer;
+      font-weight: 600;
+      padding: .8rem 1.2rem;
+      border-radius: 8px;
+      border: none;
+      background: var(--accent-gradient);
+      color: #0a0a0a;
+      transition: all .3s ease;
+    }
 
-        button {
-            cursor: pointer;
-            font-weight: 600;
-            padding: .8rem 1.2rem;
-            border-radius: 8px;
-            border: none;
-            background: var(--accent-gradient);
-            color: #0a0a0a;
-            transition: all .3s ease;
-        }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0, 212, 170, .25)
+    }
 
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(0, 212, 170, .25)
-        }
+    button:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 8px rgba(0, 212, 170, .15)
+    }
 
-        button:active {
-            transform: translateY(0);
-            box-shadow: 0 4px 8px rgba(0, 212, 170, .15)
-        }
+    button.secondary {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, .06);
+      color: var(--text-secondary)
+    }
 
-        button.secondary {
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, .06);
-            color: var(--text-secondary)
-        }
+    select option {
+      background: var(--bg-card);
+      color: var(--text-primary);
+      padding: .5rem
+    }
 
-        select option {
-            background: var(--bg-card);
-            color: var(--text-primary);
-            padding: .5rem
-        }
+    .preview {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem
+    }
 
-        .preview {
-            margin-top: 2rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem
-        }
+    #qrcode {
+      background: #fff;
+      padding: 16px;
+      border-radius: 12px;
+      max-width: 100%
+    }
 
-        #qrcode {
-            background: #fff;
-            padding: 16px;
-            border-radius: 12px;
-            max-width: 100%
-        }
+    #logo-container,
+    #size-container {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
 
-        #logo-container,
-        #size-container {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 1rem;
-            flex-wrap: wrap;
-        }
+    @media (max-width:768px) {
+      .input-grid {
+        grid-template-columns: 1fr
+      }
 
-        @media (max-width:768px) {
-            .input-grid {
-                grid-template-columns: 1fr
-            }
+      #logo-container,
+      #size-container {
+        flex-direction: column
+      }
+    }
 
-            #logo-container,
-            #size-container {
-                flex-direction: column
-            }
-        }
-    </style>
+    /* Decoder helpers */
+    .video-wrap {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #000;
+    }
+
+    /* Make video/image/canvas responsive and reasonably capped */
+    #decode-video,
+    #decode-image-preview,
+    #decode-canvas {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      display: none;
+      /* we toggle these in JS */
+      max-height: 420px;
+      /* prevents huge previews */
+      object-fit: contain;
+      /* keep aspect ratio without overflow */
+      background: #000;
+      /* black letterbox */
+    }
+
+    .decode-output {
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 10px;
+      padding: 1rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre-wrap;
+      word-break: break-word;
+      min-height: 56px;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+  </style>
 </head>
 
 <body>
-    <div class="container">
-        <h1><i class="fas fa-qrcode"></i> QR Generator</h1>
-        <p class="tagline">Generate WiFi, URL or vCard QR codes with optional
-            center logo and adjustable size</p>
+  <div class="container">
+    <h1><i class="fas fa-qrcode"></i> QR Generator</h1>
+    <p class="tagline">Generate WiFi, URL or vCard QR codes with optional
+      center logo and adjustable size</p>
 
-        <div class="card">
-            <div class="mode-switch">
-                <button id="mode-wifi" class="active">WiFi</button>
-                <button id="mode-url">URL</button>
-                <button id="mode-vcard">vCard</button>
-            </div>
+    <div class="card">
+      <div class="mode-switch">
+        <button id="mode-wifi" class="active">WiFi</button>
+        <button id="mode-url">URL</button>
+        <button id="mode-vcard">vCard</button>
+        <button id="mode-decode"><i class="fa-solid fa-qrcode"></i> Decoder</button>
+      </div>
 
-            <!-- WiFi Form -->
-            <div id="form-wifi">
-                <div class="input-grid">
-                    <div class="input-group">
-                        <label for="ssid">SSID</label>
-                        <input id="ssid" type="text" placeholder="MyHomeWiFi" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="wifi-pass">Password</label>
-                        <input id="wifi-pass" type="password" placeholder="Leave blank for open network">
-                    </div>
-                    <div class="input-group">
-                        <label for="enc">Encryption</label>
-                        <select id="enc">
-                            <option value="WPA" selected>WPA/WPA2</option>
-                            <option value="WEP">WEP</option>
-                            <option value="nopass">None</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label><input type="checkbox" id="hidden"> Hidden SSID</label>
-                    </div>
-                </div>
-                <div class="action-buttons" style="display:flex;gap:8px">
-                    <button id="generate">Generate QR</button>
-                    <button id="download" class="secondary">Download PNG</button>
-                    <button id="copyText" class="secondary">Copy Payload</button>
-                </div>
-            </div>
+      <!-- WiFi Form -->
+      <div id="form-wifi">
+        <div class="input-grid">
+          <div class="input-group">
+            <label for="ssid">SSID</label>
+            <input id="ssid" type="text" placeholder="MyHomeWiFi" required>
+          </div>
+          <div class="input-group">
+            <label for="wifi-pass">Password</label>
+            <input id="wifi-pass" type="password" placeholder="Leave blank for open network">
+          </div>
+          <div class="input-group">
+            <label for="enc">Encryption</label>
+            <select id="enc">
+              <option value="WPA" selected>WPA/WPA2</option>
+              <option value="WEP">WEP</option>
+              <option value="nopass">None</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label><input type="checkbox" id="hidden"> Hidden SSID</label>
+          </div>
+        </div>
+        <div class="action-buttons">
+          <button id="generate">Generate QR</button>
+          <button id="download" class="secondary">Download PNG</button>
+          <button id="copyText" class="secondary">Copy Payload</button>
+        </div>
+      </div>
 
-            <!-- URL Form -->
-            <div id="form-url" style="display:none">
-                <div class="input-grid">
-                    <div class="input-group">
-                        <label for="url">Website URL</label>
-                        <input id="url" type="url" placeholder="https://example.com" required>
-                    </div>
-                </div>
-                <div class="action-buttons" style="display:flex;gap:8px">
-                    <button id="generate-url">Generate QR</button>
-                    <button id="download-url" class="secondary">Download PNG</button>
-                    <button id="copy-url" class="secondary">Copy Payload</button>
-                </div>
-            </div>
+      <!-- URL Form -->
+      <div id="form-url" style="display:none">
+        <div class="input-grid">
+          <div class="input-group">
+            <label for="url">Website URL</label>
+            <input id="url" type="url" placeholder="https://example.com" required>
+          </div>
+        </div>
+        <div class="action-buttons">
+          <button id="generate-url">Generate QR</button>
+          <button id="download-url" class="secondary">Download PNG</button>
+          <button id="copy-url" class="secondary">Copy Payload</button>
+        </div>
+      </div>
 
-            <!-- vCard Form -->
-            <div id="form-vcard" style="display:none;">
-                <div class="input-grid">
-                    <div class="input-group">
-                        <label for="vcard-firstname">Firstname</label>
-                        <input id="vcard-firstname" type="text" placeholder="John">
-                    </div>
-                    <div class="input-group">
-                        <label for="vcard-lastname">Lastname</label>
-                        <input id="vcard-lastname" type="text" placeholder="Doe">
-                    </div>
-                    <div class="input-group">
-                        <label for="vcard-org">Organization</label>
-                        <input id="vcard-org" type="text" placeholder="Company Inc.">
-                    </div>
-                    <div class="input-group">
-                        <label for="vcard-position">Position (Work)</label>
-                        <input id="vcard-position" type="text" placeholder="CEO">
-                    </div>
-                    <div class="input-group">
-                        <label for="vcard-phone-work">Phone (Work)</label>
-                        <input id="vcard-phone-work" type="tel" placeholder="+1234567890">
-                    </div>
-                    <div class="input-group">
-                        <label for="vcard-phone-private">Phone (Private)</label>
-                        <input id="vcard-phone-private" type="tel" placeholder="+1234567890">
-                    </div>
-                    <div class="input-group">
-                        <label for="vcard-mobile-work">Mobile (Work)</label>
-                        <input id="vcard-mobile-work" type="tel" placeholder="+1234567890">
-                    </div>
-                    <div class="input-group">
-                        <label for="vcard-mobile-private">Mobile (Private)</label>
-                        <input id="vcard-mobile-private" type="tel" placeholder="+1234567890">
-                    </div>
-                    <div class="input-group">
-                        <label for="vcard-fax-work">Fax (Work)</label>
-                        <input id="vcard-fax-work" type="tel" placeholder="+1234567890">
-                    </div>
-                    <div class="input-group">
-                        <label for="vcard-fax-private">Fax (Private)</label>
-                        <input id="vcard-fax-private" type="tel" placeholder="+1234567890">
-                    </div>
-                    <div class="input-group">
-                        <label for="vcard-email">Email</label>
-                        <input id="vcard-email" type="email" placeholder="john@example.com">
-                    </div>
-                    <div class="input-group">
-                        <label for="vcard-website">Website</label>
-                        <input id="vcard-website" type="url" placeholder="https://example.com">
-                    </div>
-                    <div class="input-group">
-                        <label for="vcard-street">Street</label>
-                        <input id="vcard-street" type="text" placeholder="123 Main St">
-                    </div>
-                    <div class="input-group">
-                        <label for="vcard-zipcode">Zipcode</label>
-                        <input id="vcard-zipcode" type="text" placeholder="12345">
-                    </div>
-                    <div class="input-group">
-                        <label for="vcard-city">City</label>
-                        <input id="vcard-city" type="text" placeholder="New York">
-                    </div>
-                    <div class="input-group">
-                        <label for="vcard-state">State</label>
-                        <input id="vcard-state" type="text" placeholder="NY">
-                    </div>
-                    <div class="input-group">
-                        <label for="vcard-country">Country</label>
-                        <input id="vcard-country" type="text" placeholder="USA">
-                    </div>
-                </div>
-                <div class="action-buttons" style="display:flex;gap:8px;">
-                    <button id="generate-vcard">Generate QR</button>
-                    <button id="download-vcard" class="secondary">Download PNG</button>
-                    <button id="copy-vcard" class="secondary">Copy Payload</button>
-                </div>
-            </div>
+      <!-- vCard Form -->
+      <div id="form-vcard" style="display:none;">
+        <div class="input-grid">
+          <div class="input-group">
+            <label for="vcard-firstname">Firstname</label>
+            <input id="vcard-firstname" type="text" placeholder="John">
+          </div>
+          <div class="input-group">
+            <label for="vcard-lastname">Lastname</label>
+            <input id="vcard-lastname" type="text" placeholder="Doe">
+          </div>
+          <div class="input-group">
+            <label for="vcard-org">Organization</label>
+            <input id="vcard-org" type="text" placeholder="Company Inc.">
+          </div>
+          <div class="input-group">
+            <label for="vcard-position">Position (Work)</label>
+            <input id="vcard-position" type="text" placeholder="CEO">
+          </div>
+          <div class="input-group">
+            <label for="vcard-phone-work">Phone (Work)</label>
+            <input id="vcard-phone-work" type="tel" placeholder="+1234567890">
+          </div>
+          <div class="input-group">
+            <label for="vcard-phone-private">Phone (Private)</label>
+            <input id="vcard-phone-private" type="tel" placeholder="+1234567890">
+          </div>
+          <div class="input-group">
+            <label for="vcard-mobile-work">Mobile (Work)</label>
+            <input id="vcard-mobile-work" type="tel" placeholder="+1234567890">
+          </div>
+          <div class="input-group">
+            <label for="vcard-mobile-private">Mobile (Private)</label>
+            <input id="vcard-mobile-private" type="tel" placeholder="+1234567890">
+          </div>
+          <div class="input-group">
+            <label for="vcard-fax-work">Fax (Work)</label>
+            <input id="vcard-fax-work" type="tel" placeholder="+1234567890">
+          </div>
+          <div class="input-group">
+            <label for="vcard-fax-private">Fax (Private)</label>
+            <input id="vcard-fax-private" type="tel" placeholder="+1234567890">
+          </div>
+          <div class="input-group">
+            <label for="vcard-email">Email</label>
+            <input id="vcard-email" type="email" placeholder="john@example.com">
+          </div>
+          <div class="input-group">
+            <label for="vcard-website">Website</label>
+            <input id="vcard-website" type="url" placeholder="https://example.com">
+          </div>
+          <div class="input-group">
+            <label for="vcard-street">Street</label>
+            <input id="vcard-street" type="text" placeholder="123 Main St">
+          </div>
+          <div class="input-group">
+            <label for="vcard-zipcode">Zipcode</label>
+            <input id="vcard-zipcode" type="text" placeholder="12345">
+          </div>
+          <div class="input-group">
+            <label for="vcard-city">City</label>
+            <input id="vcard-city" type="text" placeholder="New York">
+          </div>
+          <div class="input-group">
+            <label for="vcard-state">State</label>
+            <input id="vcard-state" type="text" placeholder="NY">
+          </div>
+          <div class="input-group">
+            <label for="vcard-country">Country</label>
+            <input id="vcard-country" type="text" placeholder="USA">
+          </div>
+        </div>
+        <div class="action-buttons">
+          <button id="generate-vcard">Generate QR</button>
+          <button id="download-vcard" class="secondary">Download PNG</button>
+          <button id="copy-vcard" class="secondary">Copy Payload</button>
+        </div>
+      </div>
+
+      <!-- NEW: QR Decoder Form -->
+      <div id="form-decode" style="display:none;">
+        <h3>QR Decoder</h3>
+
+        <div class="input-group" style="margin-bottom:.75rem">
+          <label for="decode-file"><i class="fa-solid fa-image"></i> Choose image</label>
+          <input id="decode-file" type="file" accept="image/*">
         </div>
 
-        <!-- QR Preview + Global Logo & Size -->
-        <div class="preview">
-            <strong>Preview</strong>
-            <div id="qrcode"></div>
-            <small id="payloadPreview">&nbsp;</small>
-
-            <div id="size-container">
-                <label for="size">Size: <span id="sizeLabel">300</span> px</label>
-                <input id="size" type="range" min="128" max="1200" value="300"
-                    oninput="document.getElementById('sizeLabel').textContent=this.value">
-            </div>
-
-            <div id="logo-container">
-                <label for="logo">Center logo (optional)</label>
-                <input id="logo" type="file" accept="image/*">
-            </div>
+        <div class="action-buttons" style="margin-bottom:.75rem">
+          <button id="start-camera"><i class="fa-solid fa-camera"></i> Use Camera</button>
+          <button id="stop-camera" class="secondary"><i class="fa-solid fa-stop"></i> Stop</button>
+          <button id="copy-decode" class="secondary"><i class="fa-solid fa-copy"></i> Copy</button>
+          <a id="open-link" class="secondary"
+            style="display:none; text-decoration:none; padding:.8rem 1.2rem; border-radius:8px; border:1px solid rgba(255,255,255,.06);"
+            href="#" target="_blank" rel="noopener">Open Link</a>
         </div>
+
+        <div class="video-wrap" style="margin-bottom:.75rem">
+          <video id="decode-video" playsinline></video>
+          <canvas id="decode-canvas"></canvas>
+          <img id="decode-image-preview" alt="">
+        </div>
+
+        <div class="decode-output" id="decode-output" aria-live="polite"></div>
+      </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script>
-        // Elements
-        const elements = {
-            modeWiFi: document.getElementById('mode-wifi'),
-            modeURL: document.getElementById('mode-url'),
-            modeVCard: document.getElementById('mode-vcard'),
-            formWiFi: document.getElementById('form-wifi'),
-            formURL: document.getElementById('form-url'),
-            formVCard: document.getElementById('form-vcard'),
-            ssid: document.getElementById('ssid'),
-            pass: document.getElementById('wifi-pass'),
-            enc: document.getElementById('enc'),
-            hidden: document.getElementById('hidden'),
-            url: document.getElementById('url'),
-            vcardFirstname: document.getElementById('vcard-firstname'),
-            vcardLastname: document.getElementById('vcard-lastname'),
-            vcardOrg: document.getElementById('vcard-org'),
-            vcardPosition: document.getElementById('vcard-position'),
-            vcardPhoneWork: document.getElementById('vcard-phone-work'),
-            vcardPhonePrivate: document.getElementById('vcard-phone-private'),
-            vcardMobileWork: document.getElementById('vcard-mobile-work'),
-            vcardMobilePrivate: document.getElementById('vcard-mobile-private'),
-            vcardFaxWork: document.getElementById('vcard-fax-work'),
-            vcardFaxPrivate: document.getElementById('vcard-fax-private'),
-            vcardEmail: document.getElementById('vcard-email'),
-            vcardWebsite: document.getElementById('vcard-website'),
-            vcardStreet: document.getElementById('vcard-street'),
-            vcardZipcode: document.getElementById('vcard-zipcode'),
-            vcardCity: document.getElementById('vcard-city'),
-            vcardState: document.getElementById('vcard-state'),
-            vcardCountry: document.getElementById('vcard-country'),
-            size: document.getElementById('size'),
-            logo: document.getElementById('logo'),
-            qrcodeContainer: document.getElementById('qrcode'),
-            payloadPreview: document.getElementById('payloadPreview'),
-            generateBtn: document.getElementById('generate'),
-            generateUrlBtn: document.getElementById('generate-url'),
-            generateVCardBtn: document.getElementById('generate-vcard'),
-            downloadBtn: document.getElementById('download'),
-            downloadUrlBtn: document.getElementById('download-url'),
-            downloadVCardBtn: document.getElementById('download-vcard'),
-            copyBtn: document.getElementById('copyText'),
-            copyUrlBtn: document.getElementById('copy-url'),
-            copyVCardBtn: document.getElementById('copy-vcard')
+    <!-- QR Preview + Global Logo & Size -->
+    <div class="preview">
+      <strong>Preview</strong>
+      <div id="qrcode"></div>
+      <small id="payloadPreview">&nbsp;</small>
+
+      <div id="size-container">
+        <label for="size">Size: <span id="sizeLabel">300</span> px</label>
+        <input id="size" type="range" min="128" max="1200" value="300"
+          oninput="document.getElementById('sizeLabel').textContent=this.value">
+      </div>
+
+      <div id="logo-container">
+        <label for="logo">Center logo (optional)</label>
+        <input id="logo" type="file" accept="image/*">
+      </div>
+    </div>
+  </div>
+
+  <!-- Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+
+  <script>
+    // Elements
+    const elements = {
+      modeWiFi: document.getElementById('mode-wifi'),
+      modeURL: document.getElementById('mode-url'),
+      modeVCard: document.getElementById('mode-vcard'),
+      formWiFi: document.getElementById('form-wifi'),
+      formURL: document.getElementById('form-url'),
+      formVCard: document.getElementById('form-vcard'),
+      ssid: document.getElementById('ssid'),
+      pass: document.getElementById('wifi-pass'),
+      enc: document.getElementById('enc'),
+      hidden: document.getElementById('hidden'),
+      url: document.getElementById('url'),
+      vcardFirstname: document.getElementById('vcard-firstname'),
+      vcardLastname: document.getElementById('vcard-lastname'),
+      vcardOrg: document.getElementById('vcard-org'),
+      vcardPosition: document.getElementById('vcard-position'),
+      vcardPhoneWork: document.getElementById('vcard-phone-work'),
+      vcardPhonePrivate: document.getElementById('vcard-phone-private'),
+      vcardMobileWork: document.getElementById('vcard-mobile-work'),
+      vcardMobilePrivate: document.getElementById('vcard-mobile-private'),
+      vcardFaxWork: document.getElementById('vcard-fax-work'),
+      vcardFaxPrivate: document.getElementById('vcard-fax-private'),
+      vcardEmail: document.getElementById('vcard-email'),
+      vcardWebsite: document.getElementById('vcard-website'),
+      vcardStreet: document.getElementById('vcard-street'),
+      vcardZipcode: document.getElementById('vcard-zipcode'),
+      vcardCity: document.getElementById('vcard-city'),
+      vcardState: document.getElementById('vcard-state'),
+      vcardCountry: document.getElementById('vcard-country'),
+      size: document.getElementById('size'),
+      logo: document.getElementById('logo'),
+      qrcodeContainer: document.getElementById('qrcode'),
+      payloadPreview: document.getElementById('payloadPreview'),
+      generateBtn: document.getElementById('generate'),
+      generateUrlBtn: document.getElementById('generate-url'),
+      generateVCardBtn: document.getElementById('generate-vcard'),
+      downloadBtn: document.getElementById('download'),
+      downloadUrlBtn: document.getElementById('download-url'),
+      downloadVCardBtn: document.getElementById('download-vcard'),
+      copyBtn: document.getElementById('copyText'),
+      copyUrlBtn: document.getElementById('copy-url'),
+      copyVCardBtn: document.getElementById('copy-vcard')
+    };
+
+    // NEW: Decoder button element
+    const modeDecode = document.getElementById('mode-decode');
+
+    let logoDataUrl = null;
+    let qr = null;
+
+    // Mode switch
+    function switchMode(mode) {
+      elements.modeWiFi.classList.toggle('active', mode === 'wifi');
+      elements.modeURL.classList.toggle('active', mode === 'url');
+      elements.modeVCard.classList.toggle('active', mode === 'vcard');
+      modeDecode.classList.toggle('active', mode === 'decode');
+
+      elements.formWiFi.style.display = mode === 'wifi' ? 'block' : 'none';
+      elements.formURL.style.display = mode === 'url' ? 'block' : 'none';
+      elements.formVCard.style.display = mode === 'vcard' ? 'block' : 'none';
+      document.getElementById('form-decode').style.display = mode === 'decode' ? 'block' : 'none';
+    }
+
+    elements.modeWiFi.addEventListener('click', () => switchMode('wifi'));
+    elements.modeURL.addEventListener('click', () => switchMode('url'));
+    elements.modeVCard.addEventListener('click', () => switchMode('vcard'));
+    modeDecode.addEventListener('click', () => switchMode('decode'));
+
+    // Logo upload
+    elements.logo.addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (!file) return logoDataUrl = null;
+      const reader = new FileReader();
+      reader.onload = () => logoDataUrl = reader.result;
+      reader.readAsDataURL(file);
+    });
+
+    // Payload functions
+    function escapeWiFi(str) { return (str || '').replace(/([\\;,:"])/g, '\\$1'); }
+
+    function wifiPayload() {
+      const t = elements.enc.value === 'nopass' ? '' : elements.enc.value;
+      const h = elements.hidden.checked ? 'H:true;' : '';
+      let payload = `WIFI:T:${t};S:${escapeWiFi(elements.ssid.value)};`;
+      if (t) payload += `P:${escapeWiFi(elements.pass.value)};`;
+      payload += h + ';';
+      return payload.replace(/:+;/g, ';');
+    }
+
+    function urlPayload() { return elements.url.value || ''; }
+
+    function vcardPayload() {
+      const firstname = elements.vcardFirstname.value || '';
+      const lastname = elements.vcardLastname.value || '';
+      const org = elements.vcardOrg.value || '';
+      const position = elements.vcardPosition.value || '';
+      const phoneWork = elements.vcardPhoneWork.value || '';
+      const phonePrivate = elements.vcardPhonePrivate.value || '';
+      const mobileWork = elements.vcardMobileWork.value || '';
+      const mobilePrivate = elements.vcardMobilePrivate.value || '';
+      const faxWork = elements.vcardFaxWork.value || '';
+      const faxPrivate = elements.vcardFaxPrivate.value || '';
+      const email = elements.vcardEmail.value || '';
+      const website = elements.vcardWebsite.value || '';
+      const street = elements.vcardStreet.value || '';
+      const zipcode = elements.vcardZipcode.value || '';
+      const city = elements.vcardCity.value || '';
+      const state = elements.vcardState.value || '';
+      const country = elements.vcardCountry.value || '';
+
+      let vcard = 'BEGIN:VCARD\n';
+      vcard += 'VERSION:3.0\n';
+
+      // Name (N:lastname;firstname;;;)
+      if (firstname || lastname) {
+        vcard += `N:${lastname};${firstname};;;\n`;
+        vcard += (`FN:${firstname} ${lastname}`).trim() + '\n';
+      }
+
+      // Organization and Title
+      if (org) vcard += `ORG:${org}\n`;
+      if (position) vcard += `TITLE:${position}\n`;
+
+      // Phone numbers with types
+      if (phoneWork) vcard += `TEL;TYPE=WORK,VOICE:${phoneWork}\n`;
+      if (phonePrivate) vcard += `TEL;TYPE=HOME,VOICE:${phonePrivate}\n`;
+      if (mobileWork) vcard += `TEL;TYPE=WORK,CELL:${mobileWork}\n`;
+      if (mobilePrivate) vcard += `TEL;TYPE=HOME,CELL:${mobilePrivate}\n`;
+      if (faxWork) vcard += `TEL;TYPE=WORK,FAX:${faxWork}\n`;
+      if (faxPrivate) vcard += `TEL;TYPE=HOME,FAX:${faxPrivate}\n`;
+
+      // Email and Website
+      if (email) vcard += `EMAIL:${email}\n`;
+      if (website) vcard += `URL:${website}\n`;
+
+      // Address (ADR:;;street;city;state;zipcode;country)
+      if (street || city || state || zipcode || country) {
+        vcard += `ADR;TYPE=WORK:;;${street};${city};${state};${zipcode};${country}\n`;
+      }
+      
+      vcard += 'END:VCARD';
+      return vcard;
+    }
+
+    function getPayload() {
+      if (elements.formWiFi.style.display === 'block') return wifiPayload();
+      if (elements.formURL.style.display === 'block') return urlPayload();
+      if (elements.formVCard.style.display === 'block') return vcardPayload();
+      return '';
+    }
+
+    function clearQr() { elements.qrcodeContainer.innerHTML = ''; }
+
+    function generate(type) {
+      let payload = '';
+      if (type === 'wifi') {
+        payload = wifiPayload();
+      } else if (type === 'url') {
+        payload = urlPayload();
+      } else if (type === 'vcard') {
+        payload = vcardPayload();
+      }
+
+      elements.payloadPreview.textContent = payload || '\u00A0';
+      clearQr();
+
+      const size = parseInt(elements.size.value || 300, 10);
+      new QRCode(elements.qrcodeContainer, {
+        text: payload, width: size, height: size,
+        colorDark: '#000', colorLight: '#fff',
+        correctLevel: QRCode.CorrectLevel.H
+      });
+
+      if (!logoDataUrl) return;
+
+      setTimeout(() => {
+        const qrEl = elements.qrcodeContainer.querySelector('img') || elements.qrcodeContainer.querySelector('canvas');
+        if (!qrEl) return;
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(0, 0, size, size);
+        ctx.drawImage(qrEl, 0, 0, size, size);
+
+        const logoImg = new Image();
+        logoImg.onload = () => {
+          const maxLogo = Math.floor(size * 0.22);
+          const scale = Math.min(maxLogo / logoImg.width, maxLogo / logoImg.height, 1);
+          const lw = logoImg.width * scale;
+          const lh = logoImg.height * scale;
+          const lx = (size - lw) / 2;
+          const ly = (size - lh) / 2;
+          ctx.fillStyle = '#fff';
+          ctx.fillRect(lx - 6, ly - 6, lw + 12, lh + 12);
+          ctx.drawImage(logoImg, lx, ly, lw, lh);
+          elements.qrcodeContainer.innerHTML = '';
+          canvas.style.borderRadius = '6px';
+          elements.qrcodeContainer.appendChild(canvas);
         };
+        logoImg.src = logoDataUrl;
+      }, 80);
+    }
 
-        let logoDataUrl = null;
-        let qr = null;
+    function downloadQR() {
+      const el = elements.qrcodeContainer.querySelector('canvas') || elements.qrcodeContainer.querySelector('img');
+      if (!el) return;
+      const size = parseInt(elements.size.value || 300, 10);
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0, 0, size, size);
+      ctx.drawImage(el, 0, 0, size, size);
+      const a = document.createElement('a');
+      a.href = canvas.toDataURL('image/png');
+      a.download = 'qr.png';
+      a.click();
+    }
 
-        // Mode switch
-        function switchMode(mode) {
-            elements.modeWiFi.classList.toggle('active', mode === 'wifi');
-            elements.modeURL.classList.toggle('active', mode === 'url');
-            elements.modeVCard.classList.toggle('active', mode === 'vcard');
-            elements.formWiFi.style.display = mode === 'wifi' ? 'block' : 'none';
-            elements.formURL.style.display = mode === 'url' ? 'block' : 'none';
-            elements.formVCard.style.display = mode === 'vcard' ? 'block' : 'none';
-        }
+    function copyPayload() {
+      const payload = getPayload();
+      if (!payload) return;
+      navigator.clipboard.writeText(payload).then(() => {
+        alert('Payload copied to clipboard!');
+      });
+    }
 
-        elements.modeWiFi.addEventListener('click', () => switchMode('wifi'));
-        elements.modeURL.addEventListener('click', () => switchMode('url'));
-        elements.modeVCard.addEventListener('click', () => switchMode('vcard'));
+    // Event bindings
+    elements.generateBtn.addEventListener('click', () => generate('wifi'));
+    elements.generateUrlBtn.addEventListener('click', () => generate('url'));
+    elements.generateVCardBtn.addEventListener('click', () => generate('vcard'));
+    elements.downloadBtn.addEventListener('click', downloadQR);
+    elements.downloadUrlBtn.addEventListener('click', downloadQR);
+    elements.downloadVCardBtn.addEventListener('click', downloadQR);
+    elements.copyBtn.addEventListener('click', copyPayload);
+    elements.copyUrlBtn.addEventListener('click', copyPayload);
+    elements.copyVCardBtn.addEventListener('click', copyPayload);
 
-        // Logo upload
-        elements.logo.addEventListener('change', e => {
-            const file = e.target.files[0];
-            if (!file) return logoDataUrl = null;
-            const reader = new FileReader();
-            reader.onload = () => logoDataUrl = reader.result;
-            reader.readAsDataURL(file);
-        });
+    /* =========================
+       QR Decoder (image + camera)
+       ========================= */
+    const dFile = document.getElementById('decode-file');
+    const dVideo = document.getElementById('decode-video');
+    const dCanvas = document.getElementById('decode-canvas');
+    const dImgPrev = document.getElementById('decode-image-preview');
+    const dOut = document.getElementById('decode-output');
+    const dStart = document.getElementById('start-camera');
+    const dStop = document.getElementById('stop-camera');
+    const dCopy = document.getElementById('copy-decode');
+    const dOpen = document.getElementById('open-link');
 
-        // Payload functions
-        function escapeWiFi(str) { return (str || '').replace(/([\\;,:"])/g, '\\$1'); }
+    let dCtx = dCanvas.getContext('2d');
+    let dStream = null;
+    let scanning = false;
 
-        function wifiPayload() {
-            const t = elements.enc.value === 'nopass' ? '' : elements.enc.value;
-            const h = elements.hidden.checked ? 'H:true;' : '';
-            let payload = `WIFI:T:${t};S:${escapeWiFi(elements.ssid.value)};`;
-            if (t) payload += `P:${escapeWiFi(elements.pass.value)};`;
-            payload += h + ';';
-            return payload.replace(/:+;/g, ';');
-        }
+    function setDecodeResult(text) {
+      dOut.textContent = text || '';
+      try {
+        const url = new URL(text);
+        dOpen.style.display = 'inline-block';
+        dOpen.href = url.href;
+      } catch {
+        dOpen.style.display = 'none';
+        dOpen.removeAttribute('href');
+      }
+    }
 
-        function urlPayload() { return elements.url.value || ''; }
+    function decodeFromCanvas() {
+      const imgData = dCtx.getImageData(0, 0, dCanvas.width, dCanvas.height);
+      const code = jsQR(imgData.data, imgData.width, imgData.height, { inversionAttempts: 'dontInvert' });
+      if (code && code.data) {
+        setDecodeResult(code.data);
+        return code.data;
+      }
+      return null;
+    }
 
-        function vcardPayload() {
-            const firstname = elements.vcardFirstname.value || '';
-            const lastname = elements.vcardLastname.value || '';
-            const org = elements.vcardOrg.value || '';
-            const position = elements.vcardPosition.value || '';
-            const phoneWork = elements.vcardPhoneWork.value || '';
-            const phonePrivate = elements.vcardPhonePrivate.value || '';
-            const mobileWork = elements.vcardMobileWork.value || '';
-            const mobilePrivate = elements.vcardMobilePrivate.value || '';
-            const faxWork = elements.vcardFaxWork.value || '';
-            const faxPrivate = elements.vcardFaxPrivate.value || '';
-            const email = elements.vcardEmail.value || '';
-            const website = elements.vcardWebsite.value || '';
-            const street = elements.vcardStreet.value || '';
-            const zipcode = elements.vcardZipcode.value || '';
-            const city = elements.vcardCity.value || '';
-            const state = elements.vcardState.value || '';
-            const country = elements.vcardCountry.value || '';
+    // Image file decoding (show canvas, hide raw image)
+    if (dFile) {
+      dFile.addEventListener('change', (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
 
-            let vcard = 'BEGIN:VCARD\n';
-            vcard += 'VERSION:3.0\n';
+        const reader = new FileReader();
+        reader.onload = () => {
+          const img = new Image();
+          img.onload = () => {
+            // Hide raw image; we'll show the scaled canvas
+            dImgPrev.style.display = 'none';
+            dVideo.style.display = 'none';
+            dCanvas.style.display = 'block';
 
-            // Name (N:lastname;firstname;;;)
-            if (firstname || lastname) {
-                vcard += `N:${lastname};${firstname};;;\n`;
-                vcard += `FN:${firstname} ${lastname}\n`.trim() + '\n';
-            }
+            const maxW = 800;
+            const scale = Math.min(maxW / img.width, 1);
+            dCanvas.width = Math.floor(img.width * scale);
+            dCanvas.height = Math.floor(img.height * scale);
+            dCtx.drawImage(img, 0, 0, dCanvas.width, dCanvas.height);
 
-            // Organization and Title
-            if (org) vcard += `ORG:${org}\n`;
-            if (position) vcard += `TITLE:${position}\n`;
+            const res = decodeFromCanvas();
+            if (!res) setDecodeResult('No QR code found in image.');
+          };
+          img.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
 
-            // Phone numbers with types
-            if (phoneWork) vcard += `TEL;TYPE=WORK,VOICE:${phoneWork}\n`;
-            if (phonePrivate) vcard += `TEL;TYPE=HOME,VOICE:${phonePrivate}\n`;
-            if (mobileWork) vcard += `TEL;TYPE=WORK,CELL:${mobileWork}\n`;
-            if (mobilePrivate) vcard += `TEL;TYPE=HOME,CELL:${mobilePrivate}\n`;
-            if (faxWork) vcard += `TEL;TYPE=WORK,FAX:${faxWork}\n`;
-            if (faxPrivate) vcard += `TEL;TYPE=HOME,FAX:${faxPrivate}\n`;
+    // Camera decoding (ensure canvas hidden while scanning)
+    async function startCamera() {
+      try {
+        dStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+        dVideo.srcObject = dStream;
+        await dVideo.play();
+        dVideo.style.display = 'block';
+        dCanvas.style.display = 'none';   // hide canvas during live preview
+        dImgPrev.style.display = 'none';
+        scanning = true;
+        scanLoop();
+      } catch {
+        setDecodeResult('Camera access failed or is not supported.');
+      }
+    }
 
-            // Email and Website
-            if (email) vcard += `EMAIL:${email}\n`;
-            if (website) vcard += `URL:${website}\n`;
+    function stopCamera() {
+      scanning = false;
+      if (dStream) {
+        dStream.getTracks().forEach(t => t.stop());
+        dStream = null;
+      }
+      dVideo.pause();
+      dVideo.srcObject = null;
+      dVideo.style.display = 'none';
+    }
 
-            // Address (ADR:;;street;city;state;zipcode;country)
-            if (street || city || state || zipcode || country) {
-                vcard += `ADR;TYPE=WORK:;;${street};${city};${state};${zipcode};${country}\n`;
-            }
+    function scanLoop() {
+      if (!scanning) return;
+      const w = dVideo.videoWidth;
+      const h = dVideo.videoHeight;
+      if (w && h) {
+        dCanvas.width = w;
+        dCanvas.height = h;
+        dCtx.drawImage(dVideo, 0, 0, w, h);
+        const res = decodeFromCanvas();
+        if (res) stopCamera(); // auto-stop when a code is found
+      }
+      requestAnimationFrame(scanLoop);
+    }
 
-            vcard += 'END:VCARD';
-            return vcard;
-        }
-
-        function getPayload() {
-            if (elements.formWiFi.style.display === 'block') return wifiPayload();
-            if (elements.formURL.style.display === 'block') return urlPayload();
-            if (elements.formVCard.style.display === 'block') return vcardPayload();
-            return '';
-        }
-
-        function clearQr() { elements.qrcodeContainer.innerHTML = ''; }
-
-        function generate(type) {
-            let payload = '';
-            if (type === 'wifi') {
-                payload = wifiPayload();
-            } else if (type === 'url') {
-                payload = urlPayload();
-            } else if (type === 'vcard') {
-                payload = vcardPayload();
-            }
-
-            elements.payloadPreview.textContent = payload || '\u00A0';
-            clearQr();
-
-            const size = parseInt(elements.size.value || 300);
-            qr = new QRCode(elements.qrcodeContainer, { text: payload, width: size, height: size, colorDark: '#000', colorLight: '#fff', correctLevel: QRCode.CorrectLevel.H });
-
-            if (!logoDataUrl) return;
-
-            setTimeout(() => {
-                const qrEl = elements.qrcodeContainer.querySelector('img') || elements.qrcodeContainer.querySelector('canvas');
-                if (!qrEl) return;
-                const canvas = document.createElement('canvas');
-                canvas.width = size;
-                canvas.height = size;
-                const ctx = canvas.getContext('2d');
-                ctx.fillStyle = '#fff';
-                ctx.fillRect(0, 0, size, size);
-                ctx.drawImage(qrEl, 0, 0, size, size);
-
-                const logoImg = new Image();
-                logoImg.onload = () => {
-                    const maxLogo = Math.floor(size * 0.22);
-                    const scale = Math.min(maxLogo / logoImg.width, maxLogo / logoImg.height, 1);
-                    const lw = logoImg.width * scale;
-                    const lh = logoImg.height * scale;
-                    const lx = (size - lw) / 2;
-                    const ly = (size - lh) / 2;
-                    ctx.fillStyle = '#fff';
-                    ctx.fillRect(lx - 6, ly - 6, lw + 12, lh + 12);
-                    ctx.drawImage(logoImg, lx, ly, lw, lh);
-                    elements.qrcodeContainer.innerHTML = '';
-                    canvas.style.borderRadius = '6px';
-                    elements.qrcodeContainer.appendChild(canvas);
-                };
-                logoImg.src = logoDataUrl;
-            }, 80);
-        }
-
-        function downloadQR() {
-            const el = elements.qrcodeContainer.querySelector('canvas') || elements.qrcodeContainer.querySelector('img');
-            const size = parseInt(elements.size.value || 300);
-            const canvas = document.createElement('canvas');
-            canvas.width = size;
-            canvas.height = size;
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#fff';
-            ctx.fillRect(0, 0, size, size);
-            ctx.drawImage(el, 0, 0, size, size);
-            const a = document.createElement('a');
-            a.href = canvas.toDataURL('image/png');
-            a.download = 'qr.png';
-            a.click();
-        }
-
-        function copyPayload() {
-            const payload = getPayload();
-            navigator.clipboard.writeText(payload).then(() => {
-                alert('Payload copied to clipboard!');
-            });
-        }
-
-        // Event bindings
-        elements.generateBtn.addEventListener('click', () => generate('wifi'));
-        elements.generateUrlBtn.addEventListener('click', () => generate('url'));
-        elements.generateVCardBtn.addEventListener('click', () => generate('vcard'));
-        elements.downloadBtn.addEventListener('click', downloadQR);
-        elements.downloadUrlBtn.addEventListener('click', downloadQR);
-        elements.downloadVCardBtn.addEventListener('click', downloadQR);
-        elements.copyBtn.addEventListener('click', copyPayload);
-        elements.copyUrlBtn.addEventListener('click', copyPayload);
-        elements.copyVCardBtn.addEventListener('click', copyPayload);
-    </script>
+    if (dStart) dStart.addEventListener('click', startCamera);
+    if (dStop) dStop.addEventListener('click', stopCamera);
+    if (dCopy) dCopy.addEventListener('click', () => {
+      const text = dOut.textContent || '';
+      if (!text) return;
+      navigator.clipboard.writeText(text).then(() => alert('Decoded text copied!'));
+    });
+  </script>
 </body>
 
 </html>
