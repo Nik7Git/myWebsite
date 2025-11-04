@@ -426,7 +426,8 @@
       <div class="lists-grid">
         <div>
           <div class="heading-row">
-            <h3>In Reception <span id="inCount" class="count"></span></h3>
+            <h3>In Reception <span id="inCount" class="count"></span> <span id="inTotal" class="count muted"></span>
+            </h3>
             <span id="inHeaderDate" class="muted small"></span>
           </div>
           <table id="inTable">
@@ -443,7 +444,7 @@
         </div>
         <div>
           <div class="heading-row">
-            <h3>Collected <span id="colCount" class="count"></span></h3>
+            <h3>Collected <span id="colCount" class="count"></span> <span id="colTotal" class="count muted"></span></h3>
             <span id="colHeaderDate" class="muted small"></span>
           </div>
           <table id="collectedTable">
@@ -624,6 +625,8 @@
       colHeaderDate: document.getElementById("colHeaderDate"),
       inCount: document.getElementById("inCount"),
       colCount: document.getElementById("colCount"),
+      inTotal: document.getElementById("inTotal"),
+      colTotal: document.getElementById("colTotal"),
 
       // Scanner
       scannerPanel: document.getElementById("scannerPanel"),
@@ -872,6 +875,8 @@
       els.colHeaderDate.textContent = headerDateText;
       els.inCount.textContent = `(${inForDay.length})`;
       els.colCount.textContent = `(${collForDay.length})`;
+      els.inTotal.textContent = `· Total ${data.in.length}`;
+      els.colTotal.textContent = `· Total ${data.collected.length}`;
 
       setStatus(externalFileHandle ? "Saving to Disk ✓" : "Local only");
     }
