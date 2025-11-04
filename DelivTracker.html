@@ -659,7 +659,7 @@
 
     const settingsStore = {
       load() {
-        try { return Object.assign({ allowRedelivery: true, audio: true, vibrate: true, requireReceived: false, requireCollected: false }, JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}')); }
+        try { return Object.assign({ allowRedelivery: false, audio: true, vibrate: true, requireReceived: false, requireCollected: false }, JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}')); }
         catch { return { allowRedelivery: true, audio: true, vibrate: true, requireReceived: false, requireCollected: false }; }
       },
       save(s) { localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); },
