@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Delivery Tracker</title>
+
+  <link rel="icon" href="https://cdn1.iconfinder.com/data/icons/shopping-e-commerce-10/33/truck_delivery-64.png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --bg: #0b1220;
+      --panel: #121a2b;
+      --panel-2: #0f1627;
+      --text: #e6eefc;
+      --muted: #9bb1d0;
+      --accent: #4da3ff;
+      --success: #1cc78a;
+      --warning: #ffcc66;
+      --danger: #ff5d6c;
+      --chip: #22304d;
+      --border: #22314f;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans";
+      background:
+        radial-gradient(1200px 600px at 20% -10%, #1b2a4d 0%, transparent 50%),
+        radial-gradient(900px 500px at 110% 10%, #0a1c36 0%, transparent 50%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 20px clamp(16px, 3vw, 32px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(18, 26, 43, 0.6);
+      backdrop-filter: blur(8px);
+      z-index: 10;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(18px, 3vw, 24px);
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .layout {
+      padding: 24px clamp(16px, 3vw, 32px);
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    @media (max-width: 1100px) {
+      .layout {
+        grid-template-columns: 1.4fr 1fr;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: linear-gradient(180deg, rgba(18, 26, 43, 0.8), rgba(18, 26, 43, 0.5));
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .panel-header .title {
+      font-weight: 600;
+    }
+
+    .spacer {
+      flex: 1;
+    }
+
+    .row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    button,
+    input,
+    select {
+      border: 1px solid var(--border);
+      background: var(--panel-2);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    button.soft {
+      background: var(--chip);
+    }
+
+    button.primary {
+      background: linear-gradient(180deg, #2a67c8, #184a94);
+      border-color: #2d64b9;
+    }
+
+    button.success {
+      background: linear-gradient(180deg, #18b57f, #0d8a61);
+      border-color: #0aa26d;
+    }
+
+    button:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .small {
+      font-size: 12px;
+    }
+
+    .danger {
+      color: var(--danger);
+    }
+
+    .lists-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 720px) {
+      .lists-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--panel-2);
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    thead th {
+      text-align: left;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--muted);
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .pill {
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #15395e;
+      border: 1px solid #1e4470;
+      font-size: 12px;
+    }
+
+    .status-in {
+      background: #273a6b;
+      border-color: #3a4c80;
+    }
+
+    .status-collected {
+      background: #1b5b45;
+      border-color: #1f6f52;
+    }
+
+    .kbd {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      background: #111827;
+      border: 1px solid #374151;
+      border-radius: 6px;
+      padding: 2px 6px;
+    }
+
+    .save-indicator {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .banner {
+      background: #fff3cd;
+      color: #654d03;
+      border: 1px solid #ffe69c;
+      border-left: 4px solid #ffda6a;
+      padding: 10px 14px;
+      margin: 12px clamp(16px, 3vw, 32px) 0;
+      border-radius: 10px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .banner button {
+      background: #ffe69c;
+      color: #5c3d00;
+      border-color: #ffd24d;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .daybar {
+      margin: 8px 0 14px;
+      gap: 10px;
+    }
+
+    .heading-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin: 6px 0;
+    }
+
+    .heading-row h3 {
+      margin: 0;
+    }
+
+    .count {
+      font-size: 12px;
+      color: var(--muted);
+      margin-left: 8px;
+    }
+
+    .scanner-body {
+      display: grid;
+      gap: 10px;
+    }
+
+    .scanner-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    #preview {
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: #000;
+      max-height: 260px;
+    }
+
+    .panel.scanner.compact .preview-wrap,
+    .panel.scanner.compact .camera-controls {
+      display: none;
+    }
+
+    .sidebar-note {
+      line-height: 1.2;
+    }
+
+    /* Dialog (settings) */
+    dialog::backdrop {
+      background: rgba(0, 0, 0, .5);
+    }
+
+    dialog {
+      border: none;
+      padding: 0;
+      background: transparent;
+    }
+
+    .dialog-card {
+      width: min(680px, 96vw);
+    }
+
+    .setting-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+    }
+
+    .setting-line label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Print */
+    @media print {
+      body {
+        background: #fff;
+        color: #000;
+      }
+
+      header,
+      #scannerPanel,
+      #reconnectBar,
+      .daybar .spacer+.muted {
+        display: none !important;
+      }
+
+      .panel {
+        border: none;
+        background: #fff;
+      }
+
+      table {
+        border: 1px solid #999;
+      }
+
+      thead th {
+        color: #000;
+      }
+
+      .pill {
+        border: 1px solid #777;
+        background: #e8e8e8;
+        color: #000;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1><i class="fa-solid fa-truck"></i>Delivery Tracker</h1>
+    <div class="row" role="group" aria-label="File and tools">
+      <span id="saveState" class="save-indicator">Local only</span>
+      <button id="exportCsvBtn" class="soft" title="Export to CSV">Export CSV</button>
+      <button id="downloadJsonBtn" class="soft" title="Download a JSON backup">Download JSON</button>
+      <button id="importCsvBtn" class="soft" title="Import from CSV">Import CSV</button>
+      <input id="importCsvInput" type="file" accept=".csv" class="hidden" />
+      <button id="printBtn" class="soft" title="Print this view">Print</button>
+      <span class="spacer"></span>
+      <button id="undoBtn" class="soft" title="Undo last action" disabled><i class="fa-solid fa-rotate-left"></i>
+        Undo</button>
+      <button id="settingsBtn" class="soft" title="Settings"><i class="fa-solid fa-gear"></i> Settings</button>
+      <button id="chooseFileBtn" class="soft" title="Choose a JSON file to continuously save to">Choose Save
+        File</button>
+      <button id="openFileBtn" class="soft" title="Open existing JSON and start saving into it">Open Existing
+        File</button>
+      <span id="fileNote" class="save-indicator"></span>
+      <button id="resetAllBtn" class="soft danger" title="Erase local database only">Erase Database</button>
+    </div>
+  </header>
+
+  <div id="reconnectBar" class="banner hidden" role="alert">
+    Not writing to disk yet.
+    <button id="reconnectBtn">Reconnect</button>
+    <span class="muted small">Pick or re-grant access to your JSON in C:\ReceptionTrackerData\</span>
+  </div>
+
+  <div class="layout">
+    <!-- Main: Lists -->
+    <section class="panel" aria-labelledby="listsHeading">
+      <div class="panel-header">
+        <span id="listsHeading" class="title">Lists</span>
+        <span class="spacer"></span>
+        <input id="search" type="search" placeholder="Search barcode… (press / to focus)" aria-label="Search barcode" />
+        <select id="filter" aria-label="Filter status">
+          <option value="all">All</option>
+          <option value="in">In reception</option>
+          <option value="collected">Collected</option>
+        </select>
+        <button id="clearCollectedBtn" class="soft">Clear Collected</button>
+      </div>
+
+      <div class="row daybar" role="group" aria-label="Day controls">
+        <button id="prevDayBtn" class="soft" title="Previous day (←)"><i class="fa-solid fa-chevron-left"></i>
+          Prev</button>
+        <input id="dayPicker" type="date" aria-label="Pick day" />
+        <button id="todayBtn" class="soft" title="Jump to today (t)">Today</button>
+        <button id="nextDayBtn" class="soft" title="Next day (→)">Next <i
+            class="fa-solid fa-chevron-right"></i></button>
+        <span class="muted small" id="dayLabel"></span>
+        <span class="spacer"></span>
+        <span class="muted small">Day view: In = received on day · Collected = collected on day</span>
+      </div>
+
+      <div class="lists-grid">
+        <div>
+          <div class="heading-row">
+            <h3>In Reception <span id="inCount" class="count"></span></h3>
+            <span id="inHeaderDate" class="muted small"></span>
+          </div>
+          <table id="inTable">
+            <thead>
+              <tr>
+                <th>Barcode</th>
+                <th>Received</th>
+                <th>Received By</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div>
+          <div class="heading-row">
+            <h3>Collected <span id="colCount" class="count"></span></h3>
+            <span id="colHeaderDate" class="muted small"></span>
+          </div>
+          <table id="collectedTable">
+            <thead>
+              <tr>
+                <th>Barcode</th>
+                <th>Received</th>
+                <th>Received By</th>
+                <th>Collected</th>
+                <th>Collected By</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sidebar: Scanner (compactable) -->
+    <section class="panel scanner" id="scannerPanel" aria-labelledby="scannerHeading">
+      <div class="panel-header">
+        <span id="scannerHeading" class="title">Scanner</span>
+        <span class="spacer"></span>
+        <button id="toggleCompactBtn" class="soft" title="Toggle compact view">
+          <i class="fa-solid fa-minimize"></i> Compact
+        </button>
+      </div>
+
+      <div class="scanner-body">
+        <div class="row sidebar-note small muted">
+          <span>USB scanners that type digits + <span class="kbd">Enter</span> also work. Shortcuts: <span
+              class="kbd">/</span> search, <span class="kbd">n</span> new, <span class="kbd">t</span> today, <span
+              class="kbd">[</span>/<span class="kbd">]</span> day, <span class="kbd">c</span> compact, <span
+              class="kbd">z</span> undo.</span>
+        </div>
+
+        <div class="preview-wrap">
+          <video id="preview" muted autoplay playsinline aria-label="Camera preview"></video>
+        </div>
+
+        <div class="row camera-controls" role="group" aria-label="Camera controls">
+          <button id="startBtn" class="primary">Start Camera</button>
+          <button id="stopBtn" class="soft">Stop</button>
+          <button id="switchBtn" class="soft" title="Switch camera">Switch</button>
+        </div>
+
+        <datalist id="nameList"></datalist>
+
+        <!-- Names -->
+        <div class="scanner-grid">
+          <input id="receivedByInput" type="text" list="nameList" placeholder="Received by (name)…"
+            aria-label="Received by" />
+          <input id="collectedByInput" type="text" list="nameList" placeholder="Collected by (name)…"
+            aria-label="Collected by" />
+        </div>
+
+        <!-- Manual / barcode -->
+        <div class="row">
+          <input id="manualInput" type="text" placeholder="Type or scan barcode, then Enter…" aria-label="Barcode"
+            autofocus />
+          <button id="manualAddBtn" class="success">Add / Toggle</button>
+        </div>
+
+        <div id="lastScan" class="muted small" role="status" aria-live="polite">No scans yet.</div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Settings dialog -->
+  <dialog id="settingsDialog">
+    <div class="panel dialog-card">
+      <div class="panel-header">
+        <span class="title">Settings</span>
+        <span class="spacer"></span>
+        <form method="dialog"><button class="soft">Close</button></form>
+      </div>
+      <div class="setting-line">
+        <label><input type="checkbox" id="setAllowRedelivery"> Allow re-delivery of same barcode</label>
+      </div>
+      <div class="setting-line">
+        <label><input type="checkbox" id="setAudio"> Sound on scan</label>
+      </div>
+      <div class="setting-line">
+        <label><input type="checkbox" id="setVibrate"> Vibrate on scan</label>
+      </div>
+      <div class="setting-line">
+        <label><input type="checkbox" id="setRequireReceived"> Require “Received by” when adding</label>
+      </div>
+      <div class="setting-line">
+        <label><input type="checkbox" id="setRequireCollected"> Require “Collected by” when collecting</label>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- ZXing -->
+  <script src="https://cdn.jsdelivr.net/npm/@zxing/library@0.20.0/umd/index.min.js"></script>
+
+  <script>
+    /* ---------- IndexedDB to persist the file handle ---------- */
+    const idb = {
+      db: null,
+      open() {
+        return new Promise((resolve, reject) => {
+          const req = indexedDB.open("reception-tracker", 1);
+          req.onupgradeneeded = () => {
+            const db = req.result;
+            if (!db.objectStoreNames.contains("kv")) db.createObjectStore("kv");
+          };
+          req.onsuccess = () => { idb.db = req.result; resolve(); };
+          req.onerror = () => reject(req.error);
+        });
+      },
+      set(key, value) {
+        return new Promise((resolve, reject) => {
+          const tx = idb.db.transaction("kv", "readwrite");
+          tx.objectStore("kv").put(value, key);
+          tx.oncomplete = () => resolve();
+          tx.onerror = () => reject(tx.error);
+        });
+      },
+      get(key) {
+        return new Promise((resolve, reject) => {
+          const tx = idb.db.transaction("kv", "readonly");
+          const req = tx.objectStore("kv").get(key);
+          req.onsuccess = () => resolve(req.result ?? null);
+          req.onerror = () => reject(req.error);
+        });
+      },
+    };
+
+    /* ---------- State ---------- */
+    const LS_KEY = "reception-tracker";
+    const LS_SCANNER_COMPACT = "scanner-compact-v1";
+    const SETTINGS_KEY = "reception-settings-v1";
+
+    let data = { in: [], collected: [] };
+    let externalFileHandle = null, storedHandle = null;
+    let currentDeviceId = null, codeReader = null;
+    let undoStack = [];
+
+    const IDB_FILE_HANDLE_KEY = "desktopJsonHandleV1";
+
+    // Day paging
+    let viewDate = new Date();
+
+    const els = {
+      // Header / file
+      saveState: document.getElementById("saveState"),
+      fileNote: document.getElementById("fileNote"),
+      reconnectBar: document.getElementById("reconnectBar"),
+      reconnectBtn: document.getElementById("reconnectBtn"),
+
+      // Lists
+      inBody: document.querySelector("#inTable tbody"),
+      collBody: document.querySelector("#collectedTable tbody"),
+      search: document.getElementById("search"),
+      filter: document.getElementById("filter"),
+      clearCollectedBtn: document.getElementById("clearCollectedBtn"),
+      exportCsvBtn: document.getElementById("exportCsvBtn"),
+      downloadJsonBtn: document.getElementById("downloadJsonBtn"),
+      importCsvBtn: document.getElementById("importCsvBtn"),
+      importCsvInput: document.getElementById("importCsvInput"),
+      printBtn: document.getElementById("printBtn"),
+      undoBtn: document.getElementById("undoBtn"),
+      settingsBtn: document.getElementById("settingsBtn"),
+      resetAllBtn: document.getElementById("resetAllBtn"),
+      chooseFileBtn: document.getElementById("chooseFileBtn"),
+      openFileBtn: document.getElementById("openFileBtn"),
+
+      // Day controls
+      prevDayBtn: document.getElementById("prevDayBtn"),
+      nextDayBtn: document.getElementById("nextDayBtn"),
+      todayBtn: document.getElementById("todayBtn"),
+      dayPicker: document.getElementById("dayPicker"),
+      dayLabel: document.getElementById("dayLabel"),
+      inHeaderDate: document.getElementById("inHeaderDate"),
+      colHeaderDate: document.getElementById("colHeaderDate"),
+      inCount: document.getElementById("inCount"),
+      colCount: document.getElementById("colCount"),
+
+      // Scanner
+      scannerPanel: document.getElementById("scannerPanel"),
+      toggleCompactBtn: document.getElementById("toggleCompactBtn"),
+      manual: document.getElementById("manualInput"),
+      manualAdd: document.getElementById("manualAddBtn"),
+      receivedBy: document.getElementById("receivedByInput"),
+      collectedBy: document.getElementById("collectedByInput"),
+      nameList: document.getElementById("nameList"),
+      lastScan: document.getElementById("lastScan"),
+      video: document.getElementById("preview"),
+      start: document.getElementById("startBtn"),
+      stop: document.getElementById("stopBtn"),
+      switch: document.getElementById("switchBtn"),
+
+      // Settings dialog
+      settingsDialog: document.getElementById("settingsDialog"),
+      setAllowRedelivery: document.getElementById("setAllowRedelivery"),
+      setAudio: document.getElementById("setAudio"),
+      setVibrate: document.getElementById("setVibrate"),
+      setRequireReceived: document.getElementById("setRequireReceived"),
+      setRequireCollected: document.getElementById("setRequireCollected"),
+    };
+
+    const store = {
+      load() { try { return JSON.parse(localStorage.getItem(LS_KEY)) || { in: [], collected: [] }; } catch { return { in: [], collected: [] }; } },
+      save(d) { localStorage.setItem(LS_KEY, JSON.stringify(d)); },
+      clear() { localStorage.removeItem(LS_KEY); },
+    };
+
+    const settingsStore = {
+      load() {
+        try { return Object.assign({ allowRedelivery: true, audio: true, vibrate: true, requireReceived: false, requireCollected: false }, JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}')); }
+        catch { return { allowRedelivery: true, audio: true, vibrate: true, requireReceived: false, requireCollected: false }; }
+      },
+      save(s) { localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); },
+    };
+
+    let settings = settingsStore.load();
+
+    const nowIso = () => new Date().toISOString();
+    const fmt = (s) => new Date(s).toLocaleString();
+
+    // Day helpers
+    const yyyy_mm_dd = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    const isSameDay = (a, b) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+    const niceDay = (d) => {
+      const t = new Date(); const y = new Date(); y.setDate(t.getDate() - 1);
+      if (isSameDay(d, t)) return "Today";
+      if (isSameDay(d, y)) return "Yesterday";
+      return d.toLocaleDateString(undefined, { weekday: "short", year: "numeric", month: "short", day: "numeric" });
+    };
+    const setViewDate = (d) => { viewDate = new Date(d.getFullYear(), d.getMonth(), d.getDate()); els.dayPicker.value = yyyy_mm_dd(viewDate); els.dayLabel.textContent = niceDay(viewDate); render(); };
+
+    function setStatus(text) { els.saveState.textContent = text; }
+    function setFileNote(name) { els.fileNote.textContent = name ? `· ${name}` : ""; }
+    function showReconnect(show) { els.reconnectBar.classList.toggle("hidden", !show); }
+
+    /* ---------- Feedback (audio + haptics) ---------- */
+    let audioCtx = null;
+    function ensureAudio() { if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch { } } }
+    function beep(freq = 880, dur = 120) {
+      if (!settings.audio) return;
+      ensureAudio(); if (!audioCtx) return;
+      const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+      o.type = 'sine'; o.frequency.value = freq; o.connect(g); g.connect(audioCtx.destination);
+      const t = audioCtx.currentTime;
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.12, t + 0.02);
+      o.start();
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur / 1000);
+      o.stop(t + (dur / 1000) + 0.02);
+    }
+    function feedbackOK() { beep(1000, 120); if (settings.vibrate && navigator.vibrate) navigator.vibrate(20); }
+    function feedbackDuplicate() { beep(240, 200); setTimeout(() => beep(200, 200), 120); if (settings.vibrate && navigator.vibrate) navigator.vibrate([20, 40, 20]); }
+
+    /* ---------- File Access ---------- */
+    async function persistFileHandle(handle) { await idb.set(IDB_FILE_HANDLE_KEY, handle); }
+    async function restoreFileHandleIfGranted() {
+      try {
+        const handle = await idb.get(IDB_FILE_HANDLE_KEY);
+        if (!handle) return null;
+        const perm = await handle.queryPermission({ mode: "readwrite" });
+        return perm === "granted" ? handle : null;
+      } catch (e) { console.warn("restoreFileHandleIfGranted:", e); return null; }
+    }
+
+    async function chooseSaveFile() {
+      try {
+        const handle = await window.showSaveFilePicker({
+          suggestedName: "reception-deliveries.json",
+          types: [{ description: "JSON", accept: { "application/json": [".json"] } }],
+          excludeAcceptAllOption: true,
+        });
+        externalFileHandle = handle; storedHandle = handle;
+        await persistFileHandle(handle);
+        setFileNote(handle.name); showReconnect(false);
+
+        const file = await handle.getFile(); const text = await file.text();
+        if (text.trim()) {
+          try { const parsed = JSON.parse(text); if (parsed && parsed.in && parsed.collected) { data = parsed; render(); rebuildNameList(); } } catch { }
+        }
+        await saveAll();
+      } catch (err) { console.warn("chooseSaveFile:", err); }
+    }
+
+    async function openExistingFile() {
+      try {
+        const [handle] = await window.showOpenFilePicker({ multiple: false, types: [{ description: "JSON", accept: { "application/json": [".json"] } }], excludeAcceptAllOption: true });
+        if (!handle) return;
+        externalFileHandle = handle; storedHandle = handle;
+        await persistFileHandle(handle);
+        setFileNote(handle.name); showReconnect(false);
+
+        const f = await handle.getFile(); const t = await f.text();
+        if (t.trim()) { try { const parsed = JSON.parse(t); if (parsed && parsed.in && parsed.collected) { data = parsed; render(); rebuildNameList(); } } catch { } }
+        await saveAll();
+      } catch (err) { console.warn("openExistingFile:", err); }
+    }
+
+    async function reconnectSavedFile() {
+      try {
+        if (!storedHandle) storedHandle = await idb.get(IDB_FILE_HANDLE_KEY);
+        if (!storedHandle) { await chooseSaveFile(); return; }
+
+        let perm = await storedHandle.queryPermission({ mode: "readwrite" });
+        if (perm !== "granted") perm = await storedHandle.requestPermission({ mode: "readwrite" });
+
+        if (perm === "granted") {
+          externalFileHandle = storedHandle; setFileNote(storedHandle.name); showReconnect(false);
+          const f = await externalFileHandle.getFile(); const t = await f.text();
+          if (t.trim()) { const parsed = JSON.parse(t); if (parsed && parsed.in && parsed.collected) { data = parsed; render(); rebuildNameList(); } }
+          await saveAll();
+        } else { await chooseSaveFile(); }
+      } catch (e) { console.warn("reconnectSavedFile:", e); await chooseSaveFile(); }
+    }
+
+    async function saveExternalFile(d) {
+      if (!externalFileHandle) return;
+      const writable = await externalFileHandle.createWritable();
+      await writable.write(JSON.stringify(d)); await writable.close();
+    }
+
+    /* ---------- Helpers ---------- */
+    function rebuildNameList() {
+      const names = new Set();
+      data.in.forEach(i => { if (i.receivedBy) names.add(i.receivedBy); if (i.collectedBy) names.add(i.collectedBy); });
+      data.collected.forEach(i => { if (i.receivedBy) names.add(i.receivedBy); if (i.collectedBy) names.add(i.collectedBy); });
+      els.nameList.innerHTML = '';
+      Array.from(names).sort((a, b) => a.localeCompare(b)).forEach(n => { const opt = document.createElement('option'); opt.value = n; els.nameList.appendChild(opt); });
+    }
+
+    function toId(item) { return `${item.receivedAt}|${item.code}`; }
+    function findInById(id) { return data.in.findIndex(i => toId(i) === id); }
+    function findCollectedById(id) { return data.collected.findIndex(i => toId(i) === id); }
+
+    function pushUndo(action, payload) { undoStack.push({ action, payload }); updateUndoButton(); }
+    function updateUndoButton() { els.undoBtn.disabled = undoStack.length === 0; }
+    function undo() {
+      const u = undoStack.pop(); if (!u) return;
+      if (u.action === 'addIn') {
+        // remove the exact item we added
+        const idx = data.in.findIndex(x => x.code === u.payload.inItem.code && x.receivedAt === u.payload.inItem.receivedAt);
+        if (idx !== -1) data.in.splice(idx, 1);
+      } else if (u.action === 'removeIn') {
+        // restore removed item at its index (or at start if out of range)
+        const idx = Math.min(u.payload.index, data.in.length);
+        data.in.splice(idx, 0, u.payload.inItem);
+      } else if (u.action === 'collect') {
+        // move back from collected to in
+        const idxC = data.collected.findIndex(x => x.code === u.payload.colItem.code && x.collectedAt === u.payload.colItem.collectedAt);
+        if (idxC !== -1) data.collected.splice(idxC, 1);
+        const idx = Math.min(u.payload.fromIndex, data.in.length);
+        data.in.splice(idx, 0, u.payload.inItem);
+      } else if (u.action === 'reopen') {
+        // move from in back to collected
+        const idxI = data.in.findIndex(x => x.code === u.payload.inItem.code && x.receivedAt === u.payload.inItem.receivedAt);
+        if (idxI !== -1) data.in.splice(idxI, 1);
+        data.collected.unshift(u.payload.colItem);
+      } else if (u.action === 'editIn') {
+        const idx = data.in.findIndex(x => x.code === u.payload.id.code && x.receivedAt === u.payload.id.receivedAt);
+        if (idx !== -1) data.in[idx].receivedBy = u.payload.prev;
+      } else if (u.action === 'editCol') {
+        const idx = data.collected.findIndex(x => x.code === u.payload.id.code && x.receivedAt === u.payload.id.receivedAt && x.collectedAt === u.payload.id.collectedAt);
+        if (idx !== -1) { data.collected[idx].receivedBy = u.payload.prevReceived; data.collected[idx].collectedBy = u.payload.prevCollected; }
+      }
+      render(); saveAll(); updateUndoButton(); rebuildNameList();
+    }
+
+    /* ---------- Core ops ---------- */
+    function render() {
+      const q = (els.search.value || "").trim().toLowerCase();
+      const filter = els.filter.value;
+
+      const matchesQuery = (i) => String(i.code).toLowerCase().includes(q);
+      const filterByDateOrAll = (arr, dateField) => q ? arr.filter(matchesQuery) : arr.filter(i => isSameDay(new Date(i[dateField]), viewDate));
+
+      const inForDay = filterByDateOrAll(data.in, "receivedAt");
+      const collForDay = filterByDateOrAll(data.collected, "collectedAt");
+
+      // In Reception
+      els.inBody.innerHTML = "";
+      if (filter !== "collected") {
+        const frag = document.createDocumentFragment();
+        inForDay.forEach((i) => {
+          const id = toId(i);
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td><span class="pill status-in">${i.code}</span></td>
+            <td class="small muted">${fmt(i.receivedAt)}</td>
+            <td class="small">${i.receivedBy ? i.receivedBy : ""}</td>
+            <td>
+              <button class="soft" data-action="collect" data-id="${id}">Mark Collected</button>
+              <button class="soft" data-action="editIn" data-id="${id}">Edit</button>
+              <button class="soft" data-action="remove" data-id="${id}">Remove</button>
+            </td>`;
+          frag.appendChild(tr);
+        });
+        els.inBody.appendChild(frag);
+      }
+
+      // Collected
+      els.collBody.innerHTML = "";
+      if (filter !== "in") {
+        const frag = document.createDocumentFragment();
+        collForDay.forEach((i) => {
+          const id = toId(i);
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td><span class="pill status-collected">${i.code}</span></td>
+            <td class="small muted">${fmt(i.receivedAt)}</td>
+            <td class="small">${i.receivedBy ? i.receivedBy : ""}</td>
+            <td class="small muted">${fmt(i.collectedAt)}</td>
+            <td class="small">${i.collectedBy ? i.collectedBy : ""}</td>
+            <td>
+              <button class="soft" data-action="reopen" data-id="${id}" data-collected-at="${i.collectedAt}">Reopen</button>
+              <button class="soft" data-action="editCol" data-id="${id}" data-collected-at="${i.collectedAt}">Edit</button>
+            </td>`;
+          frag.appendChild(tr);
+        });
+        els.collBody.appendChild(frag);
+      }
+
+      const headerDateText = q ? "All dates (search)" : niceDay(viewDate);
+      els.inHeaderDate.textContent = headerDateText;
+      els.colHeaderDate.textContent = headerDateText;
+      els.inCount.textContent = `(${inForDay.length})`;
+      els.colCount.textContent = `(${collForDay.length})`;
+
+      setStatus(externalFileHandle ? "Saving to Disk ✓" : "Local only");
+    }
+
+    async function saveAll() {
+      store.save(data);
+      if (externalFileHandle) {
+        try { await saveExternalFile(data); setStatus("Saving to Disk ✓"); }
+        catch (e) { console.warn("Save to file failed", e); setStatus("Local only (write failed)"); }
+      }
+    }
+
+    function addOrToggle(raw, via = "manual") {
+      const code = String(raw || "").trim();
+      if (!code) return;
+
+      const receivedByVal = (els.receivedBy.value || "").trim();
+      const collectedByVal = (els.collectedBy.value || "").trim();
+
+      const idxIn = data.in.findIndex((x) => x.code === code);
+
+      if (idxIn !== -1) {
+        if (settings.requireCollected && !collectedByVal) { alert('Please enter "Collected by" before marking collected.'); return; }
+        const item = data.in.splice(idxIn, 1)[0];
+        const newItem = { code, receivedAt: item.receivedAt, receivedBy: item.receivedBy || "", collectedAt: nowIso(), collectedBy: collectedByVal || "" };
+        data.collected.unshift(newItem);
+        pushUndo('collect', { fromIndex: idxIn, inItem: item, colItem: newItem });
+        els.lastScan.textContent = `Collected ${code} by ${newItem.collectedBy || '—'}`;
+        feedbackOK();
+      } else {
+        if (settings.requireReceived && !receivedByVal) { alert('Please enter "Received by" before adding.'); return; }
+        if (!settings.allowRedelivery && data.collected.some((x) => x.code === code)) {
+          els.lastScan.textContent = `Duplicate (blocked): ${code}`; feedbackDuplicate(); return;
+        }
+        const newItem = { code, receivedAt: nowIso(), receivedBy: receivedByVal || "" };
+        data.in.unshift(newItem);
+        pushUndo('addIn', { inItem: newItem });
+        els.lastScan.textContent = `Added ${code} received by ${newItem.receivedBy || '—'}`;
+        feedbackOK();
+      }
+      rebuildNameList();
+      render(); saveAll();
+    }
+
+    /* ---------- Events ---------- */
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-action]");
+      if (!btn) return;
+      const action = btn.getAttribute("data-action");
+      const id = btn.getAttribute("data-id");
+      if (action === "collect") {
+        const idx = findInById(id); if (idx !== -1) addOrToggle(data.in[idx].code, "click");
+      }
+      if (action === "remove") {
+        const idx = findInById(id); if (idx !== -1) {
+          const removed = data.in.splice(idx, 1)[0];
+          pushUndo('removeIn', { inItem: removed, index: idx });
+          render(); saveAll();
+        }
+      }
+      if (action === "reopen") {
+        const collectedAt = btn.getAttribute('data-collected-at');
+        const idx = data.collected.findIndex(i => toId(i) === id && i.collectedAt === collectedAt);
+        if (idx !== -1) {
+          const colItem = data.collected.splice(idx, 1)[0];
+          const inItem = { code: colItem.code, receivedAt: colItem.receivedAt, receivedBy: colItem.receivedBy || '' };
+          data.in.unshift(inItem);
+          pushUndo('reopen', { colItem, inItem });
+          rebuildNameList();
+          render(); saveAll();
+        }
+      }
+      if (action === "editIn") {
+        const idx = findInById(id); if (idx !== -1) {
+          const prev = data.in[idx].receivedBy || '';
+          const next = prompt('Edit "Received by"', prev);
+          if (next !== null) {
+            pushUndo('editIn', { prev, id: { code: data.in[idx].code, receivedAt: data.in[idx].receivedAt } });
+            data.in[idx].receivedBy = next.trim(); rebuildNameList(); render(); saveAll();
+          }
+        }
+      }
+      if (action === "editCol") {
+        const collectedAt = btn.getAttribute('data-collected-at');
+        const idx = data.collected.findIndex(i => toId(i) === id && i.collectedAt === collectedAt);
+        if (idx !== -1) {
+          const item = data.collected[idx];
+          const prevReceived = item.receivedBy || '';
+          const prevCollected = item.collectedBy || '';
+          const r1 = prompt('Edit "Received by"', prevReceived);
+          if (r1 === null) return;
+          const r2 = prompt('Edit "Collected by"', prevCollected);
+          if (r2 === null) return;
+          pushUndo('editCol', { prevReceived, prevCollected, id: { code: item.code, receivedAt: item.receivedAt, collectedAt: item.collectedAt } });
+          item.receivedBy = r1.trim(); item.collectedBy = r2.trim();
+          rebuildNameList(); render(); saveAll();
+        }
+      }
+    });
+
+    els.manualAdd.addEventListener("click", () => { addOrToggle(els.manual.value, "manual"); els.manual.value = ""; els.manual.focus(); });
+    els.manual.addEventListener("keydown", (e) => { if (e.key === "Enter") { addOrToggle(e.target.value, "manual"); e.target.value = ""; } });
+
+    els.search.addEventListener("input", render);
+    els.filter.addEventListener("change", render);
+
+    els.clearCollectedBtn.addEventListener("click", () => { if (!confirm("Clear all collected items?")) return; data.collected = []; render(); saveAll(); });
+
+    els.resetAllBtn.addEventListener("click", () => { if (!confirm("This removes all data on this browser/device. Continue?")) return; data = { in: [], collected: [] }; store.clear(); render(); saveAll(); rebuildNameList(); });
+
+    els.exportCsvBtn.addEventListener("click", () => {
+      const rows = [["Status", "Barcode", "ReceivedAt", "ReceivedBy", "CollectedAt", "CollectedBy"]];
+      data.in.forEach((i) => rows.push(["In", i.code, i.receivedAt, i.receivedBy || "", "", ""]));
+      data.collected.forEach((i) => rows.push(["Collected", i.code, i.receivedAt, i.receivedBy || "", i.collectedAt, i.collectedBy || ""]));
+      const csv = rows.map(r => r.map(v => `"${String(v).replaceAll('"', '""')}"`).join(",")).join("\n");
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a"); a.href = url; a.download = `reception-deliveries-${yyyy_mm_dd(new Date())}.csv`; a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    els.downloadJsonBtn.addEventListener('click', () => {
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = `reception-deliveries-${yyyy_mm_dd(new Date())}.json`; a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    els.importCsvBtn.addEventListener('click', () => els.importCsvInput.click());
+    els.importCsvInput.addEventListener('change', async (e) => {
+      const file = e.target.files?.[0]; if (!file) return;
+      const text = await file.text();
+      const lines = text.split(/\r?\n/).filter(Boolean);
+      if (!lines.length) return;
+      const header = lines.shift();
+      let added = 0, addedCol = 0;
+      const splitCSV = (line) => line.match(/\s*("[^"]*"|[^,]*)\s*(?:,|$)/g).map(s => s.replace(/(^\s*,|,$)/g, '').replace(/^\s*"|"\s*$/g, ''));
+      for (const line of lines) {
+        const cols = splitCSV(line);
+        const [status, code, receivedAt, receivedBy, collectedAt, collectedBy] = cols;
+        if (!code) continue;
+        if (status.toLowerCase().startsWith('in')) { data.in.push({ code, receivedAt, receivedBy }); added++; }
+        else { data.collected.push({ code, receivedAt, receivedBy, collectedAt, collectedBy }); addedCol++; }
+      }
+      alert(`Imported ${added} in + ${addedCol} collected.`);
+      rebuildNameList(); render(); saveAll(); e.target.value = '';
+    });
+
+    els.printBtn.addEventListener('click', () => window.print());
+
+    document.getElementById("chooseFileBtn").addEventListener("click", chooseSaveFile);
+    document.getElementById("openFileBtn").addEventListener("click", openExistingFile);
+    document.getElementById("reconnectBtn").addEventListener("click", reconnectSavedFile);
+
+    // Day paging
+    els.prevDayBtn.addEventListener("click", () => { const d = new Date(viewDate); d.setDate(d.getDate() - 1); setViewDate(d); });
+    els.nextDayBtn.addEventListener("click", () => { const d = new Date(viewDate); d.setDate(d.getDate() + 1); setViewDate(d); });
+    els.todayBtn.addEventListener("click", () => setViewDate(new Date()));
+    els.dayPicker.addEventListener("change", (e) => { const val = e.target.value; if (val) { const [y, m, day] = val.split("-").map(Number); setViewDate(new Date(y, m - 1, day)); } });
+
+    // Compact toggle (persisted)
+    function applyCompactUI(compact) {
+      els.scannerPanel.classList.toggle("compact", !!compact);
+      els.toggleCompactBtn.innerHTML = compact ? '<i class="fa-solid fa-maximize"></i> Expand' : '<i class="fa-solid fa-minimize"></i> Compact';
+      localStorage.setItem(LS_SCANNER_COMPACT, compact ? "1" : "0");
+    }
+    els.toggleCompactBtn.addEventListener("click", () => { const now = !els.scannerPanel.classList.contains("compact"); applyCompactUI(now); });
+
+    // Undo
+    els.undoBtn.addEventListener('click', undo);
+
+    // Settings dialog
+    els.settingsBtn.addEventListener('click', () => {
+      els.setAllowRedelivery.checked = !!settings.allowRedelivery;
+      els.setAudio.checked = !!settings.audio;
+      els.setVibrate.checked = !!settings.vibrate;
+      els.setRequireReceived.checked = !!settings.requireReceived;
+      els.setRequireCollected.checked = !!settings.requireCollected;
+      els.settingsDialog.showModal();
+    });
+    els.setAllowRedelivery.addEventListener('change', () => { settings.allowRedelivery = !!els.setAllowRedelivery.checked; settingsStore.save(settings); });
+    els.setAudio.addEventListener('change', () => { settings.audio = !!els.setAudio.checked; settingsStore.save(settings); ensureAudio(); });
+    els.setVibrate.addEventListener('change', () => { settings.vibrate = !!els.setVibrate.checked; settingsStore.save(settings); });
+    els.setRequireReceived.addEventListener('change', () => { settings.requireReceived = !!els.setRequireReceived.checked; settingsStore.save(settings); });
+    els.setRequireCollected.addEventListener('change', () => { settings.requireCollected = !!els.setRequireCollected.checked; settingsStore.save(settings); });
+
+    /* ---------- Camera (ZXing) ---------- */
+    async function listCameras() { try { const devs = await navigator.mediaDevices.enumerateDevices(); return devs.filter(d => d.kind === "videoinput"); } catch (e) { console.warn("enumerateDevices failed:", e); return []; } }
+    async function warmupCameraPermission() { if (!navigator.mediaDevices?.getUserMedia) throw new Error("MediaDevices.getUserMedia not supported"); const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" } }, audio: false }); stream.getTracks().forEach(t => t.stop()); }
+    async function startScanner() {
+      try {
+        try { await warmupCameraPermission(); } catch { }
+        ensureAudio(); // prime audio on user gesture
+        if (!codeReader) codeReader = new ZXing.BrowserMultiFormatReader();
+
+        if (currentDeviceId) {
+          await codeReader.decodeFromVideoDevice(currentDeviceId, els.video, (result, err) => { if (result) addOrToggle(result.getText(), "scan"); });
+          return;
+        }
+
+        try {
+          await codeReader.decodeFromConstraints({ video: { facingMode: { ideal: "environment" } } }, els.video, (result, err) => { if (result) addOrToggle(result.getText(), "scan"); });
+        } catch (e1) {
+          console.warn("constraints env failed, fallback to default device:", e1);
+          await codeReader.decodeFromVideoDevice(null, els.video, (result, err) => { if (result) addOrToggle(result.getText(), "scan"); });
+        }
+
+        const cams = await listCameras();
+        if (cams.length) {
+          const back = cams.find((c) => /back|rear|environment/i.test(c.label));
+          currentDeviceId = (back || cams[0]).deviceId;
+        }
+      } catch (e) {
+        console.error("startScanner error:", e, { name: e?.name, message: e?.message });
+        alert(
+          e?.name === "NotAllowedError" ? "Camera permission was blocked. In iOS Settings > Safari, allow Camera for this site." :
+            e?.name === "NotFoundError" ? "No camera device found." :
+              e?.message || "Camera access denied or not supported."
+        );
+      }
+    }
+
+    async function stopScanner() {
+      try { if (codeReader) await codeReader.reset(); } catch (e) { console.warn("codeReader.reset failed:", e); }
+      const v = els.video; if (v && v.srcObject) { try { v.srcObject.getTracks().forEach(t => t.stop()); } catch { } v.srcObject = null; }
+    }
+    async function switchCamera() {
+      const cams = await listCameras();
+      if (cams.length < 2) { alert("Only one camera detected."); return; }
+      const idx = cams.findIndex(c => c.deviceId === currentDeviceId);
+      const next = cams[(idx + 1) % cams.length]; currentDeviceId = next.deviceId;
+
+      await stopScanner();
+      if (!codeReader) codeReader = new ZXing.BrowserMultiFormatReader();
+      try { await codeReader.decodeFromVideoDevice(currentDeviceId, els.video, (result, err) => { if (result) addOrToggle(result.getText(), "scan"); }); }
+      catch (e) { console.error("switchCamera error:", e); alert("Could not switch camera."); }
+    }
+
+    document.getElementById("startBtn").addEventListener("click", startScanner);
+    document.getElementById("stopBtn").addEventListener("click", stopScanner);
+    document.getElementById("switchBtn").addEventListener("click", switchCamera);
+
+    /* ---------- Keyboard shortcuts ---------- */
+    function isTypingInElement(target) { return ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName) || target.isContentEditable; }
+    window.addEventListener('keydown', (e) => {
+      if (isTypingInElement(e.target)) {
+        if (e.key === '/' && e.target.id !== 'search') { e.preventDefault(); els.search.focus(); els.search.select(); }
+        return;
+      }
+      if (e.key === '/') { e.preventDefault(); els.search.focus(); els.search.select(); }
+      else if (e.key.toLowerCase() === 'n') { e.preventDefault(); els.manual.focus(); }
+      else if (e.key.toLowerCase() === 't') { e.preventDefault(); setViewDate(new Date()); }
+      else if (e.key === '[') { const d = new Date(viewDate); d.setDate(d.getDate() - 1); setViewDate(d); }
+      else if (e.key === ']') { const d = new Date(viewDate); d.setDate(d.getDate() + 1); setViewDate(d); }
+      else if (e.key.toLowerCase() === 'c' && !(e.ctrlKey || e.metaKey || e.altKey)) { applyCompactUI(!els.scannerPanel.classList.contains('compact')); }
+      else if (e.key.toLowerCase() === 'z') { if (!els.undoBtn.disabled) undo(); }
+    });
+
+    /* ---------- Boot ---------- */
+    (async function init() {
+      await idb.open();
+
+      // Load local copy immediately
+      data = store.load();
+
+      // Init day picker
+      els.dayPicker.value = yyyy_mm_dd(viewDate);
+      els.dayLabel.textContent = niceDay(viewDate);
+
+      // Apply saved compact state
+      applyCompactUI(localStorage.getItem(LS_SCANNER_COMPACT) === "1");
+
+      render();
+      rebuildNameList();
+      updateUndoButton();
+
+      // Try silent restore
+      const grantedHandle = await restoreFileHandleIfGranted();
+      if (grantedHandle) {
+        externalFileHandle = grantedHandle; storedHandle = grantedHandle;
+        setFileNote(grantedHandle.name); showReconnect(false);
+        try {
+          const f = await externalFileHandle.getFile(); const t = await f.text();
+          if (t.trim()) { const parsed = JSON.parse(t); if (parsed && parsed.in && parsed.collected) { data = parsed; render(); rebuildNameList(); } }
+        } catch (e) { console.warn("Reading restored file failed:", e); }
+      } else {
+        showReconnect(true);
+      }
+
+      window.addEventListener("load", () => els.manual.focus());
+    })();
+  </script>
+</body>
+
+</html>
