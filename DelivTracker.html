@@ -847,22 +847,56 @@
       } catch (err) { console.warn("openExistingFile:", err); }
     }
 
+    // REPLACE this entire function with the one below
     async function reconnectSavedFile() {
       try {
         if (!storedHandle) storedHandle = await idb.get(IDB_FILE_HANDLE_KEY);
-        if (!storedHandle) { await chooseSaveFile(); return; }
 
-        let perm = await storedHandle.queryPermission({ mode: "readwrite" });
-        if (perm !== "granted") perm = await storedHandle.requestPermission({ mode: "readwrite" });
+        // If we have a stored handle, try to (re)grant permission first
+        if (storedHandle) {
+          let perm = await storedHandle.queryPermission({ mode: "readwrite" });
+          if (perm !== "granted") {
+            // Button click counts as a user gesture, so this should show the browser prompt
+            perm = await storedHandle.requestPermission({ mode: "readwrite" });
+          }
 
-        if (perm === "granted") {
-          externalFileHandle = storedHandle; setFileNote(storedHandle.name); showReconnect(false);
-          const f = await externalFileHandle.getFile(); const t = await f.text();
-          if (t.trim()) { const parsed = JSON.parse(t); if (parsed && parsed.in && parsed.collected) { data = parsed; render(); rebuildNameList(); } }
-          await saveAll();
-        } else { await chooseSaveFile(); }
-      } catch (e) { console.warn("reconnectSavedFile:", e); await chooseSaveFile(); }
+          if (perm === "granted") {
+            // Great, we can reuse the previous handle
+            externalFileHandle = storedHandle;
+            setFileNote(storedHandle.name);
+            showReconnect(false);
+
+            try {
+              const f = await externalFileHandle.getFile();
+              const t = await f.text();
+              if (t.trim()) {
+                const parsed = JSON.parse(t);
+                if (parsed && parsed.in && parsed.collected) {
+                  data = parsed;
+                  render();
+                  rebuildNameList();
+                }
+              }
+            } catch (e) {
+              console.warn("Reading restored file failed:", e);
+            }
+
+            await saveAll();
+            return;
+          }
+        }
+
+        // If we got here, there's no stored handle OR permission wasn't granted.
+        // Crucially: ask the user to pick the EXISTING JSON (open), not create a new one (save).
+        await openExistingFile();
+
+      } catch (e) {
+        console.warn("reconnectSavedFile:", e);
+        // On any error, still prefer letting the user select the existing file
+        await openExistingFile();
+      }
     }
+
 
     async function saveExternalFile(d) {
       if (!externalFileHandle) return;
