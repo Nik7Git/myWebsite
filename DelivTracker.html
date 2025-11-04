@@ -305,30 +305,73 @@
 
     /* Dialog (settings) */
     dialog::backdrop {
-      background: rgba(0, 0, 0, .5);
+      background: rgba(0, 0, 0, .65);
+      backdrop-filter: blur(2px);
     }
 
     dialog {
       border: none;
       padding: 0;
       background: transparent;
+      z-index: 1000;
     }
 
-    .dialog-card {
-      width: min(680px, 96vw);
+    dialog[open] {
+      display: grid;
+      place-items: center;
+      inset: 0;
+    }
+
+    .panel.dialog-card {
+      width: min(640px, 96vw);
+      max-height: 80vh;
+      overflow: auto;
+      background: #0f1627;
+      color: #f2f6ff;
+      border: 1px solid var(--border);
+      box-shadow: 0 28px 80px rgba(0, 0, 0, .9);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .panel.dialog-card .panel-header {
+      position: sticky;
+      top: 0;
+      background: #0f1627;
+      color: #f2f6ff;
+      z-index: 1;
+      margin: -16px -16px 12px;
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      border-top-left-radius: 14px;
+      border-top-right-radius: 14px;
     }
 
     .setting-line {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 8px 0;
+      padding: 12px 4px;
     }
 
     .setting-line label {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
+      color: #f2f6ff;
+      font-weight: 700;
+      letter-spacing: .01em;
+    }
+
+    .setting-line+.setting-line {
+      border-top: 1px solid rgba(255, 255, 255, .25);
+    }
+
+    .setting-line input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #64a6ff;
+      filter: drop-shadow(0 0 1px rgba(0, 0, 0, .6));
     }
 
     /* Print */
@@ -364,6 +407,28 @@
         color: #000;
       }
     }
+
+    /* High-contrast preference */
+    @media (prefers-contrast: more) {
+      .panel.dialog-card {
+        background: #0b1220;
+        color: #ffffff;
+      }
+
+      .panel.dialog-card .panel-header {
+        background: #0b1220;
+        color: #ffffff;
+      }
+
+      .setting-line label {
+        color: #ffffff;
+        font-weight: 800;
+      }
+
+      .setting-line+.setting-line {
+        border-top-color: rgba(255, 255, 255, .45);
+      }
+    }
   </style>
 </head>
 
@@ -381,8 +446,7 @@
       <button id="undoBtn" class="soft" title="Undo last action" disabled><i class="fa-solid fa-rotate-left"></i>
         Undo</button>
       <button id="settingsBtn" class="soft" title="Settings"><i class="fa-solid fa-gear"></i> Settings</button>
-      <button id="chooseFileBtn" class="soft" title="Choose a JSON file to continuously save to">New Save
-        File</button>
+      <button id="chooseFileBtn" class="soft" title="Choose a JSON file to continuously save to">New Save File</button>
       <button id="openFileBtn" class="soft" title="Open existing JSON and start saving into it">Open Existing
         File</button>
       <span id="fileNote" class="save-indicator"></span>
@@ -537,6 +601,10 @@
       <div class="setting-line">
         <label><input type="checkbox" id="setRequireCollected"> Require “Collected by” when collecting</label>
       </div>
+      <div class="row" style="justify-content:flex-end; gap: 8px; padding: 8px 16px;">
+        <button id="settingsSelectNone" class="soft" type="button">Select None</button>
+        <button id="settingsSelectAll" class="soft" type="button">Select All</button>
+      </div>
     </div>
   </dialog>
 
@@ -649,6 +717,8 @@
       setVibrate: document.getElementById("setVibrate"),
       setRequireReceived: document.getElementById("setRequireReceived"),
       setRequireCollected: document.getElementById("setRequireCollected"),
+      settingsSelectNone: document.getElementById("settingsSelectNone"),
+      settingsSelectAll: document.getElementById("settingsSelectAll"),
     };
 
     const store = {
@@ -1063,6 +1133,24 @@
     els.setRequireReceived.addEventListener('change', () => { settings.requireReceived = !!els.setRequireReceived.checked; settingsStore.save(settings); });
     els.setRequireCollected.addEventListener('change', () => { settings.requireCollected = !!els.setRequireCollected.checked; settingsStore.save(settings); });
 
+    function setAllSettings(checked) {
+      els.setAllowRedelivery.checked = checked;
+      els.setAudio.checked = checked;
+      els.setVibrate.checked = checked;
+      els.setRequireReceived.checked = checked;
+      els.setRequireCollected.checked = checked;
+      settings.allowRedelivery = checked;
+      settings.audio = checked;
+      settings.vibrate = checked;
+      settings.requireReceived = checked;
+      settings.requireCollected = checked;
+      settingsStore.save(settings);
+      if (checked && settings.audio) ensureAudio();
+    }
+
+    els.settingsSelectNone.addEventListener('click', () => setAllSettings(false));
+    els.settingsSelectAll.addEventListener('click', () => setAllSettings(true));
+
     /* ---------- Camera (ZXing) ---------- */
     async function listCameras() { try { const devs = await navigator.mediaDevices.enumerateDevices(); return devs.filter(d => d.kind === "videoinput"); } catch (e) { console.warn("enumerateDevices failed:", e); return []; } }
     async function warmupCameraPermission() { if (!navigator.mediaDevices?.getUserMedia) throw new Error("MediaDevices.getUserMedia not supported"); const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" } }, audio: false }); stream.getTracks().forEach(t => t.stop()); }
@@ -1134,6 +1222,26 @@
       else if (e.key.toLowerCase() === 'c' && !(e.ctrlKey || e.metaKey || e.altKey)) { applyCompactUI(!els.scannerPanel.classList.contains('compact')); }
       else if (e.key.toLowerCase() === 'z') { if (!els.undoBtn.disabled) undo(); }
     });
+
+    /* ---------- Lightweight self-tests (console only) ---------- */
+    (function selfTests() {
+      try {
+        const log = (ok, name) => console[ok ? 'log' : 'error'](`[TEST] ${name}: ${ok ? 'OK' : 'FAIL'}`);
+        // Date helper tests
+        const d1 = new Date('2025-01-01T10:00:00Z');
+        const d2 = new Date('2025-01-01T23:59:00Z');
+        const d3 = new Date('2025-01-02T00:00:00Z');
+        log(isSameDay(d1, d2), 'isSameDay true');
+        log(!isSameDay(d1, d3), 'isSameDay false');
+        log(/^\d{4}-\d{2}-\d{2}$/.test(yyyy_mm_dd(new Date())), 'yyyy_mm_dd format');
+        // CSV split tests (quoted commas)
+        const splitCSV = (line) => line.match(/\s*("[^"]*"|[^,]*)\s*(?:,|$)/g).map(s => s.replace(/(^\s*,|,$)/g, '').replace(/^\s*"|"\s*$/g, ''));
+        const row = 'Collected,"ABC,123",2025-01-01T09:00:00Z,Jane,2025-01-01T10:00:00Z,"Doe, John"';
+        const cols = splitCSV(row);
+        log(cols.length === 6, 'splitCSV length 6');
+        log(cols[1] === 'ABC,123' && cols[5] === 'Doe, John', 'splitCSV quoted values');
+      } catch (e) { console.warn('[TEST] self-tests error', e); }
+    })();
 
     /* ---------- Boot ---------- */
     (async function init() {
