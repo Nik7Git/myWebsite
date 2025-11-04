@@ -116,6 +116,40 @@
       box-shadow: 0 0 0 3px rgba(0, 212, 170, .12)
     }
 
+    /* ===== NEW: force dark dropdown look ===== */
+    select {
+      /* remove native styling so we can control colors and arrow */
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+
+      /* make the field itself dark */
+      background-color: var(--card);
+      color: var(--text);
+
+      /* custom chevron */
+      background-image:
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23a8a8a8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right .9rem center;
+      background-size: 16px 16px;
+      padding-right: 2.2rem; /* room for the chevron */
+
+      /* hint to browsers we want dark native UI where possible */
+      color-scheme: dark;
+    }
+
+    /* hide old IE arrow if it shows up anywhere */
+    select::-ms-expand {
+      display: none;
+    }
+
+    /* make the dropdown list panel dark in browsers that honor it */
+    select option {
+      background-color: var(--card);
+      color: var(--text);
+    }
+
     .helper {
       color: var(--muted);
       font-size: .9rem;
