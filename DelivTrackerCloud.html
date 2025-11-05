@@ -1,0 +1,1787 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="color-scheme" content="dark light" />
+    <title>Delivery Tracker</title>
+
+    <!-- Preconnects for faster font load -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      rel="icon"
+      href="https://cdn1.iconfinder.com/data/icons/shopping-e-commerce-10/33/truck_delivery-64.png" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <style>
+      :root {
+        --bg: #0b1220;
+        --panel: #121a2b;
+        --panel-2: #0f1627;
+        --text: #e6eefc;
+        --muted: #9bb1d0;
+        --accent: #4da3ff;
+        --success: #1cc78a;
+        --warning: #ffcc66;
+        --danger: #ff5d6c;
+        --chip: #22304d;
+        --border: #22314f;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial,
+          "Noto Sans";
+        background: radial-gradient(
+            1200px 600px at 20% -10%,
+            #1b2a4d 0%,
+            transparent 50%
+          ),
+          radial-gradient(900px 500px at 110% 10%, #0a1c36 0%, transparent 50%),
+          var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+      }
+
+      header {
+        padding: 20px clamp(16px, 3vw, 32px);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--border);
+        position: sticky;
+        top: 0;
+        background: rgba(18, 26, 43, 0.6);
+        backdrop-filter: blur(8px);
+        z-index: 10;
+      }
+
+      .title-wrap {
+        display: flex;
+        flex-direction: column;
+      }
+      h1 {
+        margin: 0;
+        font-size: clamp(18px, 3vw, 24px);
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      .subtitle {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 2px;
+        align-self: flex-end;
+      }
+
+      .layout {
+        padding: 24px clamp(16px, 3vw, 32px);
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 24px;
+        align-items: start;
+      }
+
+      @media (max-width: 1100px) {
+        .layout {
+          grid-template-columns: 1.4fr 1fr;
+        }
+      }
+      @media (max-width: 900px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .panel {
+        background: linear-gradient(
+          180deg,
+          rgba(18, 26, 43, 0.8),
+          rgba(18, 26, 43, 0.5)
+        );
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 16px;
+      }
+
+      .panel-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+      .panel-header .title {
+        font-weight: 600;
+      }
+      .spacer {
+        flex: 1;
+      }
+      .row {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      button,
+      input,
+      select {
+        border: 1px solid var(--border);
+        background: var(--panel-2);
+        color: var(--text);
+        padding: 10px 12px;
+        border-radius: 10px;
+        font-size: 14px;
+      }
+      button {
+        cursor: pointer;
+      }
+      button.soft {
+        background: var(--chip);
+      }
+      button.primary {
+        background: linear-gradient(180deg, #2a67c8, #184a94);
+        border-color: #2d64b9;
+      }
+      button.success {
+        background: linear-gradient(180deg, #18b57f, #0d8a61);
+        border-color: #0aa26d;
+      }
+      button:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+
+      .muted {
+        color: var(--muted);
+      }
+      .small {
+        font-size: 12px;
+      }
+
+      .lists-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      @media (max-width: 720px) {
+        .lists-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--panel-2);
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+      }
+      thead th {
+        text-align: left;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--muted);
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--border);
+      }
+      tbody td {
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--border);
+      }
+      tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      .pill {
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: #15395e;
+        border: 1px solid #1e4470;
+        font-size: 12px;
+      }
+      .status-in {
+        background: #273a6b;
+        border-color: #3a4c80;
+      }
+      .status-collected {
+        background: #1b5b45;
+        border-color: #1f6f52;
+      }
+
+      .kbd {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 12px;
+        background: #111827;
+        border: 1px solid #374151;
+        border-radius: 6px;
+        padding: 2px 6px;
+      }
+
+      .save-indicator {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .daybar {
+        margin: 8px 0 14px;
+        gap: 10px;
+      }
+      .heading-row {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        margin: 6px 0;
+      }
+      .heading-row h3 {
+        margin: 0;
+      }
+      .count {
+        font-size: 12px;
+        color: var(--muted);
+        margin-left: 8px;
+      }
+
+      .scanner-body {
+        display: grid;
+        gap: 10px;
+      }
+      .scanner-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      #preview {
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        width: 100%;
+        aspect-ratio: 4/3;
+        background: #000;
+        max-height: 260px;
+      }
+
+      .panel.scanner.compact .preview-wrap,
+      .panel.scanner.compact .camera-controls {
+        display: none;
+      }
+
+      .sidebar-note {
+        line-height: 1.2;
+      }
+
+      dialog::backdrop {
+        background: rgba(0, 0, 0, 0.65);
+        backdrop-filter: blur(2px);
+      }
+      dialog {
+        border: none;
+        padding: 0;
+        background: transparent;
+        z-index: 1000;
+      }
+      dialog[open] {
+        display: grid;
+        place-items: center;
+        inset: 0;
+      }
+
+      .panel.dialog-card {
+        width: min(640px, 96vw);
+        max-height: 80vh;
+        overflow: auto;
+        background: #0f1627;
+        color: #f2f6ff;
+        border: 1px solid var(--border);
+        box-shadow: 0 28px 80px rgba(0, 0, 0, 0.9);
+        border-radius: 14px;
+        padding: 16px;
+      }
+      .panel.dialog-card .panel-header {
+        position: sticky;
+        top: 0;
+        background: #0f1627;
+        color: #f2f6ff;
+        z-index: 1;
+        margin: -16px -16px 12px;
+        padding: 16px;
+        border-bottom: 1px solid var(--border);
+        border-top-left-radius: 14px;
+        border-top-right-radius: 14px;
+      }
+
+      .setting-line {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 4px;
+      }
+      .setting-line label {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #f2f6ff;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+      }
+      .setting-line + .setting-line {
+        border-top: 1px solid rgba(255, 255, 255, 0.25);
+      }
+      .setting-line input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        accent-color: #64a6ff;
+        filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.6));
+      }
+
+      @media print {
+        body {
+          background: #fff;
+          color: #000;
+        }
+        header,
+        #scannerPanel,
+        .daybar .spacer + .muted {
+          display: none !important;
+        }
+        .panel {
+          border: none;
+          background: #fff;
+        }
+        table {
+          border: 1px solid #999;
+        }
+        thead th {
+          color: #000;
+        }
+        .pill {
+          border: 1px solid #777;
+          background: #e8e8e8;
+          color: #000;
+        }
+      }
+
+      /* Highlight & enlarge the manual barcode box */
+      #manualInput {
+        flex: 1 1 auto;
+        font-size: 18px;
+        line-height: 1.2;
+        padding: 14px 16px;
+        border-radius: 12px;
+        border: 2px solid var(--accent);
+        background: linear-gradient(180deg, #16284a, #0f1e3a);
+        color: var(--text);
+        box-shadow: 0 0 0 3px rgba(77, 163, 255, 0.2),
+          0 8px 20px rgba(0, 0, 0, 0.35);
+      }
+      #manualInput::placeholder {
+        color: #c7d6f3;
+        opacity: 0.9;
+      }
+      #manualInput:focus-visible {
+        outline: none;
+        border-color: #7db8ff;
+        box-shadow: 0 0 0 4px rgba(77, 163, 255, 0.35),
+          0 12px 28px rgba(0, 0, 0, 0.45);
+      }
+
+      /* Utility */
+      .hidden {
+        display: none !important;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <div class="title-wrap">
+        <h1><i class="fa-solid fa-truck"></i>Delivery Tracker</h1>
+        <div class="subtitle">Cloud Database</div>
+      </div>
+      <div class="row" role="group" aria-label="File and tools">
+        <span
+          id="saveState"
+          class="save-indicator"
+          aria-live="polite"
+          aria-atomic="true"
+          >Cloud (Supabase)</span
+        >
+        <button id="exportCsvBtn" class="soft" title="Export to CSV">
+          Export CSV
+        </button>
+        <button
+          id="downloadJsonBtn"
+          class="soft"
+          title="Download a JSON backup">
+          Download JSON
+        </button>
+        <button id="printBtn" class="soft" title="Print this view">
+          Print
+        </button>
+        <span class="spacer"></span>
+        <button id="undoBtn" class="soft" title="Undo last action" disabled>
+          <i class="fa-solid fa-rotate-left"></i> Undo
+        </button>
+        <button id="settingsBtn" class="soft" title="Settings">
+          <i class="fa-solid fa-gear"></i> Settings
+        </button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <!-- Main: Lists -->
+      <section class="panel" aria-labelledby="listsHeading">
+        <div class="panel-header">
+          <span id="listsHeading" class="title">Lists</span>
+          <span class="spacer"></span>
+          <input
+            id="search"
+            type="search"
+            placeholder="Search barcode… (press / to focus)"
+            aria-label="Search barcode"
+            enterkeyhint="search" />
+          <select id="filter" aria-label="Filter status">
+            <option value="all">All</option>
+            <option value="in">In reception</option>
+            <option value="collected">Collected</option>
+          </select>
+          <button id="clearCollectedBtn" class="soft">Clear Collected</button>
+        </div>
+
+        <div class="row daybar" role="group" aria-label="Day controls">
+          <button id="prevDayBtn" class="soft" title="Previous day (←)">
+            <i class="fa-solid fa-chevron-left"></i> Prev
+          </button>
+          <input id="dayPicker" type="date" aria-label="Pick day" />
+          <button id="todayBtn" class="soft" title="Jump to today (t)">
+            Today
+          </button>
+          <button id="nextDayBtn" class="soft" title="Next day (→)">
+            Next <i class="fa-solid fa-chevron-right"></i>
+          </button>
+          <span class="muted small" id="dayLabel"></span>
+          <span class="spacer"></span>
+          <span class="muted small"
+            >Day view: In = received on day · Collected = collected on day</span
+          >
+        </div>
+
+        <div class="lists-grid">
+          <div>
+            <div class="heading-row">
+              <h3>
+                In Reception <span id="inCount" class="count"></span>
+                <span id="inTotal" class="count muted"></span>
+              </h3>
+              <span id="inHeaderDate" class="muted small"></span>
+            </div>
+            <table id="inTable">
+              <thead>
+                <tr>
+                  <th>Barcode</th>
+                  <th>Received</th>
+                  <th>Received By</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div>
+            <div class="heading-row">
+              <h3>
+                Collected <span id="colCount" class="count"></span>
+                <span id="colTotal" class="count muted"></span>
+              </h3>
+              <span id="colHeaderDate" class="muted small"></span>
+            </div>
+            <table id="collectedTable">
+              <thead>
+                <tr>
+                  <th>Barcode</th>
+                  <th>Received</th>
+                  <th>Received By</th>
+                  <th>Collected</th>
+                  <th>Collected By</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sidebar: Scanner (compactable) -->
+      <section
+        class="panel scanner"
+        id="scannerPanel"
+        aria-labelledby="scannerHeading">
+        <div class="panel-header">
+          <span id="scannerHeading" class="title">Scanner</span>
+          <span class="spacer"></span>
+          <button
+            id="toggleCompactBtn"
+            class="soft"
+            title="Toggle compact view">
+            <i class="fa-solid fa-minimize"></i> Compact
+          </button>
+        </div>
+
+        <div class="scanner-body">
+          <div class="row sidebar-note small muted">
+            <span
+              >USB scanners that type digits +
+              <span class="kbd">Enter</span> also work. Shortcuts:
+              <span class="kbd">/</span> search, <span class="kbd">n</span> new,
+              <span class="kbd">t</span> today, <span class="kbd">[</span>/<span
+                class="kbd"
+                >]</span
+              >
+              day, <span class="kbd">c</span> compact,
+              <span class="kbd">z</span> undo.</span
+            >
+          </div>
+
+          <div class="preview-wrap">
+            <video
+              id="preview"
+              muted
+              autoplay
+              playsinline
+              aria-label="Camera preview"></video>
+          </div>
+
+          <div
+            class="row camera-controls"
+            role="group"
+            aria-label="Camera controls">
+            <button id="startBtn" class="primary" aria-pressed="false">
+              Start Camera
+            </button>
+            <button id="stopBtn" class="soft">Stop</button>
+            <button id="switchBtn" class="soft" title="Switch camera">
+              Switch
+            </button>
+          </div>
+
+          <datalist id="nameList"></datalist>
+
+          <!-- Names -->
+          <div class="scanner-grid">
+            <input
+              id="receivedByInput"
+              type="text"
+              list="nameList"
+              placeholder="Received by (name)…"
+              aria-label="Received by"
+              autocomplete="off" />
+            <input
+              id="collectedByInput"
+              type="text"
+              list="nameList"
+              placeholder="Collected by (name)…"
+              aria-label="Collected by"
+              autocomplete="off" />
+          </div>
+
+          <!-- Manual / barcode -->
+          <div class="row">
+            <input
+              id="manualInput"
+              type="text"
+              placeholder="Type or scan barcode, then Enter…"
+              aria-label="Barcode"
+              autocomplete="off"
+              autocapitalize="off"
+              spellcheck="false"
+              enterkeyhint="done"
+              autofocus />
+            <button id="manualAddBtn" class="success">Add / Toggle</button>
+          </div>
+
+          <div
+            id="lastScan"
+            class="muted small"
+            role="status"
+            aria-live="polite">
+            No scans yet.
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Settings -->
+    <dialog id="settingsDialog" aria-modal="true">
+      <div class="panel dialog-card">
+        <div class="panel-header">
+          <span class="title">Settings</span>
+          <span class="spacer"></span>
+          <form method="dialog">
+            <button class="soft" id="settingsCloseBtn">Close</button>
+          </form>
+        </div>
+        <div class="setting-line">
+          <label
+            ><input type="checkbox" id="setAllowRedelivery" /> Allow re-delivery
+            of same barcode</label
+          >
+        </div>
+        <div class="setting-line">
+          <label><input type="checkbox" id="setAudio" /> Sound on scan</label>
+        </div>
+        <div class="setting-line">
+          <label
+            ><input type="checkbox" id="setVibrate" /> Vibrate on scan</label
+          >
+        </div>
+        <div class="setting-line">
+          <label
+            ><input type="checkbox" id="setRequireReceived" /> Require “Received
+            by” when adding</label
+          >
+        </div>
+        <div class="setting-line">
+          <label
+            ><input type="checkbox" id="setRequireCollected" /> Require
+            “Collected by” when collecting</label
+          >
+        </div>
+        <div
+          class="row"
+          style="justify-content: flex-end; gap: 8px; padding: 8px 16px">
+          <button id="settingsSelectNone" class="soft" type="button">
+            Select None
+          </button>
+          <button id="settingsSelectAll" class="soft" type="button">
+            Select All
+          </button>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- Supabase client -->
+    <script type="module">
+      import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+      // Supabase client
+      window.supabaseClient = createClient(
+        "https://ttmlsegtexhkjdhosfwg.supabase.co",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR0bWxzZWd0ZXhoa2pkaG9zZndnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyNzU3MzYsImV4cCI6MjA3Nzg1MTczNn0.C-A0tKMfkuzlyk506xjiUdPrE9DceXZoBPeYG6oTNnc"
+      );
+
+      // Ensure we have an anon session early
+      (async () => {
+        try {
+          const {
+            data: { session },
+          } = await window.supabaseClient.auth.getSession();
+          if (!session) await window.supabaseClient.auth.signInAnonymously();
+        } catch (e) {
+          console.warn("Supabase anon sign-in failed", e);
+        }
+      })();
+    </script>
+
+    <!-- ZXing (deferred to speed up first paint) -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@zxing/library@0.20.0/umd/index.min.js"
+      defer></script>
+
+    <script>
+      /* ---------- State ---------- */
+      let data = { in: [], collected: [] };
+      let currentDeviceId = null,
+        codeReader = null;
+      let undoStack = [];
+      let viewDate = new Date();
+      let totals = { in: 0, collected: 0 }; // <-- global totals from DB
+
+      const els = {
+        inBody: document.querySelector("#inTable tbody"),
+        collBody: document.querySelector("#collectedTable tbody"),
+        search: document.getElementById("search"),
+        filter: document.getElementById("filter"),
+        clearCollectedBtn: document.getElementById("clearCollectedBtn"),
+        exportCsvBtn: document.getElementById("exportCsvBtn"),
+        downloadJsonBtn: document.getElementById("downloadJsonBtn"),
+        printBtn: document.getElementById("printBtn"),
+        undoBtn: document.getElementById("undoBtn"),
+        settingsBtn: document.getElementById("settingsBtn"),
+        // Day controls
+        prevDayBtn: document.getElementById("prevDayBtn"),
+        nextDayBtn: document.getElementById("nextDayBtn"),
+        todayBtn: document.getElementById("todayBtn"),
+        dayPicker: document.getElementById("dayPicker"),
+        dayLabel: document.getElementById("dayLabel"),
+        inHeaderDate: document.getElementById("inHeaderDate"),
+        colHeaderDate: document.getElementById("colHeaderDate"),
+        inCount: document.getElementById("inCount"),
+        colCount: document.getElementById("colCount"),
+        inTotal: document.getElementById("inTotal"),
+        colTotal: document.getElementById("colTotal"),
+        // Scanner
+        scannerPanel: document.getElementById("scannerPanel"),
+        toggleCompactBtn: document.getElementById("toggleCompactBtn"),
+        manual: document.getElementById("manualInput"),
+        manualAdd: document.getElementById("manualAddBtn"),
+        receivedBy: document.getElementById("receivedByInput"),
+        collectedBy: document.getElementById("collectedByInput"),
+        nameList: document.getElementById("nameList"),
+        lastScan: document.getElementById("lastScan"),
+        video: document.getElementById("preview"),
+        start: document.getElementById("startBtn"),
+        stop: document.getElementById("stopBtn"),
+        switch: document.getElementById("switchBtn"),
+        // Settings
+        settingsDialog: document.getElementById("settingsDialog"),
+        setAllowRedelivery: document.getElementById("setAllowRedelivery"),
+        setAudio: document.getElementById("setAudio"),
+        setVibrate: document.getElementById("setVibrate"),
+        setRequireReceived: document.getElementById("setRequireReceived"),
+        setRequireCollected: document.getElementById("setRequireCollected"),
+        settingsSelectNone: document.getElementById("settingsSelectNone"),
+        settingsSelectAll: document.getElementById("settingsSelectAll"),
+        settingsCloseBtn: document.getElementById("settingsCloseBtn"),
+        saveState: document.getElementById("saveState"),
+      };
+
+      const settingsStore = {
+        load() {
+          try {
+            return Object.assign(
+              {
+                allowRedelivery: false,
+                audio: true,
+                vibrate: true,
+                requireReceived: false,
+                requireCollected: false,
+              },
+              JSON.parse(localStorage.getItem("reception-settings-v1") || "{}")
+            );
+          } catch {
+            return {
+              allowRedelivery: true,
+              audio: true,
+              vibrate: true,
+              requireReceived: false,
+              requireCollected: false,
+            };
+          }
+        },
+        save(s) {
+          localStorage.setItem("reception-settings-v1", JSON.stringify(s));
+        },
+      };
+
+      let settings = settingsStore.load();
+
+      const nowIso = () => new Date().toISOString();
+      const fmt = (s) => new Date(s).toLocaleString();
+      const yyyy_mm_dd = (d) =>
+        `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
+          2,
+          "0"
+        )}-${String(d.getDate()).padStart(2, "0")}`;
+      const isSameDay = (a, b) =>
+        a.getFullYear() === b.getFullYear() &&
+        a.getMonth() === b.getMonth() &&
+        a.getDate() === b.getDate();
+      const niceDay = (d) => {
+        const t = new Date();
+        const y = new Date();
+        y.setDate(t.getDate() - 1);
+        if (isSameDay(d, t)) return "Today";
+        if (isSameDay(d, y)) return "Yesterday";
+        return d.toLocaleDateString(undefined, {
+          weekday: "short",
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        });
+      };
+
+      /* ---------- Status UI ---------- */
+      function setStatus(text) {
+        els.saveState.textContent = text;
+      }
+      function statusSyncing() {
+        setStatus("Cloud: syncing…");
+      }
+      function statusOK() {
+        setStatus("Cloud ✓");
+      }
+      function statusWarn() {
+        setStatus("Cloud ⚠︎");
+      }
+
+      /* ---------- Feedback ---------- */
+      let audioCtx = null;
+      function ensureAudio() {
+        if (!audioCtx) {
+          try {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          } catch {}
+        }
+      }
+      function beep(freq = 880, dur = 120) {
+        if (!settings.audio) return;
+        ensureAudio();
+        if (!audioCtx) return;
+        const o = audioCtx.createOscillator(),
+          g = audioCtx.createGain();
+        o.type = "sine";
+        o.frequency.value = freq;
+        o.connect(g);
+        g.connect(audioCtx.destination);
+        const t = audioCtx.currentTime;
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(0.12, t + 0.02);
+        o.start();
+        g.gain.exponentialRampToValueAtTime(0.0001, t + dur / 1000);
+        o.stop(t + dur / 1000 + 0.02);
+      }
+      function feedbackOK() {
+        beep(1000, 120);
+        if (settings.vibrate && navigator.vibrate) navigator.vibrate(20);
+      }
+      function feedbackDuplicate() {
+        beep(240, 200);
+        setTimeout(() => beep(200, 200), 120);
+        if (settings.vibrate && navigator.vibrate)
+          navigator.vibrate([20, 40, 20]);
+      }
+
+      /* ---------- Supabase helpers ---------- */
+      async function waitForAuthReady(maxMs = 3000) {
+        const start = Date.now();
+        while (Date.now() - start < maxMs) {
+          try {
+            const {
+              data: { session },
+            } = await window.supabaseClient.auth.getSession();
+            if (session) return session;
+          } catch {}
+          await new Promise((r) => setTimeout(r, 150));
+        }
+        try {
+          await window.supabaseClient.auth.signInAnonymously();
+        } catch {}
+      }
+
+      let _supabaseUserId = null;
+      async function getUserId() {
+        if (_supabaseUserId) return _supabaseUserId;
+        try {
+          const { data } = await window.supabaseClient.auth.getUser();
+          _supabaseUserId = data?.user?.id || null;
+        } catch {}
+        return _supabaseUserId;
+      }
+      const toId = (item) => `${item.receivedAt}|${item.code}`;
+
+      async function supaInsertIn(item) {
+        statusSyncing();
+        const payload = {
+          code: item.code,
+          received_at: item.receivedAt,
+          received_by: item.receivedBy || null,
+          collected_at: null,
+          collected_by: null,
+          created_by: await getUserId(),
+        };
+        const { error } = await window.supabaseClient
+          .from("deliveries")
+          .insert(payload);
+        if (error) {
+          console.warn("supaInsertIn error:", error);
+          statusWarn();
+        } else {
+          statusOK();
+          await refreshTotals();
+        }
+      }
+      async function supaMarkCollected(original) {
+        statusSyncing();
+        const { error } = await window.supabaseClient
+          .from("deliveries")
+          .update({
+            collected_at: original.collectedAt,
+            collected_by: original.collectedBy || null,
+          })
+          .eq("code", original.code)
+          .eq("received_at", original.receivedAt);
+        if (error) {
+          console.warn("supaMarkCollected error:", error);
+          statusWarn();
+        } else {
+          statusOK();
+          await refreshTotals();
+        }
+      }
+      async function supaRemoveIn(item) {
+        statusSyncing();
+        const { error } = await window.supabaseClient
+          .from("deliveries")
+          .delete()
+          .eq("code", item.code)
+          .eq("received_at", item.receivedAt);
+        if (error) {
+          console.warn("supaRemoveIn error:", error);
+          statusWarn();
+        } else {
+          statusOK();
+          await refreshTotals();
+        }
+      }
+      async function supaReopen(item) {
+        statusSyncing();
+        const { error } = await window.supabaseClient
+          .from("deliveries")
+          .update({ collected_at: null, collected_by: null })
+          .eq("code", item.code)
+          .eq("received_at", item.receivedAt);
+        if (error) {
+          console.warn("supaReopen error:", error);
+          statusWarn();
+        } else {
+          statusOK();
+          await refreshTotals();
+        }
+      }
+      async function supaUpdateReceivedBy(item) {
+        statusSyncing();
+        const { error } = await window.supabaseClient
+          .from("deliveries")
+          .update({ received_by: item.receivedBy || null })
+          .eq("code", item.code)
+          .eq("received_at", item.receivedAt);
+        if (error) {
+          console.warn("supaUpdateReceivedBy error:", error);
+          statusWarn();
+        } else {
+          statusOK();
+        }
+      }
+      async function supaUpdateCollectedNames(item) {
+        statusSyncing();
+        const { error } = await window.supabaseClient
+          .from("deliveries")
+          .update({
+            received_by: item.receivedBy || null,
+            collected_by: item.collectedBy || null,
+          })
+          .eq("code", item.code)
+          .eq("received_at", item.receivedAt);
+        if (error) {
+          console.warn("supaUpdateCollectedNames error:", error);
+          statusWarn();
+        } else {
+          statusOK();
+        }
+      }
+
+      async function supaFetchForDay(dateISO) {
+        const start = new Date(dateISO);
+        start.setHours(0, 0, 0, 0);
+        const end = new Date(start);
+        end.setDate(start.getDate() + 1);
+
+        const { data: inRowsRaw, error: inErr } = await window.supabaseClient
+          .from("deliveries")
+          .select("*")
+          .gte("received_at", start.toISOString())
+          .lt("received_at", end.toISOString())
+          .is("collected_at", null)
+          .order("received_at", { ascending: false });
+        if (inErr) console.warn("supaFetchForDay(in) error:", inErr);
+
+        const { data: colRowsRaw, error: colErr } = await window.supabaseClient
+          .from("deliveries")
+          .select("*")
+          .gte("collected_at", start.toISOString())
+          .lt("collected_at", end.toISOString())
+          .order("collected_at", { ascending: false });
+        if (colErr) console.warn("supaFetchForDay(col) error:", colErr);
+
+        const inRows = (inRowsRaw || []).map((r) => ({
+          code: r.code,
+          receivedAt: r.received_at,
+          receivedBy: r.received_by || "",
+        }));
+        const colRows = (colRowsRaw || []).map((r) => ({
+          code: r.code,
+          receivedAt: r.received_at,
+          receivedBy: r.received_by || "",
+          collectedAt: r.collected_at,
+          collectedBy: r.collected_by || "",
+        }));
+        return { in: inRows, collected: colRows };
+      }
+
+      // NEW: global totals from DB (not just loaded days)
+      async function refreshTotals() {
+        try {
+          const { count: inCount, error: inErr } = await window.supabaseClient
+            .from("deliveries")
+            .select("*", { count: "exact", head: true })
+            .is("collected_at", null);
+          if (inErr) throw inErr;
+
+          const { count: colCount, error: colErr } = await window.supabaseClient
+            .from("deliveries")
+            .select("*", { count: "exact", head: true })
+            .not("collected_at", "is", null);
+          if (colErr) throw colErr;
+
+          totals.in = inCount || 0;
+          totals.collected = colCount || 0;
+
+          // Update UI immediately
+          els.inTotal.textContent = `· Total ${totals.in}`;
+          els.colTotal.textContent = `· Total ${totals.collected}`;
+        } catch (e) {
+          console.warn("refreshTotals error:", e);
+        }
+      }
+
+      /* ---------- Core ops ---------- */
+      function rebuildNameList() {
+        const names = new Set();
+        data.in.forEach((i) => {
+          if (i.receivedBy) names.add(i.receivedBy);
+          if (i.collectedBy) names.add(i.collectedBy);
+        });
+        data.collected.forEach((i) => {
+          if (i.receivedBy) names.add(i.receivedBy);
+          if (i.collectedBy) names.add(i.collectedBy);
+        });
+        els.nameList.innerHTML = "";
+        Array.from(names)
+          .sort((a, b) => a.localeCompare(b))
+          .forEach((n) => {
+            const opt = document.createElement("option");
+            opt.value = n;
+            els.nameList.appendChild(opt);
+          });
+      }
+      const findInById = (id) => data.in.findIndex((i) => toId(i) === id);
+
+      function render() {
+        const q = (els.search.value || "").trim().toLowerCase();
+        const filter = els.filter.value;
+
+        const matchesQuery = (i) => String(i.code).toLowerCase().includes(q);
+        const filterByDateOrAll = (arr, field) =>
+          q
+            ? arr.filter(matchesQuery)
+            : arr.filter((i) => isSameDay(new Date(i[field]), viewDate));
+
+        const inForDay = filterByDateOrAll(data.in, "receivedAt");
+        const collForDay = filterByDateOrAll(data.collected, "collectedAt");
+
+        els.inBody.innerHTML = "";
+        if (filter !== "collected") {
+          const frag = document.createDocumentFragment();
+          inForDay.forEach((i) => {
+            const id = toId(i);
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+            <td><span class="pill status-in">${i.code}</span></td>
+            <td class="small muted">${fmt(i.receivedAt)}</td>
+            <td class="small">${i.receivedBy ? i.receivedBy : ""}</td>
+            <td>
+              <button class="soft" data-action="collect" data-id="${id}">Mark Collected</button>
+              <button class="soft" data-action="editIn" data-id="${id}">Edit</button>
+              <button class="soft" data-action="remove" data-id="${id}">Remove</button>
+            </td>`;
+            frag.appendChild(tr);
+          });
+          els.inBody.appendChild(frag);
+        }
+
+        els.collBody.innerHTML = "";
+        if (filter !== "in") {
+          const frag = document.createDocumentFragment();
+          collForDay.forEach((i) => {
+            const id = toId(i);
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+            <td><span class="pill status-collected">${i.code}</span></td>
+            <td class="small muted">${fmt(i.receivedAt)}</td>
+            <td class="small">${i.receivedBy ? i.receivedBy : ""}</td>
+            <td class="small muted">${fmt(i.collectedAt)}</td>
+            <td class="small">${i.collectedBy ? i.collectedBy : ""}</td>
+            <td>
+              <button class="soft" data-action="reopen" data-id="${id}" data-collected-at="${
+              i.collectedAt
+            }">Reopen</button>
+              <button class="soft" data-action="editCol" data-id="${id}" data-collected-at="${
+              i.collectedAt
+            }">Edit</button>
+            </td>`;
+            frag.appendChild(tr);
+          });
+          els.collBody.appendChild(frag);
+        }
+
+        const headerDateText = q ? "All dates (search)" : niceDay(viewDate);
+        els.inHeaderDate.textContent = headerDateText;
+        els.colHeaderDate.textContent = headerDateText;
+        els.inCount.textContent = `(${inForDay.length})`;
+        els.colCount.textContent = `(${collForDay.length})`;
+
+        // Use global DB totals, not local arrays
+        els.inTotal.textContent = `· Total ${totals.in}`;
+        els.colTotal.textContent = `· Total ${totals.collected}`;
+
+        if (!q) setStatus("Cloud (Supabase)");
+      }
+
+      function pushUndo(action, payload) {
+        undoStack.push({ action, payload });
+        els.undoBtn.disabled = undoStack.length === 0;
+      }
+      function undo() {
+        const u = undoStack.pop();
+        if (!u) return;
+        if (u.action === "addIn") {
+          const idx = data.in.findIndex(
+            (x) =>
+              x.code === u.payload.inItem.code &&
+              x.receivedAt === u.payload.inItem.receivedAt
+          );
+          if (idx !== -1) data.in.splice(idx, 1);
+        } else if (u.action === "removeIn") {
+          const idx = Math.min(u.payload.index, data.in.length);
+          data.in.splice(idx, 0, u.payload.inItem);
+        } else if (u.action === "collect") {
+          const idxC = data.collected.findIndex(
+            (x) =>
+              x.code === u.payload.colItem.code &&
+              x.collectedAt === u.payload.colItem.collectedAt
+          );
+          if (idxC !== -1) data.collected.splice(idxC, 1);
+          const idx = Math.min(u.payload.fromIndex, data.in.length);
+          data.in.splice(idx, 0, u.payload.inItem);
+        } else if (u.action === "reopen") {
+          const idxI = data.in.findIndex(
+            (x) =>
+              x.code === u.payload.inItem.code &&
+              x.receivedAt === u.payload.inItem.receivedAt
+          );
+          if (idxI !== -1) data.in.splice(idxI, 1);
+          data.collected.unshift(u.payload.colItem);
+        } else if (u.action === "editIn") {
+          const idx = data.in.findIndex(
+            (x) =>
+              x.code === u.payload.id.code &&
+              x.receivedAt === u.payload.id.receivedAt
+          );
+          if (idx !== -1) data.in[idx].receivedBy = u.payload.prev;
+        } else if (u.action === "editCol") {
+          const idx = data.collected.findIndex(
+            (x) =>
+              x.code === u.payload.id.code &&
+              x.receivedAt === u.payload.id.receivedAt &&
+              x.collectedAt === u.payload.id.collectedAt
+          );
+          if (idx !== -1) {
+            data.collected[idx].receivedBy = u.payload.prevReceived;
+            data.collected[idx].collectedBy = u.payload.prevCollected;
+          }
+        }
+        render();
+        els.undoBtn.disabled = undoStack.length === 0;
+        rebuildNameList();
+      }
+
+      /* ---------- Actions ---------- */
+      async function addOrToggle(raw, via = "manual") {
+        const code = String(raw || "").trim();
+        if (!code) return;
+
+        const receivedByVal = (els.receivedBy.value || "").trim();
+        const collectedByVal = (els.collectedBy.value || "").trim();
+
+        const idxIn = data.in.findIndex((x) => x.code === code);
+
+        if (idxIn !== -1) {
+          if (settings.requireCollected && !collectedByVal) {
+            alert('Please enter "Collected by" before marking collected.');
+            return;
+          }
+          const item = data.in.splice(idxIn, 1)[0];
+          const newItem = {
+            code,
+            receivedAt: item.receivedAt,
+            receivedBy: item.receivedBy || "",
+            collectedAt: nowIso(),
+            collectedBy: collectedByVal || "",
+          };
+          data.collected.unshift(newItem);
+          pushUndo("collect", {
+            fromIndex: idxIn,
+            inItem: item,
+            colItem: newItem,
+          });
+          els.lastScan.textContent = `Collected ${code} by ${
+            newItem.collectedBy || "—"
+          }`;
+          feedbackOK();
+          render();
+          rebuildNameList();
+          await supaMarkCollected(newItem);
+        } else {
+          if (settings.requireReceived && !receivedByVal) {
+            alert('Please enter "Received by" before adding.');
+            return;
+          }
+          if (
+            !settings.allowRedelivery &&
+            data.collected.some((x) => x.code === code)
+          ) {
+            els.lastScan.textContent = `Duplicate (blocked): ${code}`;
+            feedbackDuplicate();
+            return;
+          }
+          const newItem = {
+            code,
+            receivedAt: nowIso(),
+            receivedBy: receivedByVal || "",
+          };
+          data.in.unshift(newItem);
+          pushUndo("addIn", { inItem: newItem });
+          els.lastScan.textContent = `Added ${code} received by ${
+            newItem.receivedBy || "—"
+          }`;
+          feedbackOK();
+          render();
+          rebuildNameList();
+          await supaInsertIn(newItem);
+        }
+      }
+
+      document.addEventListener("click", async (e) => {
+        const btn = e.target.closest("button[data-action]");
+        if (!btn) return;
+        const action = btn.getAttribute("data-action");
+        const id = btn.getAttribute("data-id");
+
+        if (action === "collect") {
+          const idx = findInById(id);
+          if (idx !== -1) await addOrToggle(data.in[idx].code, "click");
+        }
+        if (action === "remove") {
+          const idx = findInById(id);
+          if (idx !== -1) {
+            const removed = data.in.splice(idx, 1)[0];
+            pushUndo("removeIn", { inItem: removed, index: idx });
+            render();
+            rebuildNameList();
+            await supaRemoveIn(removed);
+          }
+        }
+        if (action === "reopen") {
+          const collectedAt = btn.getAttribute("data-collected-at");
+          const idx = data.collected.findIndex(
+            (i) => toId(i) === id && i.collectedAt === collectedAt
+          );
+          if (idx !== -1) {
+            const colItem = data.collected.splice(idx, 1)[0];
+            const inItem = {
+              code: colItem.code,
+              receivedAt: colItem.receivedAt,
+              receivedBy: colItem.receivedBy || "",
+            };
+            data.in.unshift(inItem);
+            pushUndo("reopen", { colItem, inItem });
+            render();
+            rebuildNameList();
+            await supaReopen(colItem);
+          }
+        }
+        if (action === "editIn") {
+          const idx = findInById(id);
+          if (idx !== -1) {
+            const prev = data.in[idx].receivedBy || "";
+            const next = prompt('Edit "Received by"', prev);
+            if (next !== null) {
+              pushUndo("editIn", {
+                prev,
+                id: {
+                  code: data.in[idx].code,
+                  receivedAt: data.in[idx].receivedAt,
+                },
+              });
+              data.in[idx].receivedBy = next.trim();
+              render();
+              rebuildNameList();
+              await supaUpdateReceivedBy({
+                code: data.in[idx].code,
+                receivedAt: data.in[idx].receivedAt,
+                receivedBy: data.in[idx].receivedBy,
+              });
+            }
+          }
+        }
+        if (action === "editCol") {
+          const collectedAt = btn.getAttribute("data-collected-at");
+          const idx = data.collected.findIndex(
+            (i) => toId(i) === id && i.collectedAt === collectedAt
+          );
+          if (idx !== -1) {
+            const item = data.collected[idx];
+            const prevReceived = item.receivedBy || "";
+            const prevCollected = item.collectedBy || "";
+            const r1 = prompt('Edit "Received by"', prevReceived);
+            if (r1 === null) return;
+            const r2 = prompt('Edit "Collected by"', prevCollected);
+            if (r2 === null) return;
+            pushUndo("editCol", {
+              prevReceived,
+              prevCollected,
+              id: {
+                code: item.code,
+                receivedAt: item.receivedAt,
+                collectedAt: item.collectedAt,
+              },
+            });
+            item.receivedBy = r1.trim();
+            item.collectedBy = r2.trim();
+            render();
+            rebuildNameList();
+            await supaUpdateCollectedNames({
+              code: item.code,
+              receivedAt: item.receivedAt,
+              receivedBy: item.receivedBy,
+              collectedAt: item.collectedAt,
+              collectedBy: item.collectedBy,
+            });
+          }
+        }
+      });
+
+      /* ---------- Day paging & initial load ---------- */
+      const setViewDate = async (d) => {
+        viewDate = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+        els.dayPicker.value = yyyy_mm_dd(viewDate);
+        els.dayLabel.textContent = niceDay(viewDate);
+        const { in: inRows, collected: colRows } = await supaFetchForDay(
+          viewDate.toISOString()
+        );
+
+        const keepIfNotDay = (arr, field) =>
+          arr.filter((i) => !isSameDay(new Date(i[field]), viewDate));
+        data.in = keepIfNotDay(data.in, "receivedAt").concat(inRows);
+        data.collected = keepIfNotDay(data.collected, "collectedAt").concat(
+          colRows
+        );
+
+        rebuildNameList();
+        render();
+      };
+
+      els.prevDayBtn.addEventListener("click", () => {
+        const d = new Date(viewDate);
+        d.setDate(d.getDate() - 1);
+        setViewDate(d);
+      });
+      els.nextDayBtn.addEventListener("click", () => {
+        const d = new Date(viewDate);
+        d.setDate(d.getDate() + 1);
+        setViewDate(d);
+      });
+      els.todayBtn.addEventListener("click", () => setViewDate(new Date()));
+      els.dayPicker.addEventListener("change", (e) => {
+        const val = e.target.value;
+        if (val) {
+          const [y, m, day] = val.split("-").map(Number);
+          setViewDate(new Date(y, m - 1, day));
+        }
+      });
+
+      /* ---------- Realtime sync ---------- */
+      function withinSameDay(iso, day) {
+        if (!iso) return false;
+        return isSameDay(new Date(iso), day);
+      }
+      async function startRealtime() {
+        const channel = window.supabaseClient
+          .channel("deliveries-all")
+          .on(
+            "postgres_changes",
+            { event: "*", schema: "public", table: "deliveries" },
+            async (payload) => {
+              // Always refresh global totals
+              await refreshTotals();
+
+              // Only refresh the visible day table if change affects current day window
+              const row = payload.new || payload.old;
+              const touchesIn =
+                withinSameDay(row.received_at, viewDate) &&
+                row.collected_at == null;
+              const touchesCol = withinSameDay(row.collected_at, viewDate);
+              if (touchesIn || touchesCol) setViewDate(viewDate);
+            }
+          )
+          .subscribe();
+        return channel;
+      }
+
+      /* ---------- Misc UI ---------- */
+      const debounce = (fn, ms = 120) => {
+        let t;
+        return (...a) => {
+          clearTimeout(t);
+          t = setTimeout(() => fn(...a), ms);
+        };
+      };
+      els.search.addEventListener("input", debounce(render, 100));
+      els.filter.addEventListener("change", render);
+
+      els.clearCollectedBtn.addEventListener("click", async () => {
+        if (!confirm("Clear all collected items for this day?")) return;
+        const start = new Date(viewDate);
+        start.setHours(0, 0, 0, 0);
+        const end = new Date(start);
+        end.setDate(start.getDate() + 1);
+        const { data: rows } = await window.supabaseClient
+          .from("deliveries")
+          .select("code,received_at,collected_at")
+          .gte("collected_at", start.toISOString())
+          .lt("collected_at", end.toISOString());
+        for (const r of rows || []) {
+          await window.supabaseClient
+            .from("deliveries")
+            .update({ collected_at: null, collected_by: null })
+            .eq("code", r.code)
+            .eq("received_at", r.received_at);
+        }
+        await setViewDate(viewDate);
+        await refreshTotals(); // reflect global changes
+      });
+
+      els.exportCsvBtn.addEventListener("click", () => {
+        const rows = [
+          [
+            "Status",
+            "Barcode",
+            "ReceivedAt",
+            "ReceivedBy",
+            "CollectedAt",
+            "CollectedBy",
+          ],
+        ];
+        data.in.forEach((i) =>
+          rows.push(["In", i.code, i.receivedAt, i.receivedBy || "", "", ""])
+        );
+        data.collected.forEach((i) =>
+          rows.push([
+            "Collected",
+            i.code,
+            i.receivedAt,
+            i.receivedBy || "",
+            i.collectedAt,
+            i.collectedBy || "",
+          ])
+        );
+        const csv = rows
+          .map((r) =>
+            r.map((v) => `"${String(v).replaceAll('"', '""')}"`).join(",")
+          )
+          .join("\n");
+        const blob = new Blob([csv], { type: "text/csv" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `reception-deliveries-${yyyy_mm_dd(new Date())}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+
+      els.downloadJsonBtn.addEventListener("click", () => {
+        const blob = new Blob([JSON.stringify(data, null, 2)], {
+          type: "application/json",
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `reception-deliveries-${yyyy_mm_dd(new Date())}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+
+      els.printBtn.addEventListener("click", () => window.print());
+      els.undoBtn.addEventListener("click", undo);
+
+      function applyCompactUI(compact) {
+        els.scannerPanel.classList.toggle("compact", !!compact);
+        els.toggleCompactBtn.innerHTML = compact
+          ? '<i class="fa-solid fa-maximize"></i> Expand'
+          : '<i class="fa-solid fa-minimize"></i> Compact';
+        els.toggleCompactBtn.setAttribute(
+          "aria-pressed",
+          compact ? "true" : "false"
+        );
+        localStorage.setItem("scanner-compact-v1", compact ? "1" : "0");
+      }
+      els.toggleCompactBtn.addEventListener("click", () => {
+        const now = !els.scannerPanel.classList.contains("compact");
+        applyCompactUI(now);
+      });
+
+      els.manualAdd.addEventListener("click", () => {
+        addOrToggle(els.manual.value, "manual");
+        els.manual.value = "";
+        els.manual.focus();
+      });
+      els.manual.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          addOrToggle(e.target.value, "manual");
+          e.target.value = "";
+        }
+      });
+
+      // Settings dialog
+      els.settingsBtn.addEventListener("click", () => {
+        els.setAllowRedelivery.checked = !!settings.allowRedelivery;
+        els.setAudio.checked = !!settings.audio;
+        els.setVibrate.checked = !!settings.vibrate;
+        els.setRequireReceived.checked = !!settings.requireReceived;
+        els.setRequireCollected.checked = !!settings.requireCollected;
+        els.settingsDialog.showModal();
+        els.settingsCloseBtn.focus();
+      });
+      els.setAllowRedelivery.addEventListener("change", () => {
+        settings.allowRedelivery = !!els.setAllowRedelivery.checked;
+        settingsStore.save(settings);
+      });
+      els.setAudio.addEventListener("change", () => {
+        settings.audio = !!els.setAudio.checked;
+        settingsStore.save(settings);
+        ensureAudio();
+      });
+      els.setVibrate.addEventListener("change", () => {
+        settings.vibrate = !!els.setVibrate.checked;
+        settingsStore.save(settings);
+      });
+      els.setRequireReceived.addEventListener("change", () => {
+        settings.requireReceived = !!els.setRequireReceived.checked;
+        settingsStore.save(settings);
+      });
+      els.setRequireCollected.addEventListener("change", () => {
+        settings.requireCollected = !!els.setRequireCollected.checked;
+        settingsStore.save(settings);
+      });
+      els.settingsSelectNone.addEventListener("click", () =>
+        setAllSettings(false)
+      );
+      els.settingsSelectAll.addEventListener("click", () =>
+        setAllSettings(true)
+      );
+      function setAllSettings(checked) {
+        els.setAllowRedelivery.checked = checked;
+        els.setAudio.checked = checked;
+        els.setVibrate.checked = checked;
+        els.setRequireReceived.checked = checked;
+        els.setRequireCollected.checked = checked;
+        settings.allowRedelivery = checked;
+        settings.audio = checked;
+        settings.vibrate = checked;
+        settings.requireReceived = checked;
+        settings.requireCollected = checked;
+        settingsStore.save(settings);
+        if (checked && settings.audio) ensureAudio();
+      }
+
+      /* ---------- Camera ---------- */
+      async function listCameras() {
+        try {
+          const devs = await navigator.mediaDevices.enumerateDevices();
+          return devs.filter((d) => d.kind === "videoinput");
+        } catch (e) {
+          console.warn("enumerateDevices:", e);
+          return [];
+        }
+      }
+      async function warmupCameraPermission() {
+        if (!navigator.mediaDevices?.getUserMedia)
+          throw new Error("MediaDevices.getUserMedia not supported");
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: { ideal: "environment" } },
+          audio: false,
+        });
+        stream.getTracks().forEach((t) => t.stop());
+      }
+      async function startScanner() {
+        try {
+          try {
+            await warmupCameraPermission();
+          } catch {}
+          ensureAudio();
+          if (!codeReader) codeReader = new ZXing.BrowserMultiFormatReader();
+
+          if (currentDeviceId) {
+            await codeReader.decodeFromVideoDevice(
+              currentDeviceId,
+              els.video,
+              (result, err) => {
+                if (result) addOrToggle(result.getText(), "scan");
+              }
+            );
+            els.start.setAttribute("aria-pressed", "true");
+            return;
+          }
+          try {
+            await codeReader.decodeFromConstraints(
+              { video: { facingMode: { ideal: "environment" } } },
+              els.video,
+              (result, err) => {
+                if (result) addOrToggle(result.getText(), "scan");
+              }
+            );
+          } catch (e1) {
+            await codeReader.decodeFromVideoDevice(
+              null,
+              els.video,
+              (result, err) => {
+                if (result) addOrToggle(result.getText(), "scan");
+              }
+            );
+          }
+
+          const cams = await listCameras();
+          if (cams.length) {
+            const back = cams.find((c) =>
+              /back|rear|environment/i.test(c.label)
+            );
+            currentDeviceId = (back || cams[0]).deviceId;
+          }
+          els.start.setAttribute("aria-pressed", "true");
+        } catch (e) {
+          console.error("startScanner error:", e);
+          alert(
+            e?.name === "NotAllowedError"
+              ? "Camera permission was blocked."
+              : e?.name === "NotFoundError"
+              ? "No camera device found."
+              : e?.message || "Camera access denied or not supported."
+          );
+        }
+      }
+      async function stopScanner() {
+        try {
+          if (codeReader) await codeReader.reset();
+        } catch {}
+        const v = els.video;
+        if (v && v.srcObject) {
+          try {
+            v.srcObject.getTracks().forEach((t) => t.stop());
+          } catch {}
+          v.srcObject = null;
+        }
+        els.start.setAttribute("aria-pressed", "false");
+      }
+      async function switchCamera() {
+        const cams = await listCameras();
+        if (cams.length < 2) {
+          alert("Only one camera detected.");
+          return;
+        }
+        const idx = cams.findIndex((c) => c.deviceId === currentDeviceId);
+        const next = cams[(idx + 1) % cams.length];
+        currentDeviceId = next.deviceId;
+        await stopScanner();
+        if (!codeReader) codeReader = new ZXing.BrowserMultiFormatReader();
+        try {
+          await codeReader.decodeFromVideoDevice(
+            currentDeviceId,
+            els.video,
+            (result, err) => {
+              if (result) addOrToggle(result.getText(), "scan");
+            }
+          );
+          els.start.setAttribute("aria-pressed", "true");
+        } catch (e) {
+          alert("Could not switch camera.");
+        }
+      }
+      els.start.addEventListener("click", startScanner);
+      els.stop.addEventListener("click", stopScanner);
+      els.switch.addEventListener("click", switchCamera);
+
+      /* ---------- Boot ---------- */
+      (async function init() {
+        els.dayPicker.value = yyyy_mm_dd(viewDate);
+        els.dayLabel.textContent = niceDay(viewDate);
+        applyCompactUI(localStorage.getItem("scanner-compact-v1") === "1");
+        render();
+
+        await waitForAuthReady();
+        await setViewDate(new Date());
+        await refreshTotals(); // <-- init global totals
+        await startRealtime();
+
+        window.addEventListener("load", () => els.manual.focus());
+      })();
+
+      /* ---------- Keyboard shortcuts ---------- */
+      function isTypingInElement(target) {
+        return (
+          ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName) ||
+          target.isContentEditable
+        );
+      }
+      window.addEventListener("keydown", (e) => {
+        if (isTypingInElement(e.target)) {
+          if (e.key === "/" && e.target.id !== "search") {
+            e.preventDefault();
+            els.search.focus();
+            els.search.select();
+          }
+          return;
+        }
+        if (e.key === "/") {
+          e.preventDefault();
+          els.search.focus();
+          els.search.select();
+        } else if (e.key.toLowerCase() === "n") {
+          e.preventDefault();
+          els.manual.focus();
+        } else if (e.key.toLowerCase() === "t") {
+          e.preventDefault();
+          setViewDate(new Date());
+        } else if (e.key === "[") {
+          const d = new Date(viewDate);
+          d.setDate(d.getDate() - 1);
+          setViewDate(d);
+        } else if (e.key === "]") {
+          const d = new Date(viewDate);
+          d.setDate(d.getDate() + 1);
+          setViewDate(d);
+        } else if (
+          e.key.toLowerCase() === "c" &&
+          !(e.ctrlKey || e.metaKey || e.altKey)
+        ) {
+          applyCompactUI(!els.scannerPanel.classList.contains("compact"));
+        } else if (e.key.toLowerCase() === "z") {
+          if (!els.undoBtn.disabled) undo();
+        }
+      });
+    </script>
+  </body>
+</html>
