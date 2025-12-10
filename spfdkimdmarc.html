@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>SPF / DMARC / DKIM Checker</title>
 
-  <link rel="icon" href="https://cdn1.iconfinder.com/data/icons/security-filledoutline/64/EMAIL-Lock-Security-Communicate-256.png" />
+  <link rel="icon" href="https://cdn-icons-png.freepik.com/512/3624/3624728.png" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -375,6 +375,9 @@
               <option value="m2" selected>m2</option>
               <option value="zendesk1" selected>zendesk1</option>
               <option value="zendesk2" selected>zendesk2</option>
+              <option value="kl" selected>kl</option>
+              <option value="kl1" selected>kl1</option>
+              <option value="kl2" selected>kl2</option>
             </select>
             <div id="selHelp" class="helper">
               Hold <span class="mono">Ctrl</span>/<span class="mono">⌘</span> to toggle selections.
@@ -412,6 +415,9 @@
 
     <section class="card" aria-labelledby="dkimHeading">
       <h3 id="dkimHeading"><i class="fa-solid fa-key"></i> DKIM</h3>
+      <div id="dkimStatus" class="badge muted" aria-live="polite">
+        <i class="fa-regular fa-circle"></i> Awaiting input
+      </div>
       <div id="dkimRows" class="list"></div>
       <div id="dkimNotes" class="helper" style="margin-top:.5rem" aria-live="polite"></div>
     </section>
@@ -514,20 +520,77 @@
         return;
       }
 
-      const rows = [
-        ["Raw", `<span class="mono break">${escapeHtml(spfObj.raw)}</span>`, true],
-        ["Includes", spfObj.includes.length ? spfObj.includes.map(i => `<span class="badge">${escapeHtml(i)}</span>`).join(" ") : "<span class='muted'>None</span>", true],
-        ["A / MX", `${spfObj.a ? "<span class='badge ok'>a</span>" : "<span class='badge muted'>a</span>"} ${spfObj.mx ? "<span class='badge ok'>mx</span>" : "<span class='badge muted'>mx</span>"}${spfObj.ptrs?.length ? " <span class='badge warn'>ptr</span>" : ""}`, true],
-        ["IPs", spfObj.ips.length ? spfObj.ips.map(i => `<span class="badge">${escapeHtml(i)}</span>`).join(" ") : "<span class='muted'>None</span>", true],
-        ["Redirect", spfObj.redirects.length ? spfObj.redirects.map(r => `<span class="badge">${escapeHtml(r)}</span>`).join(" ") : "<span class='muted'>None</span>", true],
-        ["Exists", spfObj.exists.length ? spfObj.exists.map(r => `<span class="badge">${escapeHtml(r)}</span>`).join(" ") : "<span class='muted'>None</span>", true],
-        ["All Policy", spfObj.all ? `<span class="badge ${/^-all$/i.test(spfObj.all) ? "ok" : /~all/i.test(spfObj.all) ? "warn" : "muted"}">${escapeHtml(spfObj.all)}</span>` : "<span class='muted'>Not set</span>", true]
-      ];
+      const rows = [];
+
+      // Raw
+      rows.push(["Raw", `<span class="mono break">${escapeHtml(spfObj.raw)}</span>`, true]);
+
+      // Includes
+      rows.push([
+        "Includes",
+        spfObj.includes.length
+          ? spfObj.includes.map(i => `<span class="badge">${escapeHtml(i)}</span>`).join(" ")
+          : "<span class='muted'>None</span>",
+        true
+      ]);
+
+      // A / MX row – plain text "a mx" style
+      const amxTokens = [];
+      if (spfObj.a) amxTokens.push("a");
+      if (spfObj.mx) amxTokens.push("mx");
+      if (spfObj.ptrs && spfObj.ptrs.length) amxTokens.push("ptr");
+
+      rows.push([
+        "A / MX",
+        amxTokens.length
+          ? `<span class="mono">${escapeHtml(amxTokens.join(" "))}</span>`
+          : "<span class='muted'>None</span>",
+        true
+      ]);
+
+      // IPs
+      rows.push([
+        "IPs",
+        spfObj.ips.length
+          ? spfObj.ips.map(i => `<span class="badge">${escapeHtml(i)}</span>`).join(" ")
+          : "<span class='muted'>None</span>",
+        true
+      ]);
+
+      // Redirect
+      rows.push([
+        "Redirect",
+        spfObj.redirects.length
+          ? spfObj.redirects.map(r => `<span class="badge">${escapeHtml(r)}</span>`).join(" ")
+          : "<span class='muted'>None</span>",
+        true
+      ]);
+
+      // Exists
+      rows.push([
+        "Exists",
+        spfObj.exists.length
+          ? spfObj.exists.map(r => `<span class="badge">${escapeHtml(r)}</span>`).join(" ")
+          : "<span class='muted'>None</span>",
+        true
+      ]);
+
+      // All policy
+      rows.push([
+        "All Policy",
+        spfObj.all
+          ? `<span class="badge ${/^-all$/i.test(spfObj.all) ? "ok" : /~all/i.test(spfObj.all) ? "warn" : "muted"
+          }">${escapeHtml(spfObj.all)}</span>`
+          : "<span class='muted'>Not set</span>",
+        true
+      ]);
 
       const frag = document.createDocumentFragment();
       rows.forEach(([k, v, isHtml]) => {
         const div = document.createElement("div");
-        div.innerHTML = isHtml ? `<strong>${k}:</strong> ${v}` : `<strong>${k}:</strong> <span class="mono break">${escapeHtml(v || "")}</span>`;
+        div.innerHTML = isHtml
+          ? `<strong>${k}:</strong> ${v}`
+          : `<strong>${k}:</strong> <span class="mono break">${escapeHtml(v || "")}</span>`;
         frag.appendChild(div);
       });
 
@@ -548,11 +611,17 @@
 
       content.appendChild(frag);
 
-      if (/^-all$/i.test(spfObj.all)) setStatus(status, "ok", "SPF present (enforcing)", "fa-solid fa-circle-check");
-      else if (/~all/i.test(spfObj.all)) setStatus(status, "warn", "SPF present (softfail)", "fa-solid fa-triangle-exclamation");
-      else setStatus(status, "warn", "SPF present (no ~all / -all)", "fa-solid fa-triangle-exclamation");
+      if (/^-all$/i.test(spfObj.all)) {
+        setStatus(status, "ok", "SPF present (enforcing)", "fa-solid fa-circle-check");
+      } else if (/~all/i.test(spfObj.all)) {
+        setStatus(status, "warn", "SPF present (softfail)", "fa-solid fa-triangle-exclamation");
+      } else {
+        setStatus(status, "warn", "SPF present (no ~all / -all)", "fa-solid fa-triangle-exclamation");
+      }
 
-      if (lookup && lookup.total > 10) setStatus(status, "err", "SPF exceeds 10-DNS-lookup limit", "fa-solid fa-circle-xmark");
+      if (lookup && lookup.total > 10) {
+        setStatus(status, "err", "SPF exceeds 10-DNS-lookup limit", "fa-solid fa-circle-xmark");
+      }
     }
 
     // ---------- DMARC ----------
@@ -577,7 +646,7 @@
       return `<span class="mono break">${escapeHtml(txt)}</span>`;
     }
 
-    // NEW: badges for alignment (adkim/aspf)
+    // badges for alignment (adkim/aspf)
     function badgeForAlignment(raw) {
       const v = (raw || "").trim().toLowerCase();
       if (v === "s") {
@@ -613,12 +682,43 @@
       const policyRaw = dm.tags.p || "";
       const policy = policyRaw.toLowerCase();
       addRow("p (Policy)", badgeForPolicy(policyRaw), true);
-      addRow("sp (Subdomain policy)", badgeForPolicy(dm.tags.sp || ""), true);
 
-      // NEW: adkim / aspf with alignment badges
-      const adkimBadge = badgeForAlignment(dm.tags.adkim || "");
-      const aspfBadge = badgeForAlignment(dm.tags.aspf || "");
-      addRow("adkim / aspf", `${adkimBadge} / ${aspfBadge}`, true);
+      // sp (Subdomain policy) – inherits from p if not explicitly set
+      const spRaw = dm.tags.sp;
+      let spDisplay;
+
+      if (spRaw) {
+        spDisplay = badgeForPolicy(spRaw);
+      } else {
+        const policyLabel =
+          policy === "reject" ? "Reject" :
+            policy === "quarantine" ? "Quarantine" :
+              policy === "none" ? "None" :
+                (policy || "Policy");
+
+        const inheritedText = `${policyLabel} inherited`;
+        let cls = "muted";
+        if (policy === "reject") cls = "ok";
+        else if (policy === "quarantine") cls = "info";
+        else if (policy === "none") cls = "err";
+
+        spDisplay = `<span class="badge ${cls}">${escapeHtml(inheritedText)}</span>`;
+      }
+
+      addRow("sp (Subdomain policy)", spDisplay, true);
+
+      // adkim / aspf: show "- / -" if tags are not present at all
+      const hasAdkim = Object.prototype.hasOwnProperty.call(dm.tags, "adkim");
+      const hasAspf = Object.prototype.hasOwnProperty.call(dm.tags, "aspf");
+
+      const adkimDisplay = hasAdkim
+        ? badgeForAlignment(dm.tags.adkim)
+        : `<span class="mono">-</span>`;
+      const aspfDisplay = hasAspf
+        ? badgeForAlignment(dm.tags.aspf)
+        : `<span class="mono">-</span>`;
+
+      addRow("adkim / aspf", `${adkimDisplay} / ${aspfDisplay}`, true);
 
       addRow("rua (Aggregate reports)", dm.tags.rua || "");
       addRow("ruf (Forensic reports)", dm.tags.ruf || "");
@@ -629,7 +729,7 @@
       if (policy === "reject" || policy === "quarantine") {
         setStatus(status, "ok", `DMARC present (${policy})`, "fa-solid fa-circle-check");
       } else if (policy === "none") {
-        setStatus(status, "warn", "DMARC present (monitoring only)", "fa-solid fa-triangle-exclamation");
+        setStatus(status, "err", "DMARC present (monitoring only)", "fa-solid fa-circle-exclamation");
       } else {
         setStatus(status, "warn", "DMARC present (unknown policy)", "fa-solid fa-triangle-exclamation");
       }
@@ -697,12 +797,14 @@
       $("dkimNotes").textContent = "";
       setStatus($("spfStatus"), "muted", "Working…", "fa-solid fa-spinner fa-spin");
       setStatus($("dmarcStatus"), "muted", "Working…", "fa-solid fa-spinner fa-spin");
+      setStatus($("dkimStatus"), "muted", "Working…", "fa-solid fa-spinner fa-spin");
 
       btn.disabled = true; card.classList.add("calculating");
 
       if (!domain || !/^[a-z0-9.-]+\.[a-z]{2,}$/i.test(domain)) {
         setStatus($("spfStatus"), "err", "Invalid domain", "fa-solid fa-circle-xmark");
         setStatus($("dmarcStatus"), "err", "Invalid domain", "fa-solid fa-circle-xmark");
+        setStatus($("dkimStatus"), "err", "Invalid domain", "fa-solid fa-circle-xmark");
         btn.disabled = false; card.classList.remove("calculating"); return;
       }
 
@@ -724,7 +826,7 @@
         $("dmarcNotes").innerHTML = `<div class="helper">${escapeHtml(e.message || String(e))}</div>`;
       }
 
-      // DKIM: only show found + dimming logic for select
+      // DKIM
       const selEl = $("commonSelectors");
       const selectors = new Set();
       if (selector) selectors.add(selector);
@@ -741,6 +843,7 @@
 
       if (selectors.size === 0) {
         $("dkimNotes").innerHTML = `No DKIM selectors specified. Add one (e.g. <span class="mono">default</span>) or enable common selectors.`;
+        setStatus($("dkimStatus"), "warn", "No DKIM selectors", "fa-solid fa-triangle-exclamation");
       }
 
       for (const sel of selectors) {
@@ -756,10 +859,14 @@
         } catch { /* skip */ }
       }
 
-      if (found.length === 0) {
-        $("dkimNotes").innerHTML = `No DKIM records found for selectors: <span class="mono break">${escapeHtml(tried.join(", "))}</span>`;
-      } else {
-        $("dkimNotes").innerHTML = `Found selectors: <span class="mono">${escapeHtml(found.join(", "))}</span>`;
+      if (selectors.size > 0) {
+        if (found.length === 0) {
+          $("dkimNotes").innerHTML = `No DKIM records found for selectors: <span class="mono break">${escapeHtml(tried.join(", "))}</span>`;
+          setStatus($("dkimStatus"), "err", "No DKIM records found", "fa-solid fa-circle-xmark");
+        } else {
+          $("dkimNotes").innerHTML = `Found selectors: <span class="mono">${escapeHtml(found.join(", "))}</span>`;
+          setStatus($("dkimStatus"), "ok", "DKIM record(s) found", "fa-solid fa-circle-check");
+        }
       }
 
       btn.disabled = false; card.classList.remove("calculating");
