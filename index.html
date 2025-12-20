@@ -356,6 +356,7 @@
             font-size: .9rem;
             border: 1px solid rgba(0, 212, 170, .3);
             transition: all 0.3s ease;
+            cursor: pointer;
         }
 
         .skill-tag:hover {
@@ -575,6 +576,122 @@
         /* ---------- Helps to fit text in dropdown list in one line ---------- */
         .dropdown-content a {
             white-space: nowrap
+        }
+
+        /* =======================================================================
+           NEW: Skill overlay modal
+        ======================================================================= */
+        .skill-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .75);
+            backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 5000;
+            padding: 20px;
+        }
+
+        .skill-modal-overlay.open {
+            display: flex;
+        }
+
+        .skill-modal {
+            width: min(720px, 100%);
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .6);
+            overflow: hidden;
+            position: relative;
+            animation: fadeInUp .35s ease;
+        }
+
+        .skill-modal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--accent-gradient);
+        }
+
+        .skill-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 18px 18px 10px 18px;
+        }
+
+        .skill-modal-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .skill-modal-title i {
+            color: var(--primary-color);
+        }
+
+        .skill-modal-close {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, .12);
+            color: var(--text-primary);
+            border-radius: 10px;
+            padding: 8px 10px;
+            cursor: pointer;
+            transition: all .2s ease;
+        }
+
+        .skill-modal-close:hover {
+            background: rgba(0, 212, 170, .12);
+            border-color: rgba(0, 212, 170, .3);
+            transform: translateY(-1px);
+        }
+
+        .skill-modal-body {
+            padding: 0 18px 18px 18px;
+            color: var(--text-secondary);
+        }
+
+        .skill-modal-body p {
+            margin: 10px 0 12px 0;
+        }
+
+        .skill-modal-body ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        .skill-modal-body li {
+            margin: 8px 0;
+            color: var(--text-primary);
+        }
+
+        .skill-modal-footer {
+            padding: 12px 18px 18px 18px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .skill-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(0, 212, 170, .25);
+            background: rgba(0, 212, 170, .08);
+            color: var(--primary-color);
+            font-size: .85rem;
         }
     </style>
 </head>
@@ -964,17 +1081,17 @@
     </section>
 
     <!-- ---------- Contact ---------- -->
-  <section id="contact" aria-label="Contact">
-    <div class="container">
-      <div class="section-header">
-        <h2>Contact</h2>
-      </div>
-      <div class="contact-info">
-        <div class="contact-item"><i class="fa-solid fa-envelope"></i><span>name@example.com</span></div>
-        <div class="contact-item"><i class="fa-brands fa-linkedin"></i><span>linkedin.com/in/name</span></div>
-      </div>
-    </div>
-  </section>
+    <section id="contact" aria-label="Contact">
+        <div class="container">
+            <div class="section-header">
+                <h2>Contact</h2>
+            </div>
+            <div class="contact-info">
+                <div class="contact-item"><i class="fa-solid fa-envelope"></i><span>name@example.com</span></div>
+                <div class="contact-item"><i class="fa-brands fa-linkedin"></i><span>linkedin.com/in/name</span></div>
+            </div>
+        </div>
+    </section>
 
     <!-- ---------- Footer ---------- -->
     <footer style="background:#000; padding:2rem 0; text-align:center; color:var(--text-secondary)">
@@ -983,6 +1100,30 @@
             <p style="margin-top:.5rem;">Built with passion for technology</p>
         </div>
     </footer>
+
+    <!-- =======================================================================
+         NEW: Skill overlay HTML
+    ======================================================================= -->
+    <div class="skill-modal-overlay" id="skillModalOverlay" aria-hidden="true">
+        <div class="skill-modal" role="dialog" aria-modal="true" aria-labelledby="skillModalTitle">
+            <div class="skill-modal-header">
+                <div class="skill-modal-title" id="skillModalTitle">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <span id="skillModalSkillName">Skill</span>
+                </div>
+                <button class="skill-modal-close" id="skillModalCloseBtn" aria-label="Close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="skill-modal-body">
+                <p id="skillModalSummary"></p>
+                <ul id="skillModalBullets"></ul>
+            </div>
+
+            <div class="skill-modal-footer" id="skillModalFooter"></div>
+        </div>
+    </div>
 
     <!-- ---------- Back to Top ---------- -->
     <div class="back-to-top" id="backToTop">
@@ -1076,7 +1217,8 @@
 
         // Dynamic year for copyright
         const currentYear = new Date().getFullYear();
-        document.querySelector('footer p').innerHTML = `&copy; ${currentYear} Nik B. | IT Engineer`;
+        const footerFirstP = document.querySelector('footer p');
+        if (footerFirstP) footerFirstP.innerHTML = `&copy; ${currentYear} Nik B. | IT Engineer`;
 
         // Parallax effect for hero section (subtle)
         window.addEventListener('scroll', () => {
@@ -1103,7 +1245,6 @@
 
             sections.forEach(section => {
                 const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
                 if (pageYOffset >= sectionTop - 100) {
                     current = section.getAttribute('id');
                 }
@@ -1115,6 +1256,848 @@
                     link.style.color = 'var(--primary-color)';
                 }
             });
+        });
+
+        /* =======================================================================
+           NEW: Skill modal logic
+        ======================================================================= */
+
+      // Placeholders for EVERY skill-tag on your page
+      // Tip: The key MUST match the exact text inside <span class="skill-tag">...</span>
+      const skillDetails = {
+        "Microsoft Intune": {
+          icon: "fa-brands fa-microsoft",
+          summary: "End-to-end Microsoft Intune delivery, rollout, and ongoing management.",
+          bullets: [
+            "Singlehandedly deployed Intune from scratch for 2 companies (tenant setup, enrollment strategy, baselines).",
+            "Migrated legacy GPOs into Intune configuration profiles and standardised policy across device fleets.",
+            "Deployed custom PowerShell scripts (device configuration, remediation, reporting) through Intune.",
+            "Implemented Autopilot-driven provisioning and streamlined new device onboarding.",
+          ],
+          tags: ["Autopilot", "GPO → Intune", "Remediations", "Compliance"],
+        },
+
+        "Azure AD": {
+                icon: "fa-solid fa-id-card",
+                summary: "Identity and access management across cloud and hybrid environments.",
+                bullets: [
+                    "Designed group strategy and access control for secure, manageable administration.",
+                    "Implemented Conditional Access policies to reduce risk and improve sign-in security.",
+                    "Streamlined user and device lifecycle processes to keep environments tidy and compliant."
+                ],
+                tags: ["Conditional Access", "Groups", "Identity"]
+            },
+        "Exchange Online": {
+                icon: "fa-solid fa-envelope",
+                summary: "Email platform administration, security hardening, and migrations.",
+                bullets: [
+                    "Managed mail flow rules and security posture improvements.",
+                    "Delivered SPF/DKIM/DMARC improvements to reduce spoofing risk.",
+                    "Handled mailbox administration and troubleshooting across orgs."
+                ],
+                tags: ["Mail Flow", "Security", "DNS"]
+            },
+        "Microsoft Teams": {
+          icon: "fa-solid fa-handshake",
+          summary: "PLACEHOLDER: Describe what you did with Microsoft Teams.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        SharePoint: {
+          icon: "fa-solid fa-folder-open",
+          summary: "PLACEHOLDER: Describe what you did with SharePoint.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        Defender: {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with Defender.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        Purview: {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with Purview.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "Dynamics CRM": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with Dynamics CRM.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "EC2,VPC": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with EC2,VPC.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "Azure Virtual Desktop/Application": {
+          icon: "fa-solid fa-wrench",
+          summary:
+            "PLACEHOLDER: Describe what you did with Azure Virtual Desktop/Application.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "Azure Networking": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with Azure Networking.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "Azure Virtual Machines": {
+          icon: "fa-solid fa-wrench",
+          summary:
+            "PLACEHOLDER: Describe what you did with Azure Virtual Machines.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+
+        CISCO: {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with CISCO.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "VLAN Management": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with VLAN Management.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        HSRP: {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with HSRP.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "OSPF/EIGRP/Static": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with OSPF/EIGRP/Static.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "ACL Configuration": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with ACL Configuration.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        EtherChannel: {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with EtherChannel.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "Ubiquiti UniFi": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with Ubiquiti UniFi.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        STP: {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with STP.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "VPN Setup": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with VPN Setup.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "Firewall Rules": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with Firewall Rules.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        Meraki: {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with Meraki.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "AAA (Tacacs+, Radius)": {
+          icon: "fa-solid fa-wrench",
+          summary:
+            "PLACEHOLDER: Describe what you did with AAA (Tacacs+, Radius).",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "Wi-Fi optimize": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with Wi-Fi optimize.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "Site to site VPN": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with Site to site VPN.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        Aruba: {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with Aruba.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        Huawei: {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with Huawei.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "ComLaude/Cloudflare/Route53": {
+          icon: "fa-solid fa-wrench",
+          summary:
+            "PLACEHOLDER: Describe what you did with ComLaude/Cloudflare/Route53.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+
+        "Windows Server 2022": {
+          icon: "fa-solid fa-wrench",
+          summary:
+            "PLACEHOLDER: Describe what you did with Windows Server 2022.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "Active Directory": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with Active Directory.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "Group Policy": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with Group Policy.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        MDT: {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with MDT.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        WSUS: {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with WSUS.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "DHCP/DNS": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with DHCP/DNS.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        DFS: {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with DFS.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "RRAS VPN": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with RRAS VPN.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        IIS: {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with IIS.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "File Server": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with File Server.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "Print Server": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with Print Server.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        WebDAV: {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with WebDAV.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "Windows Admin Center": {
+          icon: "fa-solid fa-wrench",
+          summary:
+            "PLACEHOLDER: Describe what you did with Windows Admin Center.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+
+        PowerShell: {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with PowerShell.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "Command Line": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with Command Line.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "HTML/CSS": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with HTML/CSS.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "Automation Scripts": {
+          icon: "fa-solid fa-wrench",
+          summary:
+            "PLACEHOLDER: Describe what you did with Automation Scripts.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "Batch Processing": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with Batch Processing.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+
+        "Windows 11/10": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with Windows 11/10.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "VMware vSphere": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with VMware vSphere.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "Hyper-V": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with Hyper-V.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        VirtualBox: {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with VirtualBox.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "Office 365": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with Office 365.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "Remote Desktop": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with Remote Desktop.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        Mimecast: {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with Mimecast.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "8x8": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with 8x8.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        Veeam: {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with Veeam.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "Jamf Pro": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with Jamf Pro.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        Sophos: {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with Sophos.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "Net2 Door Access": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with Net2 Door Access.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        PaperCut: {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with PaperCut.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        Setyl: {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with Setyl.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "Evoko Room Booking": {
+          icon: "fa-solid fa-wrench",
+          summary:
+            "PLACEHOLDER: Describe what you did with Evoko Room Booking.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "Polycom/Yealink": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with Polycom/Yealink.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "HIKVision CCTV": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with HIKVision CCTV.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "SignIn App": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with SignIn App.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        LiquidFiles: {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with LiquidFiles.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "Adyen Payment System": {
+          icon: "fa-solid fa-wrench",
+          summary:
+            "PLACEHOLDER: Describe what you did with Adyen Payment System.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+
+        "Email Security": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with Email Security.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "SPF/DKIM/DMARC": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with SPF/DKIM/DMARC.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "Defender Configuration": {
+          icon: "fa-solid fa-wrench",
+          summary:
+            "PLACEHOLDER: Describe what you did with Defender Configuration.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "Access Control": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with Access Control.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+        "Security Policies": {
+          icon: "fa-solid fa-wrench",
+          summary: "PLACEHOLDER: Describe what you did with Security Policies.",
+          bullets: [
+            "PLACEHOLDER bullet 1",
+            "PLACEHOLDER bullet 2",
+            "PLACEHOLDER bullet 3",
+          ],
+          tags: ["PLACEHOLDER tag"],
+        },
+      };
+
+        // Modal elements
+        const skillModalOverlay = document.getElementById('skillModalOverlay');
+        const skillModalCloseBtn = document.getElementById('skillModalCloseBtn');
+        const skillModalTitle = document.getElementById('skillModalTitle');
+        const skillModalSkillName = document.getElementById('skillModalSkillName');
+        const skillModalSummary = document.getElementById('skillModalSummary');
+        const skillModalBullets = document.getElementById('skillModalBullets');
+        const skillModalFooter = document.getElementById('skillModalFooter');
+
+        let lastFocusedElement = null;
+
+        function openSkillModal(skillName) {
+            const details = skillDetails[skillName] || {
+                icon: "fa-solid fa-wrench",
+                summary: "Add details for this skill inside the skillDetails object.",
+                bullets: [`No custom content found for: "${skillName}".`],
+                tags: []
+            };
+
+            // Title & icon
+            const iconEl = skillModalTitle.querySelector('i');
+            iconEl.className = details.icon || "fa-solid fa-wrench";
+            skillModalSkillName.textContent = skillName;
+
+            // Summary
+            skillModalSummary.textContent = details.summary || "";
+
+            // Bullets
+            skillModalBullets.innerHTML = "";
+            (details.bullets || []).forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                skillModalBullets.appendChild(li);
+            });
+
+            // Tags
+            skillModalFooter.innerHTML = "";
+            (details.tags || []).forEach(t => {
+                const pill = document.createElement('span');
+                pill.className = "skill-pill";
+                pill.innerHTML = `<i class="fa-solid fa-tag"></i><span>${t}</span>`;
+                skillModalFooter.appendChild(pill);
+            });
+
+            // Open
+            lastFocusedElement = document.activeElement;
+            skillModalOverlay.classList.add('open');
+            skillModalOverlay.setAttribute('aria-hidden', 'false');
+
+            skillModalCloseBtn.focus();
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeSkillModal() {
+            skillModalOverlay.classList.remove('open');
+            skillModalOverlay.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = "";
+
+            if (lastFocusedElement && typeof lastFocusedElement.focus === "function") {
+                lastFocusedElement.focus();
+            }
+        }
+
+        // Open modal when clicking a skill tag
+        document.querySelectorAll('.skill-tag').forEach(tag => {
+            tag.addEventListener('click', () => {
+                const skillName = tag.textContent.trim();
+                openSkillModal(skillName);
+            });
+
+            // Keyboard open (Enter/Space)
+            tag.setAttribute('tabindex', '0');
+            tag.setAttribute('role', 'button');
+            tag.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openSkillModal(tag.textContent.trim());
+                }
+            });
+        });
+
+        // Close handlers
+        skillModalCloseBtn.addEventListener('click', closeSkillModal);
+
+        // Click outside modal closes it
+        skillModalOverlay.addEventListener('click', (e) => {
+            if (e.target === skillModalOverlay) closeSkillModal();
+        });
+
+        // ESC closes it
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && skillModalOverlay.classList.contains('open')) {
+                closeSkillModal();
+            }
         });
     </script>
 </body>
