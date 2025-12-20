@@ -2,737 +2,907 @@
 <html lang="en">
 
 <head>
-    <!-- keep your head exactly as provided -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Binary/Decimal/Hex Converter</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Binary / Decimal / Hex Converter</title>
 
-    <!-- Favicon: cyan "code-compare"-style chevrons -->
-    <link rel="icon" type="image/svg+xml"
-        href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%200%2064%2064%22%3E%3Crect width=%2264%22 height=%2264%22 rx=%2210%22 fill=%22black%22/%3E%3Cpath d=%22M24%2020%20L14%2032%20L24%2044%22 stroke=%22cyan%22 stroke-width=%226%22 fill=%22none%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M40%2020%20L50%2032%20L40%2044%22 stroke=%22cyan%22 stroke-width=%226%22 fill=%22none%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M30%2016%20L38%2024%22 stroke=%22cyan%22 stroke-width=%226%22 stroke-linecap=%22round%22/%3E%3Cpath d=%22M30%2040%20L38%2048%22 stroke=%22cyan%22 stroke-width=%226%22 stroke-linecap=%22round%22/%3E%3C/svg%3E">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%200%2064%2064%22%3E%3Crect width=%2264%22 height=%2264%22 rx=%2210%22 fill=%22black%22/%3E%3Cpath d=%22M24%2020%20L14%2032%20L24%2044%22 stroke=%22cyan%22 stroke-width=%226%22 fill=%22none%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M40%2020%20L50%2032%20L40%2044%22 stroke=%22cyan%22 stroke-width=%226%22 fill=%22none%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3Cpath d=%22M30%2016%20L38%2024%22 stroke=%22cyan%22 stroke-width=%226%22 stroke-linecap=%22round%22/%3E%3Cpath d=%22M30%2040%20L38%2048%22 stroke=%22cyan%22 stroke-width=%226%22 stroke-linecap=%22round%22/%3E%3C/svg%3E" />
 
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 
+  <style>
+    :root {
+      --primary: #00d4aa;
+      --secondary: #0066ff;
+      --bg: #0a0a0a;
+      --card: rgba(26, 26, 26, 0.85);
+      --card2: rgba(0, 0, 0, 0.22);
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #e6e6e6;
+      --muted: #a0a0a0;
+      --grad: linear-gradient(135deg, #00d4aa 0%, #0066ff 100%);
+      --warn: #ff6b35;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+      --shadow2: 0 14px 40px rgba(0, 0, 0, 0.45);
+      --r: 18px;
+    }
 
+    * {
+      box-sizing: border-box;
+    }
 
-    <style>
-        /* Modern Variables matching portfolio style */
-        :root {
-            --primary-color: #00d4aa;
-            --secondary-color: #0066ff;
-            --bg-dark: #0a0a0a;
-            --bg-card: #1a1a1a;
-            --bg-card-hover: #252525;
-            --text-primary: #e0e0e0;
-            --text-secondary: #a0a0a0;
-            --accent-gradient: linear-gradient(135deg, #00d4aa 0%, #0066ff 100%);
-            --success: #00d4aa;
-            --warning: #ff6b35;
-        }
+    html,
+    body {
+      height: 100%;
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
+      color: var(--text);
+      background: radial-gradient(1200px 800px at 20% 10%,
+          rgba(0, 212, 170, 0.15),
+          transparent 60%),
+        radial-gradient(1100px 700px at 85% 15%,
+          rgba(0, 102, 255, 0.12),
+          transparent 55%),
+        var(--bg);
+      padding: 18px;
+    }
 
-        body {
-            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-            line-height: 1.7;
-            background: var(--bg-dark);
-            color: var(--text-primary);
-            min-height: 100vh;
-            padding: 20px;
-        }
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+    }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: var(--bg-card);
-            padding: 3rem;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            position: relative;
-            overflow: hidden;
-            animation: fadeInUp 0.6s ease;
-        }
+    .container::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 3px;
+      background: var(--grad);
+    }
 
-        .container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--accent-gradient);
-        }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 18px 18px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(0, 0, 0, 0.1);
+    }
 
-        h1 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-align: center;
-            margin-bottom: 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-        }
+    .title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.35rem;
+      font-weight: 900;
+      margin: 0;
+      letter-spacing: 0.2px;
+    }
 
-        h1 i {
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+    .title i,
+    .title span {
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
 
-        .input-row {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 1rem;
-            align-items: end;
-            margin-bottom: 0.75rem;
-        }
+    .hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.22);
+      color: var(--muted);
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
 
-        .input-section {
-            margin-bottom: 1.2rem;
-        }
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(420px, 1.05fr) minmax(360px, 0.95fr);
+      gap: 14px;
+      padding: 14px 18px 18px;
+      align-items: stretch;
+    }
 
-        .input-section label {
-            display: block;
-            color: var(--text-primary);
-            font-weight: 500;
-            margin-bottom: 0.6rem;
-            font-size: 1.05rem;
-        }
+    .panel {
+      border-radius: var(--r);
+      border: 1px solid var(--border);
+      background: var(--card2);
+      box-shadow: var(--shadow2);
+      overflow: hidden;
+      height: min(78vh, 720px);
+      display: flex;
+      flex-direction: column;
+    }
 
-        .select-base,
-        .grouping-toggle {
-            background: rgba(0, 0, 0, 0.3);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            color: var(--text-primary);
-            padding: 12px 14px;
-            border-radius: 12px;
-            font-size: 0.95rem;
-        }
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(0, 0, 0, 0.16);
+      flex: 0 0 auto;
+    }
 
-        #textInput {
-            width: 100%;
-            min-height: 110px;
-            background: rgba(0, 0, 0, 0.3);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 1.2rem 1.4rem;
-            color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-            font-size: 1rem;
-            resize: vertical;
-            transition: all 0.3s ease;
-        }
+    .panel-head .h {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 900;
+      letter-spacing: 0.2px;
+    }
 
-        #textInput:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 20px rgba(0, 212, 170, 0.1);
-        }
+    .panel-head .h i {
+      color: var(--secondary);
+    }
 
-        #textInput::placeholder {
-            color: var(--text-secondary);
-        }
+    .panel-head .sub {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
 
-        .convert-btn {
-            width: 100%;
-            padding: 14px 22px;
-            border: none;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            background: var(--accent-gradient);
-            color: #000;
-            margin-bottom: 1.2rem;
-        }
+    .left-body {
+      padding: 14px;
+      overflow: auto;
+      flex: 1 1 auto;
+    }
 
-        .convert-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0, 212, 170, 0.3);
-        }
+    .toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.22);
+      cursor: pointer;
+      user-select: none;
+      font-weight: 700;
+      color: var(--text);
+    }
 
-        .convert-btn:active {
-            transform: translateY(0);
-        }
+    .toggle input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+    }
 
-        .error {
-            color: #ff7979;
-            font-size: 0.95rem;
-            margin: 0.2rem 0 0.8rem;
-        }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin: 12px 0;
+    }
 
-        .stats-bar {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin: 1.2rem 0 1.6rem;
-            padding: 0.9rem;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
+    .stat {
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 14px;
+      padding: 10px 12px;
+    }
 
-        .stat-item {
-            text-align: center;
-        }
+    .stat .v {
+      font-weight: 900;
+      color: var(--primary);
+      font-size: 1.05rem;
+      line-height: 1.1;
+    }
 
-        .stat-value {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--primary-color);
-        }
+    .stat .l {
+      color: var(--muted);
+      font-size: 0.82rem;
+      margin-top: 4px;
+    }
 
-        .stat-label {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-top: 4px;
-        }
+    .cards {
+      display: grid;
+      gap: 12px;
+    }
 
-        .hash-results {
-            display: grid;
-            gap: 1.2rem;
-        }
+    .card {
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.26);
+      overflow: hidden;
+      position: relative;
+    }
 
-        .hash-item {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 1.2rem;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            animation: fadeInUp 0.4s ease;
-            animation-fill-mode: both;
-        }
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 2px;
+      background: var(--grad);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.22s ease;
+      opacity: 0.9;
+    }
 
-        .hash-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--accent-gradient);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
+    .card:hover::before {
+      transform: scaleX(1);
+    }
 
-        .hash-item:hover {
-            transform: none;
-            background: rgba(0, 0, 0, 0.3);
-            border-color: rgba(255, 255, 255, 0.05);
-            box-shadow: none;
-        }
+    .card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 12px 10px;
+    }
 
+    .card-title {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 900;
+      color: var(--primary);
+    }
 
-        .hash-item:hover::before {
-            transform: scaleX(1);
-        }
+    .card-title i {
+      color: var(--secondary);
+    }
 
-        .hash-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 0.6rem;
-        }
+    .copy {
+      border: 1px solid rgba(0, 212, 170, 0.55);
+      background: rgba(0, 212, 170, 0.06);
+      color: var(--primary);
+      border-radius: 12px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.14s ease, background 0.14s ease;
+      white-space: nowrap;
+    }
 
-        .hash-type {
-            font-weight: 600;
-            color: var(--primary-color);
-            font-size: 1.05rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+    .copy:hover {
+      transform: translateY(-1px);
+      background: rgba(0, 212, 170, 0.12);
+    }
 
-        .hash-type i {
-            color: var(--secondary-color);
-        }
+    .copy.copied {
+      background: rgba(0, 212, 170, 0.22);
+    }
 
-        .copy-hash-btn {
-            background: transparent;
-            border: 1px solid var(--primary-color);
-            color: var(--primary-color);
-            padding: 8px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+    .field {
+      width: 100%;
+      border: none;
+      outline: none;
+      padding: 12px 14px 14px;
+      font-size: 1rem;
+      color: var(--text);
+      background: rgba(0, 0, 0, 0.32);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      border-left: 3px solid rgba(0, 212, 170, 0.55);
+    }
 
-        .copy-hash-btn:hover {
-            background: var(--primary-color);
-            color: #000;
-        }
+    .error {
+      display: none;
+      padding: 10px 14px 12px;
+      color: #ff8d8d;
+      font-size: 0.92rem;
+    }
 
-        .copy-hash-btn.copied {
-            background: var(--success);
-            color: #000;
-            border-color: var(--success);
-        }
+    .actions {
+      margin-top: 12px;
+    }
 
-        .hash-value {
-            font-family: 'Courier New', monospace;
-            font-size: 1rem;
-            color: var(--text-primary);
-            line-height: 1.6;
-            padding: 12px 16px;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 10px;
-            border-left: 3px solid var(--primary-color);
-            width: 100%;
-            /* ✅ makes it span the card */
-            box-sizing: border-box;
-            /* ✅ prevents overflow */
-            display: block;
-        }
+    .btn {
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-weight: 900;
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(0, 0, 0, 0.24);
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
 
+    .btn.warn {
+      border-color: rgba(255, 107, 53, 0.65);
+      color: var(--warn);
+    }
 
+    .btn.warn:hover {
+      background: rgba(255, 107, 53, 0.12);
+      transform: translateY(-1px);
+    }
 
+    .right-body {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      overflow: hidden;
+      flex: 1 1 auto;
+    }
 
-        .hash-info {
-            margin-top: 8px;
-            color: var(--text-secondary);
-            font-size: 0.82rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    .ref-search {
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(0, 0, 0, 0.26);
+      color: var(--text);
+      padding: 10px 12px;
+      outline: none;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
+      flex: 0 0 auto;
+    }
 
-        .clear-btn {
-            background: transparent;
-            border: 2px solid var(--warning);
-            color: var(--warning);
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin: 1rem auto 0;
-        }
+    .ref-search:focus {
+      border-color: rgba(0, 212, 170, 0.45);
+      box-shadow: 0 0 18px rgba(0, 212, 170, 0.12);
+    }
 
-        .clear-btn:hover {
-            background: var(--warning);
-            color: #000;
-            transform: translateY(-2px);
-        }
+    .ref-wrap {
+      flex: 1 1 auto;
+      overflow: auto;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.18);
+    }
 
-        .empty-state {
-            text-align: center;
-            color: var(--text-secondary);
-            font-style: italic;
-            padding: 1.4rem;
-        }
+    .ref-wrap::-webkit-scrollbar,
+    .left-body::-webkit-scrollbar {
+      width: 12px;
+    }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .container {
-                padding: 2rem;
-            }
+    .ref-wrap::-webkit-scrollbar-track,
+    .left-body::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.55);
+      border-radius: 999px;
+    }
 
-            h1 {
-                font-size: 1.8rem;
-            }
+    .ref-wrap::-webkit-scrollbar-thumb,
+    .left-body::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.16);
+      border-radius: 999px;
+      border: 3px solid rgba(0, 0, 0, 0.55);
+    }
 
-            .input-row {
-                grid-template-columns: 1fr;
-            }
+    .ref-wrap::-webkit-scrollbar-thumb:hover,
+    .left-body::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 212, 170, 0.35);
+    }
 
-            .hash-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
+    .ref-wrap,
+    .left-body {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.16) rgba(0, 0, 0, 0.55);
+    }
 
-            .hash-info {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 5px;
-            }
+    table.ref-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
+      font-size: 0.92rem;
+    }
 
-            .stats-bar {
-                flex-direction: column;
-                gap: 0.8rem;
-            }
-        }
+    .ref-table thead th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: rgba(10, 10, 10, 0.92);
+      backdrop-filter: blur(8px);
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text);
+    }
 
-        /* Animation */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
+    .ref-table tbody td {
+      padding: 8px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      color: var(--text);
+      white-space: nowrap;
+    }
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+    .ref-table tbody tr:hover td {
+      background: rgba(0, 212, 170, 0.07);
+    }
 
-        .hash-item:nth-child(1) {
-            animation-delay: 0.1s;
-        }
+    .ref-table tbody tr:nth-child(even) td {
+      background: rgba(255, 255, 255, 0.02);
+    }
 
-        .hash-item:nth-child(2) {
-            animation-delay: 0.2s;
-        }
+    @media (max-width: 980px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
 
-        .hash-item:nth-child(3) {
-            animation-delay: 0.3s;
-        }
+      .panel {
+        height: min(78vh, 680px);
+      }
 
-        .hash-item:nth-child(4) {
-            animation-delay: 0.4s;
-        }
-
-        .hash-item:nth-child(5) {
-            animation-delay: 0.5s;
-        }
-
-        .icon {
-            width: 1em;
-            height: 1em;
-            display: inline-block;
-            object-fit: contain;
-            vertical-align: -0.125em;
-            /* nudges it to sit nicely with text */
-        }
-    </style>
+      .hint {
+        display: none;
+      }
+    }
+  </style>
 </head>
 
 <body>
-    <div class="container">
-        <h1><i class="fa-solid fa-code-compare"></i> Binary / Decimal / Hex Converter</h1>
-
-        <!-- tiny control bar just for the nibble-group toggle -->
-        <div class="input-row" style="margin-bottom:1rem;">
-            <div></div>
-            <label class="grouping-toggle" style="display:flex;align-items:center;gap:10px;cursor:pointer">
-                <input id="groupToggle" type="checkbox" checked style="accent-color:#00d4aa;width:18px;height:18px">
-
-                Group binary in nibbles
-            </label>
-        </div>
-
-        <!-- Stats (base, bits, bytes) -->
-        <div class="stats-bar" aria-live="polite">
-            <div class="stat-item">
-                <div class="stat-value" id="statBase">—</div>
-                <div class="stat-label">Detected Base</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value" id="statBits">—</div>
-                <div class="stat-label">Bits</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value" id="statBytes">—</div>
-                <div class="stat-label">Bytes (min)</div>
-            </div>
-        </div>
-
-        <!-- Results: just the 3 fields, all editable -->
-        <div id="results" class="hash-results" aria-live="polite">
-            <!-- Decimal -->
-            <div class="hash-item">
-                <div class="hash-header">
-                    <div class="hash-type"><i class="fa-solid fa-hashtag"></i>Decimal</div>
-                    <button class="copy-hash-btn" data-type="dec">
-                        <i class="fa-regular fa-copy"></i> Copy
-                    </button>
-                </div>
-                <input id="decInput" class="hash-value" placeholder="e.g. 3857" aria-label="Decimal input">
-                <div class="error" id="decError" role="alert" style="display:none"></div>
-            </div>
-
-            <!-- Binary -->
-            <div class="hash-item">
-                <div class="hash-header">
-                    <div class="hash-type"><img class="icon"
-                            src="data:image/png;base64,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"
-                            alt="Hex icon" loading="lazy" />Binary</div>
-                    <button class="copy-hash-btn" data-type="bin">
-                        <i class="fa-regular fa-copy"></i> Copy
-                    </button>
-                </div>
-                <input id="binInput" class="hash-value" placeholder="e.g. 111100010001 or 0b1111..."
-                    aria-label="Binary input">
-                <div class="error" id="binError" role="alert" style="display:none"></div>
-            </div>
-
-            <!-- Hex -->
-            <div class="hash-item">
-                <div class="hash-header">
-                    <div class="hash-type"><img class="icon"
-                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAAAXNSR0IArs4c6QAACvRJREFUeF7tnXeIH0UUx78/G8auQUWNmtgL9t49FQsaUTAaS0zOhl2MxAImOeyiJihiiSWnCbEkGAsmBNRcLIkoIiiKf5kzFlAUEUMQUc98b25zv9vs/vbN7vx2d3bfQLhwN7P73pvPvCk786aBxNQ3EsB4ACcC4P/5T1M5LdA7IBZ/9gBYAjT4MzY14v/UxwqfqRVezpq2kIowdMaBEANA3+KBFm/xHs1acgt0A43OsIwhAPrdPVs9W7+m6lmA3qADaARdBcIAaMuvXqWHNeoFGqOCXzYBoG6/+nW/RsM13cEAAP0DPrZ+TfWxALuCngAAdf31qfhA0/6uoAH0TRgY+NXPBKpxBwGYutoOXWqLWlqgiwAs18WeWlY+leYYQAGobfUDvQSgr8YGqLvqCkDdCVAPUHMCFAAFQMcAdWZAPUCdax/g10D1AHVmQAGoc+2rB6h57SsACoB2ATVnQAFQAHQWUGcG1APUufZ1EFjz2q8LANdcA5x3HnD33UBPy4NSfgExYgTw6KPAihXAzTenk73SXcCmmwL33w9cdhkwbBjw/ffAhAnAe++lM1aZSp12GjBtGrD33sB//wEvvABcfrm9hJUE4KSTgEsuAc48E9h6a6AxsPf5zz+B664DZs2yN1QZSrDFn3suMG4ccMABwAYbDEr17rvAKafYS5kJgKuvBo4+2v6lrktsuSWw007AVlsBw4eb1h6VpADssw/AbmPzzV1Lave8ddcFdt0VoCfbfnvzk7+LSrkDwMqne91iCzuliswtAYBGfu014OSTBz1HkTJL3507ALNnAxdeCKyzjlTE4vNJADjjDODZZ02L8ynlDgDd5EsvAfvv74+ZJABQm3vvBSZOBDbc0B/dcgeApvGtG5AC4GM3UAgAhODxxw0IcYOTMrUhKQCU+cgjgTlzgFFrDlKXSZO1ZSkMgD32AObNA/bbz95A/AqxfLkp//77wNtv2z2D0z2+v6MDOOoogNOkYMqXZRYQlL3rLuC224ZOt6QS/vUXwEp5803gww+Br7+WljR6HHussSl1ZDe70UatyxcGAMW64w5gyhS7PpOVzwq/6CKALdNF4kJIV5cxoAsA2BUsWQIcdJCddL/+asB5/nm7cnG5gxW/s88G1lsvOlehAKQx1M8/A52dwMKFbowUPIWj+BkzoiGw6QKC59nCTbBfftmA7Tpxte/ii6O720IBoKIPPwzcdFM8oWFjLF5s3Fs70u23G48UXhBKAwC7GHqq3XaTSbpypbGDq9bf/FY2NC5jH3poicYAgSijR5v58zbbyAz13HPAFVfI8trmoqHoWY45ZmjJNADwCWzRF1wgk+LHH4FLL23f94YbbwTuuw/YeOOh8hTuASjOZ58BBx+cbKi//wYeegi4887kvGlzRA3g0gJw661mbBG3xNws4zffAIcf7m5cE9afcC9bBuy7bwkBkLYUAvDgg8ZNtytxGkd5dt558A1pAbDxbhzthyvHtY5PPglcddXQVdhSeIB77gEmTUqeNuUBAI3+zjtmTT9IaQFgq/vkE2CvvZKrMg8A+Emb+wA222xQnlIAwO/uFGyTTVobKi8AwgPTtABQGw6+uN6QlPIAIGpgWgoApK4yLwDGjAGeesp8JmbKAoC0e8sDAOryxhsA1wWCVAoAOK178UVghx3K4QGaB6b//gt8+SVwyy3pRuic4Uh23OQFQPPA9I8/jN05Q7BNmTaEhF8mnTPn5QEoH0fv3FTBaWeW/YDSdY68AOAgl+Otjz4Cnnkm/azDKQA0+FdfAfxU3CrlCYBti4jLL/0ukBcArvRSAISWVACEhlIP0P51AGFViLKpBxCZCVAPIDSUegD1ADoIDK3TC9tOIdm0CxCaXbsAoaG0C9AuQLsA7QJ0IUjoMAvPVpkxwGGHAZ9+2j57FjUG2GUXo9O337ZHt0oAwPV+fhz56SdzXpHr/q5TEQDw28qrrwJ77gm8/rpZ+//hB7eaeQ8Av0B2dwM77mgMk/azaJJZiwCAII8fb3YBZ/mU3Uo3rwGIOsJVFQDCx+4UgBDGrPyZM4Fzzhm6T74KADC4BfdMNp9QVgCaAGB4FG6N5omd8FEwnwEg1DyZzG3l4eAUlQLgn3/MkSsO2mwSI4EceCCw3XbuI2UkySEdA1AnQmiT2MdzoMd/cfspKwWAjXFs8xbtAWzlleZXAISWUgCEhhrIVsgswE5Eu9wKgJ29FAChvaRjAOHjrLNpFyA0mXoAoaGK7AJsdgVzpW/kSOCII4BDDjGRMVtFyygaAOmu4CAKCEPQMNYip7Sc98dFOKmUB7ABIMwzDcdTxZwrR53W9QWAqHbKKKA8X0nIwyAoACGLxYVy8xkAqhgXfk8BiGgyr7wC8Pxfc2vxHQCqSU/AM43NwTYUgAgAGA+I3wO23Xbwj1UAgNowRN3Yse0PdF3INDDLGCDMAcPLHXdc9QC49lrzQShYGlYPEDO7YaBKRvYOYhZXxQNwhxM3g3AGxKQAxADAnUBTpwK//WY+MNF1ug49x1dLF4Kk00DJbJ0xlxiV5IsvgPnzjW66IyhkOU4LGSrFJhKnxPjhPEUAwAihjKTqKpBmlN7ejwHSVGaaMkUAkEZO2zIKgNBiCoDQUHoySE8G6ckgPRnU2l24XAcQOqbM2bQLEJpQuwDtArQLqGsXwCVZLlbEXdgQOBEfu4CnnwauvDL5KjmXC0FCp5spm9NpYBkDRWayTlPhsgWKdKWXUwB4S8YTTyTfuOmjB1i0CDj11GSz19oDXH898MADa19mEDabjwAwIqfkmtxaAyANp+obANIQuAS91gCEI1jHOUzfAAhHHW/VEdQWAJtLFXjfPW+9YJfhQ5JehEFdenuB889vb7QSlzZzNgiMusWilaDcz8ctTz6k8M0jrWT+5RdzGdZbb/mgGeAMgPAetiT1uWLI2z7b+a07SQbJ36P2HbYq51v35gSAqAuakozL+/V4uyanjWVOURc0Jcn7wQfA8ccn5SrH350AwBg948YNvcVKoh5v8ODtVx9/LMmdfx7pwlZYMt4b/NhjBvCyp8wARO1ht1Gafea0aWYHbNlS1LkDqYwMgsEbSiZPLi/g1CUTABz5M3xZ1itged/uihXA3Llmn3+79/dJKpE7jRlyLhyqRVK2Oc+qVcDSpUYvjpPKljIB8MgjwA03AOuv704tXu7E27e533/iRPe7YCWS8ngWwd59d0lueR7CwE2e3MrOkz9lSKkBCIcxc60ML2w+6yzXT01+XlToueRS8hy//27WP8riDVIDsGABcPrpyZ9H5aYZzMlBFHfg0AXnnRiYcfp0gAGp2pE+/xw44YTyTH9TAxB3itWF0b77ziwSFTU7iDt5nFU3roDOmGFOMpUlpQagLAqoHNksoABks5/3pRUA76swmwIKQDb7eV9aAfC+CrMpoABks5/3pRUA76swmwIKQDb7eV9aAfC+CrMpoABks5/3pRUA76swmwIKQDb7eV9aAfC+CrMpQACWAxiIRpftYVraOwv0EoDFAE70TnQV2IUFugnA1NVP6nLxNH2GdxboIgBs/fQCmupngVENo7N2A/Wre/QAjY4AAPUC9SOgA2j0DADQ7wVmrj7cOqF+dqilxv2tn5o3A8CpICHQGUG1mVhT+SEA+r0AIeCAUNcFqglBL9AY1axakwcIft0PwXidGlaOgCEtP9AuAoAhIGiX4D8HvQA6OeCLUqUFAGt5BI4N6B20eyg3FKxwpm4AS+IqPlDhf7v3X075gvrfAAAAAElFTkSuQmCC"
-                            alt="Hex icon" loading="lazy" />Hex</div>
-                    <button class="copy-hash-btn" data-type="hex">
-                        <i class="fa-regular fa-copy"></i> Copy
-                    </button>
-                </div>
-                <input id="hexInput" class="hash-value" placeholder="e.g. F11 or 0xF11" aria-label="Hex input">
-                <div class="error" id="hexError" role="alert" style="display:none"></div>
-            </div>
-        </div>
-
-        <button id="clearBtn" class="clear-btn"><i class="fa-regular fa-trash-can"></i> Clear</button>
+  <div class="container">
+    <div class="topbar">
+      <h1 class="title">
+        <i class="fa-solid fa-code-compare"></i>
+        <span>Binary / Decimal / Hex</span>
+      </h1>
     </div>
 
-    <script>
-        // Elements
-        const decInput = document.getElementById('decInput');
-        const binInput = document.getElementById('binInput');
-        const hexInput = document.getElementById('hexInput');
+    <div class="layout">
+      <!-- LEFT -->
+      <section class="panel">
+        <div class="panel-head">
+          <div class="h"><i class="fa-solid fa-sliders"></i> Converter</div>
+          <div class="sub">Type in any box</div>
+        </div>
 
-        const decError = document.getElementById('decError');
-        const binError = document.getElementById('binError');
-        const hexError = document.getElementById('hexError');
+        <div class="left-body">
+          <label class="toggle">
+            <input id="groupToggle" type="checkbox" checked />
+            Group binary in nibbles
+          </label>
 
-        const clearBtn = document.getElementById('clearBtn');
-        const groupToggle = document.getElementById('groupToggle');
+          <div class="stats" aria-live="polite">
+            <div class="stat">
+              <div class="v" id="statBase">—</div>
+              <div class="l">Detected Base</div>
+            </div>
+            <div class="stat">
+              <div class="v" id="statBits">—</div>
+              <div class="l">Bits</div>
+            </div>
+            <div class="stat">
+              <div class="v" id="statBytes">—</div>
+              <div class="l">Bytes (min)</div>
+            </div>
+          </div>
 
-        const statBase = document.getElementById('statBase');
-        const statBits = document.getElementById('statBits');
-        const statBytes = document.getElementById('statBytes');
+          <div class="cards" id="results">
+            <div class="card">
+              <div class="card-head">
+                <div class="card-title">
+                  <i class="fa-solid fa-hashtag"></i> Decimal
+                </div>
+                <button class="copy" data-type="dec">
+                  <i class="fa-regular fa-copy"></i> Copy
+                </button>
+              </div>
+              <input id="decInput" class="field" placeholder="e.g. 255" aria-label="Decimal input" />
+              <div class="error" id="decError" role="alert"></div>
+            </div>
 
-        // Keep the last valid number so we can re-render when toggling nibble grouping
-        let lastParsed = null; // BigInt or null
-        let updating = false;  // prevent event loops
+            <div class="card">
+              <div class="card-head">
+                <div class="card-title">
+                  <i class="fa-solid fa-binary"></i> Binary
+                </div>
+                <button class="copy" data-type="bin">
+                  <i class="fa-regular fa-copy"></i> Copy
+                </button>
+              </div>
+              <input id="binInput" class="field" placeholder="e.g. 0001 0011 or 0b00010011" aria-label="Binary input" />
+              <div class="error" id="binError" role="alert"></div>
+            </div>
 
-        // Helpers
-        function showError(el, msg) { el.textContent = msg; el.style.display = 'block'; }
-        function clearError(el) { el.textContent = ''; el.style.display = 'none'; }
+            <div class="card">
+              <div class="card-head">
+                <div class="card-title">
+                  <i class="fa-solid fa-hexagon-nodes"></i> Hex
+                </div>
+                <button class="copy" data-type="hex">
+                  <i class="fa-regular fa-copy"></i> Copy
+                </button>
+              </div>
+              <input id="hexInput" class="field" placeholder="e.g. FF or 0xFF" aria-label="Hex input" />
+              <div class="error" id="hexError" role="alert"></div>
+            </div>
+          </div>
 
-        function bitsNeeded(nBig) {
-            if (nBig === 0n) return 1;
-            let n = nBig < 0n ? -nBig : nBig;
-            let bits = 0;
-            while (n > 0n) { n >>= 1n; bits++; }
-            return bits;
+          <div class="actions">
+            <button id="clearBtn" class="btn warn">
+              <i class="fa-regular fa-trash-can"></i> Clear
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT -->
+      <section class="panel">
+        <div class="panel-head">
+          <div class="h">
+            <i class="fa-solid fa-table"></i> 0–255 Reference
+          </div>
+          <div class="sub">Search dec / hex / bin</div>
+        </div>
+
+        <div class="right-body">
+          <input id="refSearch" class="ref-search" placeholder="Search… (e.g. 128, FF, 11110000)"
+            aria-label="Search table" />
+
+          <div class="ref-wrap" aria-label="Reference table scroll area">
+            <table class="ref-table" aria-label="Decimal Binary Hex table">
+              <thead>
+                <tr>
+                  <th style="width: 110px">Decimal</th>
+                  <th>Binary (8-bit)</th>
+                  <th style="width: 90px">Hex</th>
+                </tr>
+              </thead>
+              <tbody id="refTbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    // Elements
+    const decInput = document.getElementById("decInput");
+    const binInput = document.getElementById("binInput");
+    const hexInput = document.getElementById("hexInput");
+
+    const decError = document.getElementById("decError");
+    const binError = document.getElementById("binError");
+    const hexError = document.getElementById("hexError");
+
+    const clearBtn = document.getElementById("clearBtn");
+    const groupToggle = document.getElementById("groupToggle");
+
+    const statBase = document.getElementById("statBase");
+    const statBits = document.getElementById("statBits");
+    const statBytes = document.getElementById("statBytes");
+
+    // Reference table elements
+    const refTbody = document.getElementById("refTbody");
+    const refSearch = document.getElementById("refSearch");
+
+    let lastParsed = null; // BigInt or null
+    let updating = false;
+
+    function showError(el, msg) {
+      el.textContent = msg;
+      el.style.display = "block";
+    }
+    function clearError(el) {
+      el.textContent = "";
+      el.style.display = "none";
+    }
+
+    function bitsNeeded(nBig) {
+      if (nBig === 0n) return 1;
+      let n = nBig < 0n ? -nBig : nBig;
+      let bits = 0;
+      while (n > 0n) {
+        n >>= 1n;
+        bits++;
+      }
+      return bits;
+    }
+
+    function padToMultiple(bitsStr, multiple) {
+      let s = String(bitsStr);
+      const rem = s.length % multiple;
+      if (rem === 0) return s;
+      return "0".repeat(multiple - rem) + s;
+    }
+
+    function formatBinaryGrouped(bitsStr, groupSize = 4) {
+      const s = String(bitsStr);
+      const out = [];
+      for (let i = 0; i < s.length; i += groupSize)
+        out.push(s.slice(i, i + groupSize));
+      return out.join(" ");
+    }
+
+    function toBinaryString(absBigInt) {
+      const raw = absBigInt.toString(2);
+      return padToMultiple(raw || "0", 8); // always byte padded
+    }
+
+    function sanitizeForBase(raw, base) {
+      let v = (raw || "").trim();
+      v = v.replace(/^0x/i, "").replace(/^0b/i, "").replace(/[\s_]/g, "");
+      if (v === "") return v;
+
+      const sign = v[0] === "-" || v[0] === "+" ? v[0] : "";
+      v = sign ? sign + v.slice(1) : v;
+
+      if (base === 10)
+        return sign + v.slice(sign ? 1 : 0).replace(/[^0-9]/g, "");
+      if (base === 2)
+        return sign + v.slice(sign ? 1 : 0).replace(/[^01]/g, "");
+      return (
+        sign + v.slice(sign ? 1 : 0).replace(/[^0-9a-fA-F]/g, "")
+      ).toUpperCase();
+    }
+
+    function parseBigIntFrom(base, value) {
+      if (!value || value === "+" || value === "-") return null;
+      const sign = value[0] === "-" ? "-" : value[0] === "+" ? "+" : "";
+      const core = value.slice(sign ? 1 : 0);
+      try {
+        if (base === 10) return BigInt(value);
+        if (base === 2) return BigInt((sign || "") + "0b" + core);
+        if (base === 16) return BigInt((sign || "") + "0x" + core);
+      } catch {
+        return null;
+      }
+      return null;
+    }
+
+    function updateStats(fromBase, n) {
+      if (n === null) {
+        statBase.textContent = "—";
+        statBits.textContent = "—";
+        statBytes.textContent = "—";
+        return;
+      }
+      const abs = n < 0n ? -n : n;
+      const bits = bitsNeeded(abs);
+      const bytes = Math.ceil(bits / 8);
+
+      statBase.textContent = fromBase;
+      statBits.textContent = (n === 0n ? 1 : bits).toString();
+      statBytes.textContent = bytes.toString();
+    }
+
+    function renderBinaryFieldFromBigInt(n) {
+      const sign = n < 0n ? "-" : "";
+      const abs = n < 0n ? -n : n;
+
+      const bytePadded = toBinaryString(abs);
+      binInput.value = groupToggle.checked
+        ? (sign ? "-" : "") + formatBinaryGrouped(bytePadded, 4)
+        : (sign ? "-" : "") + bytePadded;
+    }
+
+    function setAllFromBigInt(n, source) {
+      updating = true;
+      lastParsed = n;
+
+      const sign = n < 0n ? "-" : "";
+      const abs = n < 0n ? -n : n;
+
+      const decStr = sign + abs.toString(10);
+      const hexStr = sign + abs.toString(16).toUpperCase();
+
+      if (source !== "dec") decInput.value = decStr;
+      if (source !== "hex") hexInput.value = hexStr;
+      if (source !== "bin") renderBinaryFieldFromBigInt(n);
+
+      updating = false;
+    }
+
+    function convertFrom(which) {
+      if (updating) return;
+
+      clearError(decError);
+      clearError(binError);
+      clearError(hexError);
+
+      let raw = "";
+      let base = 10;
+
+      if (which === "dec") {
+        raw = sanitizeForBase(decInput.value, 10);
+        decInput.value = raw;
+        base = 10;
+      } else if (which === "bin") {
+        raw = sanitizeForBase(binInput.value, 2);
+        base = 2;
+      } else {
+        raw = sanitizeForBase(hexInput.value, 16);
+        hexInput.value = raw;
+        base = 16;
+      }
+
+      if (!raw) {
+        updating = true;
+        if (which !== "dec") decInput.value = "";
+        if (which !== "bin") binInput.value = "";
+        if (which !== "hex") hexInput.value = "";
+        updating = false;
+        lastParsed = null;
+        updateStats("—", null);
+        return;
+      }
+
+      const n = parseBigIntFrom(base, raw);
+      if (n === null) {
+        const el =
+          which === "dec" ? decError : which === "bin" ? binError : hexError;
+        showError(el, "Invalid number for this base.");
+        updateStats("—", null);
+        return;
+      }
+
+      setAllFromBigInt(n, which);
+      updateStats(
+        which === "dec" ? "Decimal" : which === "bin" ? "Binary" : "Hex",
+        n
+      );
+      if (which === "bin") renderBinaryFieldFromBigInt(n);
+    }
+
+    decInput.addEventListener("input", () => convertFrom("dec"));
+    binInput.addEventListener("input", () => convertFrom("bin"));
+    hexInput.addEventListener("input", () => convertFrom("hex"));
+
+    groupToggle.addEventListener("change", () => {
+      if (lastParsed !== null) {
+        renderBinaryFieldFromBigInt(lastParsed);
+      } else if (binInput.value) {
+        const sanitized = sanitizeForBase(binInput.value, 2);
+        const sign =
+          sanitized[0] === "-" ? "-" : sanitized[0] === "+" ? "+" : "";
+        const core = sanitized.slice(sign ? 1 : 0);
+        const bytePadded = padToMultiple(core || "0", 8);
+
+        binInput.value = groupToggle.checked
+          ? (sign ? "-" : "") + formatBinaryGrouped(bytePadded, 4)
+          : (sign ? "-" : "") + bytePadded;
+      }
+    });
+
+    document.querySelectorAll(".copy").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const type = btn.getAttribute("data-type");
+        let toCopy = "";
+
+        if (type === "dec") toCopy = decInput.value || "";
+        else if (type === "hex") toCopy = hexInput.value || "";
+        else {
+          if (lastParsed === null) {
+            const s = sanitizeForBase(binInput.value, 2);
+            const sign = s[0] === "-" ? "-" : s[0] === "+" ? "+" : "";
+            const core = s.slice(sign ? 1 : 0);
+            toCopy = (sign ? "-" : "") + padToMultiple(core || "0", 8);
+          } else {
+            const sign = lastParsed < 0n ? "-" : "";
+            const abs = lastParsed < 0n ? -lastParsed : lastParsed;
+            toCopy = (sign ? "-" : "") + toBinaryString(abs);
+          }
         }
 
-        function formatBinaryNibbles(bitsStr) {
-            // groups from the right: 1111 0001 0001
-            const rev = bitsStr.split('').reverse();
-            const out = [];
-            for (let i = 0; i < rev.length; i += 4) {
-                out.push(rev.slice(i, i + 4).reverse().join(''));
-            }
-            return out.reverse().join(' ');
+        try {
+          await navigator.clipboard.writeText(toCopy);
+          btn.classList.add("copied");
+          btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied';
+          setTimeout(() => {
+            btn.classList.remove("copied");
+            btn.innerHTML = '<i class="fa-regular fa-copy"></i> Copy';
+          }, 1000);
+        } catch {
+          alert("Copy failed. Your browser may block clipboard access.");
         }
+      });
+    });
 
-        function sanitizeForBase(raw, base) {
-            let v = (raw || '').trim();
-            // accept prefixes + separators
-            v = v.replace(/^0x/i, '').replace(/^0b/i, '').replace(/[\s_]/g, '');
-            if (v === '') return v;
+    clearBtn.addEventListener("click", () => {
+      updating = true;
+      decInput.value = "";
+      binInput.value = "";
+      hexInput.value = "";
+      updating = false;
+      clearError(decError);
+      clearError(binError);
+      clearError(hexError);
+      lastParsed = null;
+      updateStats("—", null);
+      decInput.focus();
+    });
 
-            const sign = (v[0] === '-' || v[0] === '+') ? v[0] : '';
-            v = sign ? sign + v.slice(1) : v;
+    updateStats("—", null);
 
-            if (base === 10) {
-                return sign + v.slice(sign ? 1 : 0).replace(/[^0-9]/g, '');
-            } else if (base === 2) {
-                return sign + v.slice(sign ? 1 : 0).replace(/[^01]/g, '');
-            } else { // 16
-                return (sign + v.slice(sign ? 1 : 0).replace(/[^0-9a-fA-F]/g, '')).toUpperCase();
-            }
-        }
+    // ===== Reference table =====
+    let refRows = [];
 
-        function parseBigIntFrom(base, value) {
-            if (!value || value === '+' || value === '-') return null;
-            const sign = value[0] === '-' ? '-' : (value[0] === '+' ? '+' : '');
-            const core = value.slice(sign ? 1 : 0);
-            try {
-                if (base === 10) return BigInt(value);
-                if (base === 2) return BigInt((sign || '') + '0b' + core);
-                if (base === 16) return BigInt((sign || '') + '0x' + core);
-            } catch { return null; }
-            return null;
-        }
+    function padLeft(s, len, ch) {
+      s = String(s);
+      while (s.length < len) s = ch + s;
+      return s;
+    }
 
-        function updateStats(fromBase, n) {
-            if (n === null) {
-                statBase.textContent = '—';
-                statBits.textContent = '—';
-                statBytes.textContent = '—';
-                return;
-            }
-            const abs = n < 0n ? -n : n;
-            const bits = bitsNeeded(abs);
-            const bytes = Math.ceil(bits / 8);
+    function makeRow(dec) {
+      const rawBin = padLeft(dec.toString(2), 8, "0");
+      const bin = formatBinaryGrouped(rawBin, 4);
+      const hex = padLeft(dec.toString(16).toUpperCase(), 2, "0");
+      return { dec: String(dec), bin, hex, binRaw: rawBin };
+    }
 
-            statBase.textContent = fromBase;
-            statBits.textContent = (n === 0n ? 1 : bits).toString();
-            statBytes.textContent = bytes.toString();
-        }
+    function renderRefRows(rows) {
+      refTbody.innerHTML = rows
+        .map(
+          (r) => `
+        <tr>
+          <td>${r.dec}</td>
+          <td>${r.bin}</td>
+          <td>${r.hex}</td>
+        </tr>
+      `
+        )
+        .join("");
+    }
 
-        function renderBinaryFieldFromBigInt(n) {
-            const sign = n < 0n ? '-' : '';
-            const abs = n < 0n ? -n : n;
-            const raw = abs.toString(2);
-            binInput.value = groupToggle.checked ? (sign ? '-' : '') + formatBinaryNibbles(raw) : (sign ? '-' : '') + raw;
-        }
+    function buildRefTable() {
+      refRows = [];
+      for (let i = 0; i <= 255; i++) refRows.push(makeRow(i));
+      renderRefRows(refRows);
+    }
 
-        function setAllFromBigInt(n, source) {
-            updating = true;
+    buildRefTable();
 
-            lastParsed = n;
+    /* ============================
+       FIXED SEARCH (THIS IS THE FIX)
+       - Only treat as binary search if the query is actually binary
+       - So searching "251" will NOT become onlyBits="1"
+       ============================ */
+    refSearch.addEventListener("input", () => {
+      const qRaw = (refSearch.value || "").trim();
+      if (!qRaw) {
+        renderRefRows(refRows);
+        return;
+      }
 
-            const sign = n < 0n ? '-' : '';
-            const abs = n < 0n ? -n : n;
+      // Normalize for hex/bin matching
+      const qCompact = qRaw.replace(/[\s_]/g, "");
+      const qUpper = qCompact.toUpperCase();
 
-            const decStr = sign + abs.toString(10);
-            const hexStr = sign + abs.toString(16).toUpperCase();
+      // Only run binary matching if the user typed ONLY 0/1 (optionally with spaces/underscores),
+      // or they started with 0b / 0B.
+      const isBinaryQuery =
+        /^0b/i.test(qRaw) || /^[01]+$/.test(qCompact);
 
-            if (source !== 'dec') decInput.value = decStr;
-            if (source !== 'hex') hexInput.value = hexStr;
-            if (source !== 'bin') renderBinaryFieldFromBigInt(n);
+      const bitsQuery = isBinaryQuery
+        ? qCompact.replace(/^0b/i, "")
+        : "";
 
-            updating = false;
-        }
+      const filtered = refRows.filter((r) => {
+        // Decimal: match by substring like before
+        if (r.dec.includes(qRaw)) return true;
 
-        function convertFrom(which) {
-            if (updating) return;
+        // Hex: allow searching "FF" or "0xFF"
+        const hexQuery = qUpper.replace(/^0X/, "");
+        if (r.hex.includes(hexQuery)) return true;
 
-            // Clear all errors first
-            clearError(decError); clearError(binError); clearError(hexError);
+        // Binary: only if it's truly a binary query
+        if (bitsQuery && r.binRaw.includes(bitsQuery)) return true;
 
-            let raw = '';
-            let base = 10;
+        return false;
+      });
 
-            if (which === 'dec') {
-                raw = sanitizeForBase(decInput.value, 10);
-                decInput.value = raw;
-                base = 10;
-            } else if (which === 'bin') {
-                // remove spaces but keep optional leading sign
-                raw = sanitizeForBase(binInput.value, 2);
-                base = 2;
-            } else {
-                raw = sanitizeForBase(hexInput.value, 16);
-                hexInput.value = raw;
-                base = 16;
-            }
-
-            // Empty => clear
-            if (!raw) {
-                updating = true;
-                if (which !== 'dec') decInput.value = '';
-                if (which !== 'bin') binInput.value = '';
-                if (which !== 'hex') hexInput.value = '';
-                updating = false;
-                lastParsed = null;
-                updateStats('—', null);
-                return;
-            }
-
-            const n = parseBigIntFrom(base, raw);
-            if (n === null) {
-                const el = which === 'dec' ? decError : which === 'bin' ? binError : hexError;
-                showError(el, 'Invalid number for this base.');
-                updateStats('—', null);
-                return;
-            }
-
-            setAllFromBigInt(n, which);
-            updateStats(which === 'dec' ? 'Decimal' : which === 'bin' ? 'Binary' : 'Hex', n);
-
-            // If user typed into Binary and grouping is on, reformat Binary with grouped nibbles
-            if (which === 'bin') renderBinaryFieldFromBigInt(n);
-        }
-
-        // Events (live conversion)
-        decInput.addEventListener('input', () => convertFrom('dec'));
-        binInput.addEventListener('input', () => convertFrom('bin'));
-        hexInput.addEventListener('input', () => convertFrom('hex'));
-
-        // Re-render binary field when toggling group mode
-        groupToggle.addEventListener('change', () => {
-            if (lastParsed !== null) {
-                renderBinaryFieldFromBigInt(lastParsed);
-            } else if (binInput.value) {
-                // regroup whatever is in the field
-                const sanitized = sanitizeForBase(binInput.value, 2);
-                const sign = sanitized[0] === '-' ? '-' : (sanitized[0] === '+' ? '+' : '');
-                const core = sanitized.slice(sign ? 1 : 0);
-                binInput.value = groupToggle.checked ? (sign ? '-' : '') + formatBinaryNibbles(core) : (sign ? '-' : '') + core;
-            }
-        });
-
-        // Copy buttons:
-        // - Decimal & Hex: copy what's visible
-        // - Binary: copy UNGROUPED (raw) for convenience
-        document.querySelectorAll('.copy-hash-btn').forEach(btn => {
-            btn.addEventListener('click', async () => {
-                const type = btn.getAttribute('data-type');
-                let toCopy = '';
-                if (type === 'dec') toCopy = decInput.value || '';
-                else if (type === 'hex') toCopy = hexInput.value || '';
-                else {
-                    if (lastParsed === null) {
-                        // fall back to visible without spaces
-                        const s = sanitizeForBase(binInput.value, 2);
-                        const sign = s[0] === '-' ? '-' : (s[0] === '+' ? '+' : '');
-                        toCopy = sign + s.slice(sign ? 1 : 0);
-                    } else {
-                        const sign = lastParsed < 0n ? '-' : '';
-                        const abs = lastParsed < 0n ? -lastParsed : lastParsed;
-                        toCopy = sign + abs.toString(2); // ungrouped
-                    }
-                }
-
-                try {
-                    await navigator.clipboard.writeText(toCopy);
-                    btn.classList.add('copied');
-                    btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied';
-                    setTimeout(() => {
-                        btn.classList.remove('copied');
-                        btn.innerHTML = '<i class="fa-regular fa-copy"></i> Copy';
-                    }, 1200);
-                } catch {
-                    alert('Copy failed. Your browser may block clipboard access.');
-                }
-            });
-        });
-
-        // Clear
-        clearBtn.addEventListener('click', () => {
-            updating = true;
-            decInput.value = ''; binInput.value = ''; hexInput.value = '';
-            updating = false;
-            clearError(decError); clearError(binError); clearError(hexError);
-            lastParsed = null;
-            updateStats('—', null);
-            decInput.focus();
-        });
-
-        // Initial
-        updateStats('—', null);
-    </script>
+      renderRefRows(filtered);
+    });
+  </script>
 </body>
 
 </html>
