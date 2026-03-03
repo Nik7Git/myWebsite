@@ -22,18 +22,15 @@
       --muted: #a8a8a8;
       --grad: linear-gradient(135deg, #00d4aa 0%, #0066ff 100%);
       --border: rgba(255, 255, 255, .08);
+
+      --donut-red: #ff6b6b;
+      --donut-orange: #f7b93b;
+      --donut-green: #00e29b;
+      --donut-empty: rgba(255, 255, 255, .10);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0
-    }
-
-    html,
-    body {
-      height: 100%
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0 }
+    html, body { height: 100% }
 
     body {
       font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
@@ -43,10 +40,7 @@
       padding: 2rem 1.25rem;
     }
 
-    .container {
-      max-width: 1200px;
-      margin: 0 auto
-    }
+    .container { max-width: 1200px; margin: 0 auto }
 
     h1 {
       font-size: 2.25rem;
@@ -60,11 +54,7 @@
       -webkit-text-fill-color: transparent
     }
 
-    .tagline {
-      color: var(--muted);
-      text-align: center;
-      margin-bottom: 2rem
-    }
+    .tagline { color: var(--muted); text-align: center; margin-bottom: 2rem }
 
     .card {
       background: var(--card);
@@ -76,35 +66,15 @@
       margin-bottom: 1.25rem
     }
 
-    .card h3 {
-      font-size: 1.2rem;
-      font-weight: 700;
-      margin-bottom: 1rem
-    }
+    .card h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem }
 
-    .grid {
-      display: grid;
-      gap: 1rem
-    }
+    .grid { display: grid; gap: 1rem }
+    .grid-2 { grid-template-columns: repeat(2, 1fr) }
+    @media (max-width:900px) { .grid-2 { grid-template-columns: 1fr } }
 
-    .grid-2 {
-      grid-template-columns: repeat(2, 1fr)
-    }
+    label { font-weight: 600; font-size: .9rem; color: var(--primary) }
 
-    @media (max-width:900px) {
-      .grid-2 {
-        grid-template-columns: 1fr
-      }
-    }
-
-    label {
-      font-weight: 600;
-      font-size: .9rem;
-      color: var(--primary)
-    }
-
-    input,
-    select {
+    input, select {
       width: 100%;
       margin-top: .35rem;
       background: rgba(255, 255, 255, .04);
@@ -116,18 +86,13 @@
       transition: border-color .15s, box-shadow .15s;
     }
 
-    input:focus,
-    select:focus {
+    input:focus, select:focus {
       outline: none;
       border-color: var(--primary);
       box-shadow: 0 0 0 3px rgba(0, 212, 170, .12)
     }
 
-    .helper {
-      color: var(--muted);
-      font-size: .9rem;
-      margin-top: .35rem
-    }
+    .helper { color: var(--muted); font-size: .9rem; margin-top: .35rem }
 
     button {
       display: inline-flex;
@@ -145,14 +110,8 @@
       transition: transform .12s ease, box-shadow .12s ease;
     }
 
-    button:hover {
-      transform: translateY(-1px)
-    }
-
-    button:disabled {
-      opacity: .6;
-      cursor: not-allowed
-    }
+    button:hover { transform: translateY(-1px) }
+    button:disabled { opacity: .6; cursor: not-allowed }
 
     .badge {
       display: inline-flex;
@@ -189,33 +148,12 @@
       background: rgba(0, 229, 255, .08)
     }
 
-    .muted {
-      color: var(--muted)
-    }
+    .muted { color: var(--muted) }
+    .mono { font-family: ui-monospace, Menlo, Consolas, monospace }
+    .break { word-break: break-word; overflow-wrap: anywhere; white-space: normal }
 
-    .mono {
-      font-family: ui-monospace, Menlo, Consolas, monospace
-    }
-
-    .break {
-      word-break: break-word;
-      overflow-wrap: anywhere;
-      white-space: normal
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: .5rem
-    }
-
-    th,
-    td {
-      padding: .8rem .5rem;
-      text-align: left;
-      border-bottom: 1px solid rgba(255, 255, 255, .06)
-    }
-
+    table { width: 100%; border-collapse: collapse; margin-top: .5rem }
+    th, td { padding: .8rem .5rem; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, .06) }
     th {
       font-size: .8rem;
       text-transform: uppercase;
@@ -223,16 +161,9 @@
       color: var(--primary);
       background: rgba(0, 212, 170, .08)
     }
+    tbody tr:hover { background: rgba(255, 255, 255, .03) }
 
-    tbody tr:hover {
-      background: rgba(255, 255, 255, .03)
-    }
-
-    .list {
-      display: grid;
-      gap: .75rem;
-      margin-top: .5rem
-    }
+    .list { display: grid; gap: .75rem; margin-top: .5rem }
 
     .muteborder {
       border: 1px dashed var(--border);
@@ -245,21 +176,10 @@
       grid-template-columns: 1fr 1fr;
       gap: 1.25rem
     }
+    @media (max-width:1024px) { .cards-split { grid-template-columns: 1fr } }
 
-    @media (max-width:1024px) {
-      .cards-split {
-        grid-template-columns: 1fr
-      }
-    }
-
-    [aria-live] {
-      min-height: 1.75rem
-    }
-
-    .calculating {
-      opacity: .6;
-      pointer-events: none
-    }
+    [aria-live] { min-height: 1.75rem }
+    .calculating { opacity: .6; pointer-events: none }
 
     .dkim-row-header {
       display: flex;
@@ -268,19 +188,9 @@
       gap: .75rem;
       flex-wrap: nowrap
     }
+    .dkim-row-title { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+    .dkim-body { margin-top: .5rem }
 
-    .dkim-row-title {
-      min-width: 0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis
-    }
-
-    .dkim-body {
-      margin-top: .5rem
-    }
-
-    /* ========= DIMMER MULTI-SELECT ========= */
     select[multiple] {
       --opt-bg: rgba(255, 255, 255, .02);
       --opt-checked: rgba(0, 0, 0, .35);
@@ -291,19 +201,9 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    select[multiple] option {
-      padding: .35rem .5rem;
-      background: var(--opt-bg);
-    }
-
-    select[multiple] option:checked {
-      background: var(--opt-checked) !important;
-      color: var(--opt-checked-text);
-    }
-
-    select[multiple]:hover option:not(:checked) {
-      background: rgba(255, 255, 255, .025);
-    }
+    select[multiple] option { padding: .35rem .5rem; background: var(--opt-bg) }
+    select[multiple] option:checked { background: var(--opt-checked) !important; color: var(--opt-checked-text) }
+    select[multiple]:hover option:not(:checked) { background: rgba(255, 255, 255, .025) }
 
     select[multiple].dim {
       --opt-checked: rgba(0, 0, 0, .55);
@@ -322,6 +222,146 @@
       background: rgba(255, 255, 255, .04);
       color: var(--muted);
     }
+
+    .summary { padding: 1.35rem 1.5rem }
+
+    .summary-content {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 1.25rem;
+      align-items: stretch;
+    }
+
+    @media (max-width: 980px) { .summary-content { grid-template-columns: 1fr } }
+
+    .summary-donut {
+      display: grid;
+      place-items: center;
+      padding: .5rem .25rem;
+    }
+
+    .donut-wrap {
+      position: relative;
+      width: 210px;
+      height: 210px;
+      display: grid;
+      place-items: center;
+    }
+
+    .donut-wrap svg {
+      width: 210px;
+      height: 210px;
+      transform: rotate(-90deg);
+    }
+
+    .donut-center {
+      position: absolute;
+      inset: 42px;
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .03);
+    }
+
+    .donut-label {
+      font-size: 12px;
+      color: rgba(0, 229, 255, .80);
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .donut-number {
+      font-size: 46px;
+      font-weight: 800;
+      color: rgba(255, 255, 255, .92);
+      line-height: 1;
+      margin: 0;
+    }
+
+    .donut-outof {
+      font-size: 16px;
+      color: rgba(255, 255, 255, .82);
+      margin-top: 6px;
+      font-weight: 600;
+    }
+
+    .summary-tiles {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+      align-items: stretch;
+    }
+
+    @media (max-width: 980px) { .summary-tiles { grid-template-columns: 1fr } }
+
+    .summary-tile {
+      border: 1px solid rgba(0, 102, 255, .25);
+      border-radius: 14px;
+      padding: 1rem 1rem .95rem;
+      background: rgba(255, 255, 255, .02);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 210px;
+    }
+
+    .tile-dots {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      margin-top: 2px;
+    }
+
+    .tile-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .08);
+      border: 1px solid rgba(255, 255, 255, .08);
+    }
+
+    .tile-dot.ok { background: rgba(0, 226, 155, .90); border-color: rgba(0, 226, 155, .20) }
+    .tile-dot.oksoft { background: rgba(0, 226, 155, .18); border-color: rgba(0, 226, 155, .18) }
+    .tile-dot.warn { background: rgba(255, 209, 102, .92); border-color: rgba(255, 209, 102, .20) }
+    .tile-dot.warnsoft { background: rgba(255, 209, 102, .18); border-color: rgba(255, 209, 102, .18) }
+    .tile-dot.err { background: rgba(255, 107, 107, .92); border-color: rgba(255, 107, 107, .20) }
+    .tile-dot.errsoft { background: rgba(255, 107, 107, .18); border-color: rgba(255, 107, 107, .18) }
+
+    .summary-tile h4 {
+      margin: 2px 0 10px;
+      font-size: 26px;
+      letter-spacing: .5px;
+      color: rgba(255, 255, 255, .92);
+      font-weight: 800;
+    }
+
+    .summary-tile p {
+      margin: 0;
+      color: rgba(0, 229, 255, .70);
+      font-size: 11px;
+      line-height: 1.35;
+      text-align: center;
+      max-width: 240px;
+      font-weight: 600;
+    }
+
+    .summary-tile .tile-sub {
+      margin-top: .55rem;
+      color: rgba(255, 255, 255, .65);
+      font-size: .85rem;
+      text-align: center;
+      min-height: 1.2rem;
+      line-height: 1.2;
+    }
+
+    .summary-tile .tile-sub.ok { color: #00e29b; }
+    .summary-tile .tile-sub.warn { color: #ffd166; }
+    .summary-tile .tile-sub.err { color: #ff6b6b; }
+    .summary-tile .tile-sub + .tile-sub { margin-top: .35rem; }
   </style>
 </head>
 
@@ -331,6 +371,56 @@
       <h1><i class="fa-solid fa-envelope"></i> SPF / DMARC / DKIM Checker</h1>
       <p class="tagline">Quickly audit your domain’s email authentication DNS records via DNS-over-HTTPS.</p>
     </header>
+
+    <section class="card summary" aria-label="Overall result summary">
+      <div class="summary-content">
+        <div class="summary-donut">
+          <div class="donut-wrap" aria-label="Score donut">
+            <svg viewBox="0 0 220 220" role="img" aria-hidden="true">
+              <g id="donutSegments" fill="none" stroke-linecap="butt" stroke-width="18"></g>
+            </svg>
+
+            <div class="donut-center">
+              <div>
+                <div class="donut-label">Score</div>
+                <div id="summaryScore" class="donut-number">—</div>
+                <div class="donut-outof">of 10</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="summary-tiles">
+          <div class="summary-tile" aria-label="SPF summary tile">
+            <div class="tile-dots" id="tileDotsSpf">
+              <span class="tile-dot"></span><span class="tile-dot"></span><span class="tile-dot"></span>
+            </div>
+            <h4>SPF</h4>
+            <p>Sender Policy Framework</p>
+            <div id="tileSubSpf" class="tile-sub">Awaiting input</div>
+          </div>
+
+          <div class="summary-tile" aria-label="DMARC summary tile">
+            <div class="tile-dots" id="tileDotsDmarc">
+              <span class="tile-dot"></span><span class="tile-dot"></span><span class="tile-dot"></span>
+            </div>
+            <h4>DMARC</h4>
+            <p>Domain-based Message Authentication,<br />Reporting and Conformance</p>
+            <div id="tileSubDmarcP" class="tile-sub">Awaiting input</div>
+            <div id="tileSubDmarcSp" class="tile-sub" style="display:none;"></div>
+          </div>
+
+          <div class="summary-tile" aria-label="DKIM summary tile">
+            <div class="tile-dots" id="tileDotsDkim">
+              <span class="tile-dot"></span><span class="tile-dot"></span><span class="tile-dot"></span>
+            </div>
+            <h4>DKIM</h4>
+            <p>DomainKeys Identified Mail</p>
+            <div id="tileSubDkim" class="tile-sub">Awaiting input</div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <section class="card" id="inputCard">
       <h3><i class="fa-solid fa-magnifying-glass"></i> Lookup</h3>
@@ -397,15 +487,13 @@
     <section class="cards-split">
       <article class="card" aria-labelledby="spfHeading">
         <h3 id="spfHeading"><i class="fa-solid fa-shield-halved"></i> SPF</h3>
-        <div id="spfStatus" class="badge muted" aria-live="polite"><i class="fa-regular fa-circle"></i> Awaiting input
-        </div>
+        <div id="spfStatus" class="badge muted" aria-live="polite"><i class="fa-regular fa-circle"></i> Awaiting input</div>
         <div id="spfContent" class="list"></div>
       </article>
 
       <article class="card" aria-labelledby="dmarcHeading">
         <h3 id="dmarcHeading"><i class="fa-solid fa-envelope-circle-check"></i> DMARC</h3>
-        <div id="dmarcStatus" class="badge muted" aria-live="polite"><i class="fa-regular fa-circle"></i> Awaiting input
-        </div>
+        <div id="dmarcStatus" class="badge muted" aria-live="polite"><i class="fa-regular fa-circle"></i> Awaiting input</div>
         <table>
           <tbody id="dmarcTable"></tbody>
         </table>
@@ -424,18 +512,6 @@
   </main>
 
   <script defer>
-    // ---------- DNS over HTTPS (Google) ----------
-    async function resolveTXT(name) {
-      const res = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(name)}&type=TXT`,
-        { headers: { Accept: "application/dns-json" } });
-      if (!res.ok) throw new Error("DNS query failed");
-      const data = await res.json();
-      return (data.Answer || [])
-        .filter(a => a.type === 16 && typeof a.data === "string")
-        .map(a => a.data.replace(/^"|"$/g, "").replace(/\\"/g, '"'))
-        .map(txt => txt.replace(/" "/g, "")); // merge broken TXT chunks
-    }
-
     // ---------- Helpers ----------
     const $ = id => document.getElementById(id);
     const setStatus = (node, type, text, icon) => {
@@ -447,9 +523,168 @@
       .replaceAll('"', "&quot;").replaceAll("'", "&#039;");
     const parseTagList = txt => Object.fromEntries(
       txt.split(";").map(s => s.trim()).filter(Boolean).map(kv => {
-        const i = kv.indexOf("="); return i === -1 ? [kv, ""] : [kv.slice(0, i).toLowerCase(), kv.slice(i + 1)];
+        const i = kv.indexOf("="); return i === -1 ? [kv.toLowerCase(), ""] : [kv.slice(0, i).toLowerCase(), kv.slice(i + 1)];
       })
     );
+
+    function policyToState(policy) {
+      const v = (policy || "").trim().toLowerCase();
+      if (v === "reject") return "ok";
+      if (v === "quarantine") return "warn";
+      if (v === "none") return "err";
+      return "warn";
+    }
+
+    // ---------- DMARC scoring helpers ----------
+    function dmarcStrength(policy) {
+      const v = (policy || "").trim().toLowerCase();
+      if (v === "none") return 0;
+      if (v === "quarantine") return 1;
+      if (v === "reject") return 2;
+      return null; // invalid/unknown
+    }
+
+    // Implements your rules:
+    // - missing DMARC => 0 handled by caller
+    // - missing/invalid p => 0
+    // - base p score: none=1, quarantine=2, reject=3
+    // - sp inherits p if not present => no penalty
+    // - if sp present and weaker than p => subtract step diff
+    // - clamp min 0
+    function computeDmarcScore(tags) {
+      const pRaw = (tags?.p || "").trim().toLowerCase();
+      const pStr = dmarcStrength(pRaw);
+      if (pStr === null) return { score: 0, p: pRaw || "", sp: "", effSub: "", hasSp: false };
+
+      const baseScore = (pRaw === "none") ? 1 : (pRaw === "quarantine") ? 2 : (pRaw === "reject") ? 3 : 0;
+      let score = baseScore;
+
+      const hasSp = Object.prototype.hasOwnProperty.call(tags, "sp");
+      const spRaw = hasSp ? String(tags.sp || "").trim().toLowerCase() : "";
+      const spStr = hasSp ? dmarcStrength(spRaw) : null;
+
+      if (hasSp && spStr !== null) {
+        const diff = pStr - spStr; // >0 means sp weaker
+        if (diff > 0) score -= diff; // -1 or -2
+      }
+
+      score = Math.max(0, score);
+      const effSub = (hasSp && spStr !== null && spRaw) ? spRaw : pRaw; // for UI pill/state
+
+      return { score, p: pRaw, sp: spRaw, effSub, hasSp };
+    }
+
+    // ---------- DNS over HTTPS (Google) ----------
+    async function resolveDNS(name, type) {
+      const res = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(name)}&type=${encodeURIComponent(type)}`,
+        { headers: { Accept: "application/dns-json" } });
+      if (!res.ok) throw new Error("DNS query failed");
+      return await res.json();
+    }
+
+    async function resolveTXT(name) {
+      const data = await resolveDNS(name, "TXT");
+      return (data.Answer || [])
+        .filter(a => a.type === 16 && typeof a.data === "string")
+        .map(a => a.data.replace(/^"|"$/g, "").replace(/\\"/g, '"'))
+        .map(txt => txt.replace(/" "/g, ""));
+    }
+
+    // ---------- Summary Panel ----------
+    const DONUT = { centerX: 110, centerY: 110, radius: 86, strokeWidth: 18, segments: 10, gapRatio: 0.22 };
+
+    function scoreToDonutColor(score) {
+      const s = Number(score) || 0;
+      if (s <= 3) return getComputedStyle(document.documentElement).getPropertyValue("--donut-red").trim() || "#ff6b6b";
+      if (s <= 7) return getComputedStyle(document.documentElement).getPropertyValue("--donut-orange").trim() || "#f7b93b";
+      return getComputedStyle(document.documentElement).getPropertyValue("--donut-green").trim() || "#00e29b";
+    }
+
+    function setTileSubState(elId, state, text) {
+      const el = $(elId);
+      if (!el) return;
+
+      const t = (text || "").trim();
+      if (!t) {
+        el.style.display = "none";
+        el.className = "tile-sub";
+        el.textContent = "";
+        return;
+      }
+
+      el.style.display = "block";
+      el.className = "tile-sub";
+      if (state === "ok" || state === "warn" || state === "err") el.classList.add(state);
+      el.textContent = t;
+    }
+
+    function setTileDots(tileId, state) {
+      const host = $(tileId);
+      if (!host) return;
+      const dots = Array.from(host.querySelectorAll(".tile-dot"));
+      dots.forEach(d => d.className = "tile-dot");
+
+      if (state === "ok") {
+        dots[0]?.classList.add("oksoft");
+        dots[1]?.classList.add("oksoft");
+        dots[2]?.classList.add("ok");
+      } else if (state === "warn") {
+        dots[0]?.classList.add("warnsoft");
+        dots[1]?.classList.add("warn");
+        dots[2]?.classList.add("warnsoft");
+      } else if (state === "err") {
+        dots[0]?.classList.add("err");
+        dots[1]?.classList.add("errsoft");
+        dots[2]?.classList.add("errsoft");
+      }
+    }
+
+    function renderDonut(score) {
+      const segGroup = $("donutSegments");
+      const scoreEl = $("summaryScore");
+      if (!segGroup || !scoreEl) return;
+
+      const s = Math.max(0, Math.min(10, Math.round(Number(score) || 0)));
+      scoreEl.textContent = String(s);
+
+      const r = DONUT.radius;
+      const circumference = 2 * Math.PI * r;
+
+      const segSize = circumference / DONUT.segments;
+      const gap = segSize * DONUT.gapRatio;
+      const dash = segSize - gap;
+
+      const fillColor = scoreToDonutColor(s);
+      const emptyColor = getComputedStyle(document.documentElement).getPropertyValue("--donut-empty").trim() || "rgba(255,255,255,.10)";
+
+      segGroup.innerHTML = "";
+      for (let i = 0; i < DONUT.segments; i++) {
+        const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        c.setAttribute("cx", DONUT.centerX);
+        c.setAttribute("cy", DONUT.centerY);
+        c.setAttribute("r", r);
+        c.setAttribute("fill", "none");
+        c.setAttribute("stroke-width", String(DONUT.strokeWidth));
+        c.setAttribute("stroke-dasharray", `${dash} ${circumference - dash}`);
+        c.setAttribute("stroke-dashoffset", String(-(segSize * i)));
+        c.setAttribute("stroke", i < s ? fillColor : emptyColor);
+        segGroup.appendChild(c);
+      }
+    }
+
+    function setSummaryIdle() {
+      renderDonut(0);
+      $("summaryScore").textContent = "—";
+
+      setTileDots("tileDotsSpf", "idle");
+      setTileDots("tileDotsDmarc", "idle");
+      setTileDots("tileDotsDkim", "idle");
+
+      setTileSubState("tileSubSpf", "", "Awaiting input");
+      setTileSubState("tileSubDmarcP", "", "Awaiting input");
+      setTileSubState("tileSubDmarcSp", "", "");
+      setTileSubState("tileSubDkim", "", "Awaiting input");
+    }
 
     // ---------- SPF ----------
     function parseSPF(records) {
@@ -521,11 +756,8 @@
       }
 
       const rows = [];
-
-      // Raw
       rows.push(["Raw", `<span class="mono break">${escapeHtml(spfObj.raw)}</span>`, true]);
 
-      // Includes
       rows.push([
         "Includes",
         spfObj.includes.length
@@ -534,7 +766,6 @@
         true
       ]);
 
-      // A / MX row – plain text "a mx" style
       const amxTokens = [];
       if (spfObj.a) amxTokens.push("a");
       if (spfObj.mx) amxTokens.push("mx");
@@ -548,7 +779,6 @@
         true
       ]);
 
-      // IPs
       rows.push([
         "IPs",
         spfObj.ips.length
@@ -557,7 +787,6 @@
         true
       ]);
 
-      // Redirect
       rows.push([
         "Redirect",
         spfObj.redirects.length
@@ -566,7 +795,6 @@
         true
       ]);
 
-      // Exists
       rows.push([
         "Exists",
         spfObj.exists.length
@@ -575,12 +803,10 @@
         true
       ]);
 
-      // All policy
       rows.push([
         "All Policy",
         spfObj.all
-          ? `<span class="badge ${/^-all$/i.test(spfObj.all) ? "ok" : /~all/i.test(spfObj.all) ? "warn" : "muted"
-          }">${escapeHtml(spfObj.all)}</span>`
+          ? `<span class="badge ${/^-all$/i.test(spfObj.all) ? "ok" : /~all/i.test(spfObj.all) ? "warn" : "muted"}">${escapeHtml(spfObj.all)}</span>`
           : "<span class='muted'>Not set</span>",
         true
       ]);
@@ -611,17 +837,11 @@
 
       content.appendChild(frag);
 
-      if (/^-all$/i.test(spfObj.all)) {
-        setStatus(status, "ok", "SPF present (enforcing)", "fa-solid fa-circle-check");
-      } else if (/~all/i.test(spfObj.all)) {
-        setStatus(status, "warn", "SPF present (softfail)", "fa-solid fa-triangle-exclamation");
-      } else {
-        setStatus(status, "warn", "SPF present (no ~all / -all)", "fa-solid fa-triangle-exclamation");
-      }
+      if (/^-all$/i.test(spfObj.all)) setStatus(status, "ok", "SPF present (enforcing)", "fa-solid fa-circle-check");
+      else if (/~all/i.test(spfObj.all)) setStatus(status, "warn", "SPF present (softfail)", "fa-solid fa-triangle-exclamation");
+      else setStatus(status, "warn", "SPF present (no ~all / -all)", "fa-solid fa-triangle-exclamation");
 
-      if (lookup && lookup.total > 10) {
-        setStatus(status, "err", "SPF exceeds 10-DNS-lookup limit", "fa-solid fa-circle-xmark");
-      }
+      if (lookup && lookup.total > 10) setStatus(status, "err", "SPF exceeds 10-DNS-lookup limit", "fa-solid fa-circle-xmark");
     }
 
     // ---------- DMARC ----------
@@ -630,32 +850,19 @@
       return r ? { found: true, raw: r, tags: parseTagList(r) } : { found: false };
     }
 
-    // badges for policy
     function badgeForPolicy(raw) {
       const txt = (raw || "").trim();
       const v = txt.toLowerCase();
-      if (v === "reject") {
-        return `<span class="badge ok"><i class="fa-solid fa-circle-check"></i> Reject</span>`;
-      }
-      if (v === "none") {
-        return `<span class="badge err">none</span>`;
-      }
-      if (v === "quarantine") {
-        return `<span class="badge info">Quarantine</span>`;
-      }
+      if (v === "reject") return `<span class="badge ok"><i class="fa-solid fa-circle-check"></i> Reject</span>`;
+      if (v === "none") return `<span class="badge err">none</span>`;
+      if (v === "quarantine") return `<span class="badge info">Quarantine</span>`;
       return `<span class="mono break">${escapeHtml(txt)}</span>`;
     }
 
-    // badges for alignment (adkim/aspf)
     function badgeForAlignment(raw) {
       const v = (raw || "").trim().toLowerCase();
-      if (v === "s") {
-        return `<span class="badge ok"><i class="fa-solid fa-circle-check"></i> Strict</span>`;
-      }
-      if (v === "r" || v === "") {
-        return `<span class="badge info">Relaxed</span>`;
-      }
-      // unknown value fallback
+      if (v === "s") return `<span class="badge ok"><i class="fa-solid fa-circle-check"></i> Strict</span>`;
+      if (v === "r" || v === "") return `<span class="badge info">Relaxed</span>`;
       return `<span class="mono break">${escapeHtml(raw)}</span>`;
     }
 
@@ -683,7 +890,6 @@
       const policy = policyRaw.toLowerCase();
       addRow("p (Policy)", badgeForPolicy(policyRaw), true);
 
-      // sp (Subdomain policy) – inherits from p if not explicitly set
       const spRaw = dm.tags.sp;
       let spDisplay;
 
@@ -692,11 +898,11 @@
       } else {
         const policyLabel =
           policy === "reject" ? "Reject" :
-            policy === "quarantine" ? "Quarantine" :
-              policy === "none" ? "None" :
-                (policy || "Policy");
+          policy === "quarantine" ? "Quarantine" :
+          policy === "none" ? "None" :
+          (policy || "Policy");
 
-        const inheritedText = `${policyLabel} inherited`;
+        const inheritedText = `${policyLabel} (inherited)`;
         let cls = "muted";
         if (policy === "reject") cls = "ok";
         else if (policy === "quarantine") cls = "info";
@@ -707,32 +913,25 @@
 
       addRow("sp (Subdomain policy)", spDisplay, true);
 
-      // adkim / aspf: show "- / -" if tags are not present at all
       const hasAdkim = Object.prototype.hasOwnProperty.call(dm.tags, "adkim");
       const hasAspf = Object.prototype.hasOwnProperty.call(dm.tags, "aspf");
 
-      const adkimDisplay = hasAdkim
-        ? badgeForAlignment(dm.tags.adkim)
-        : `<span class="mono">-</span>`;
-      const aspfDisplay = hasAspf
-        ? badgeForAlignment(dm.tags.aspf)
-        : `<span class="mono">-</span>`;
-
+      const adkimDisplay = hasAdkim ? badgeForAlignment(dm.tags.adkim) : `<span class="mono">-</span>`;
+      const aspfDisplay = hasAspf ? badgeForAlignment(dm.tags.aspf) : `<span class="mono">-</span>`;
       addRow("adkim / aspf", `${adkimDisplay} / ${aspfDisplay}`, true);
 
       addRow("rua (Aggregate reports)", dm.tags.rua || "");
       addRow("ruf (Forensic reports)", dm.tags.ruf || "");
-      addRow("pct (Percent)", dm.tags.pct || "");
+
+      const pctValue = dm.tags.pct ? dm.tags.pct : "100 (default)";
+      addRow("pct (Percent)", pctValue);
+
       addRow("fo (Failure options)", dm.tags.fo || "");
       addRow("ri (Reporting interval)", dm.tags.ri);
 
-      if (policy === "reject" || policy === "quarantine") {
-        setStatus(status, "ok", `DMARC present (${policy})`, "fa-solid fa-circle-check");
-      } else if (policy === "none") {
-        setStatus(status, "err", "DMARC present (monitoring only)", "fa-solid fa-circle-exclamation");
-      } else {
-        setStatus(status, "warn", "DMARC present (unknown policy)", "fa-solid fa-triangle-exclamation");
-      }
+      if (policy === "reject" || policy === "quarantine") setStatus(status, "ok", `DMARC present (${policy})`, "fa-solid fa-circle-check");
+      else if (policy === "none") setStatus(status, "err", "DMARC present (monitoring only)", "fa-solid fa-circle-exclamation");
+      else setStatus(status, "warn", "DMARC present (unknown policy)", "fa-solid fa-triangle-exclamation");
 
       const tips = [];
       if (!dm.tags.rua) tips.push(`Consider adding <span class='mono'>rua=mailto:…</span> for aggregate reports.`);
@@ -743,20 +942,32 @@
     }
 
     // ---------- DKIM ----------
-    function parseDKIM(records) {
-      const r = records.find(s => /^v=DKIM1;?/i.test(s));
-      if (!r) return { found: false };
-      const tags = parseTagList(r);
-      let bits = null;
-      if (tags.p) {
-        const b64 = tags.p.replace(/\s+/g, "");
-        const approxBytes = Math.floor((b64.length * 3) / 4);
-        bits = approxBytes * 8;
-      }
-      return { found: true, raw: r, tags, bits };
+    function extractDkimCandidates(txtRecords) {
+      return (txtRecords || [])
+        .map(r => (r || "").trim())
+        .filter(Boolean)
+        .filter(r => {
+          const lower = r.toLowerCase();
+          if (!/(^|;)\s*p\s*=/.test(lower)) return false;
+          if (lower.startsWith("v=spf1")) return false;
+          if (lower.startsWith("v=dmarc1")) return false;
+          return true;
+        });
     }
 
-    function renderDKIM(selector, dk, fqdn) {
+    function parseDKIMRecord(record) {
+      const tags = parseTagList(record);
+      const pVal = (tags.p || "").replace(/\s+/g, "");
+      if (!pVal) return { found: false };
+      if (!tags.v) tags.v = "DKIM1";
+
+      const approxBytes = Math.floor((pVal.length * 3) / 4);
+      const bits = approxBytes ? approxBytes * 8 : null;
+
+      return { found: true, raw: record, tags, bits };
+    }
+
+    function renderDKIM(selector, dk, fqdn, idx, total) {
       const rows = $("dkimRows");
       const wrap = document.createElement("div");
       wrap.className = "muteborder";
@@ -764,20 +975,23 @@
       const t = dk.tags;
       const keyBits = dk.bits ? `${dk.bits} bits (approx)` : "<span class='muted'>n/a</span>";
       const badge = `<span class="badge ok"><i class="fa-solid fa-circle-check"></i> Found</span>`;
-      const body = `
-        <div><strong>Selector:</strong> <span class="mono">${escapeHtml(selector)}</span></div>
-        <div><strong>Domain:</strong> <span class="mono break">${escapeHtml(fqdn)}</span></div>
-        <div><strong>Key type:</strong> <span class="mono">${escapeHtml(t.k || "rsa")}</span></div>
-        <div><strong>Key length:</strong> <span class="mono">${keyBits}</span></div>
-        <div class="helper" style="margin-top:.4rem"><strong>Raw:</strong> <span class="mono break">${escapeHtml(dk.raw)}</span></div>
-      `;
+
+      const which = total > 1 ? ` <span class="muted">(record ${idx + 1} of ${total})</span>` : "";
 
       wrap.innerHTML = `
         <div class="dkim-row-header">
-          <div class="dkim-row-title"><strong>DKIM</strong> — <span class="mono">${escapeHtml(selector)}</span></div>
+          <div class="dkim-row-title"><strong>DKIM</strong> — <span class="mono">${escapeHtml(selector)}</span>${which}</div>
           ${badge}
         </div>
-        <div class="dkim-body">${body}</div>
+        <div class="dkim-body">
+          <div><strong>Selector:</strong> <span class="mono">${escapeHtml(selector)}</span></div>
+          <div><strong>Domain:</strong> <span class="mono break">${escapeHtml(fqdn)}</span></div>
+          <div><strong>Version:</strong> <span class="mono">${escapeHtml((t.v || "DKIM1"))}</span></div>
+          <div><strong>Key type:</strong> <span class="mono">${escapeHtml(t.k || "rsa")}</span></div>
+          <div><strong>Flags:</strong> <span class="mono">${escapeHtml(t.t || "-")}</span></div>
+          <div><strong>Key length:</strong> <span class="mono">${keyBits}</span></div>
+          <div class="helper" style="margin-top:.4rem"><strong>Raw:</strong> <span class="mono break">${escapeHtml(dk.raw)}</span></div>
+        </div>
       `;
       rows.appendChild(wrap);
     }
@@ -789,41 +1003,144 @@
       const domain = $("domain").value.trim().toLowerCase();
       const selector = $("selector").value.trim();
 
-      // reset
       $("spfContent").innerHTML = "";
       $("dmarcTable").innerHTML = "";
       $("dkimRows").innerHTML = "";
       $("dmarcNotes").textContent = "";
       $("dkimNotes").textContent = "";
+
       setStatus($("spfStatus"), "muted", "Working…", "fa-solid fa-spinner fa-spin");
       setStatus($("dmarcStatus"), "muted", "Working…", "fa-solid fa-spinner fa-spin");
       setStatus($("dkimStatus"), "muted", "Working…", "fa-solid fa-spinner fa-spin");
 
-      btn.disabled = true; card.classList.add("calculating");
+      $("summaryScore").textContent = "…";
+      renderDonut(0);
+
+      setTileDots("tileDotsSpf", "warn");
+      setTileDots("tileDotsDmarc", "warn");
+      setTileDots("tileDotsDkim", "warn");
+      setTileSubState("tileSubSpf", "warn", "Working…");
+      setTileSubState("tileSubDmarcP", "warn", "Working…");
+      setTileSubState("tileSubDmarcSp", "", "");
+      setTileSubState("tileSubDkim", "warn", "Working…");
+
+      btn.disabled = true;
+      card.classList.add("calculating");
 
       if (!domain || !/^[a-z0-9.-]+\.[a-z]{2,}$/i.test(domain)) {
         setStatus($("spfStatus"), "err", "Invalid domain", "fa-solid fa-circle-xmark");
         setStatus($("dmarcStatus"), "err", "Invalid domain", "fa-solid fa-circle-xmark");
         setStatus($("dkimStatus"), "err", "Invalid domain", "fa-solid fa-circle-xmark");
-        btn.disabled = false; card.classList.remove("calculating"); return;
+
+        $("summaryScore").textContent = "0";
+        renderDonut(0);
+        setTileDots("tileDotsSpf", "err");
+        setTileDots("tileDotsDmarc", "err");
+        setTileDots("tileDotsDkim", "err");
+        setTileSubState("tileSubSpf", "err", "Invalid domain");
+        setTileSubState("tileSubDmarcP", "err", "Invalid domain");
+        setTileSubState("tileSubDmarcSp", "", "");
+        setTileSubState("tileSubDkim", "err", "Invalid domain");
+
+        btn.disabled = false;
+        card.classList.remove("calculating");
+        return;
       }
 
+      // Scores per your rules
+      let spfScore = 0;
+      let dmarcScore = 0;
+      let dkimScore = 0;
+
+      // States for the UI tiles
+      let spfState = "err";
+      let dmarcState = "err";
+      let dkimState = "err";
+
+      // For "Perfect rule"
+      let spfAllPolicy = "";
+      let dmarcPRaw = "";
+      let dmarcSpRaw = "";
+      let dkimFoundAny = false;
+
+      // For pill/UI
+      let dmarcPolicyForPill = "none";
+
+      // SPF
       try {
         const spfTxt = await resolveTXT(domain);
         const spfParsed = parseSPF(spfTxt);
         let lookup = null; try { lookup = await computeSpfLookups(domain, spfParsed); } catch { }
         renderSPF(spfParsed, lookup);
+
+        if (!spfParsed.found) {
+          spfScore = 0;
+          spfState = "err";
+          setTileSubState("tileSubSpf", "err", "Not Found");
+        } else {
+          spfAllPolicy = (spfParsed.all || "").toLowerCase();
+
+          if (/^-all$/i.test(spfParsed.all || "")) {
+            spfScore = 3;
+            spfState = "ok";
+            setTileSubState("tileSubSpf", "ok", "Enforcing (-all)");
+          } else if (/~all$/i.test(spfParsed.all || "")) {
+            spfScore = 2;
+            spfState = "warn";
+            setTileSubState("tileSubSpf", "warn", "Softfail (~all)");
+          } else {
+            spfScore = 0;
+            spfState = "err";
+            setTileSubState("tileSubSpf", "err", "Present (No ~all/-all)");
+          }
+        }
       } catch (e) {
         setStatus($("spfStatus"), "err", "Lookup error", "fa-solid fa-circle-xmark");
         $("spfContent").innerHTML = `<div class="helper">${escapeHtml(e.message || String(e))}</div>`;
+        spfScore = 0;
+        spfState = "err";
+        setTileSubState("tileSubSpf", "err", "Lookup error");
       }
 
+      // DMARC
       try {
         const dmarcTxt = await resolveTXT(`_dmarc.${domain}`);
-        renderDMARC(parseDMARC(dmarcTxt));
+        const parsed = parseDMARC(dmarcTxt);
+        renderDMARC(parsed);
+
+        if (!parsed.found) {
+          dmarcScore = 0;
+          dmarcState = "err";
+          dmarcPolicyForPill = "none";
+          setTileSubState("tileSubDmarcP", "err", "Not Found");
+          setTileSubState("tileSubDmarcSp", "", "");
+        } else {
+          const { score, p, sp, effSub, hasSp } = computeDmarcScore(parsed.tags || {});
+          dmarcScore = score;
+
+          dmarcPRaw = p || "";
+          dmarcSpRaw = hasSp ? (sp || "") : "";
+
+          // Tile lines (NO score numbers)
+          setTileSubState("tileSubDmarcP", policyToState(p || "none"), `p=${p || "?"}`);
+          if (hasSp) {
+            const spTxt = sp || "(blank)";
+            setTileSubState("tileSubDmarcSp", policyToState(sp || "none"), `sp=${spTxt}`);
+          } else {
+            setTileSubState("tileSubDmarcSp", "", "");
+          }
+
+          dmarcPolicyForPill = effSub || p || "none";
+          dmarcState = policyToState(dmarcPolicyForPill);
+        }
       } catch (e) {
         setStatus($("dmarcStatus"), "err", "Lookup error", "fa-solid fa-circle-xmark");
         $("dmarcNotes").innerHTML = `<div class="helper">${escapeHtml(e.message || String(e))}</div>`;
+        dmarcScore = 0;
+        dmarcState = "err";
+        dmarcPolicyForPill = "none";
+        setTileSubState("tileSubDmarcP", "err", "Lookup error");
+        setTileSubState("tileSubDmarcSp", "", "");
       }
 
       // DKIM
@@ -832,47 +1149,82 @@
       if (selector) selectors.add(selector);
       Array.from(selEl.selectedOptions).map(o => o.value.trim()).filter(Boolean).forEach(s => selectors.add(s));
 
-      // update dimming + count
       const selCount = $("selCount");
       const selectedNum = selEl.selectedOptions.length;
       selEl.classList.toggle("dim", selectedNum > 6);
       selCount.textContent = selectedNum ? `${selectedNum} selected` : "";
 
       const tried = [];
-      const found = [];
+      const foundSelectors = [];
+      let totalDkimRecordsFound = 0;
 
       if (selectors.size === 0) {
         $("dkimNotes").innerHTML = `No DKIM selectors specified. Add one (e.g. <span class="mono">default</span>) or enable common selectors.`;
         setStatus($("dkimStatus"), "warn", "No DKIM selectors", "fa-solid fa-triangle-exclamation");
+        dkimScore = 0;
+        dkimState = "warn";
+        setTileSubState("tileSubDkim", "warn", "No selectors");
       }
 
       for (const sel of selectors) {
         tried.push(sel);
         const fqdn = `${sel}._domainkey.${domain}`;
         try {
-          const dkimTxt = await resolveTXT(fqdn);
-          const parsed = parseDKIM(dkimTxt);
-          if (parsed.found) {
-            renderDKIM(sel, parsed, fqdn);
-            found.push(sel);
+          const txts = await resolveTXT(fqdn);
+          const candidates = extractDkimCandidates(txts);
+
+          const parsedRecords = candidates
+            .map(r => parseDKIMRecord(r))
+            .filter(p => p.found);
+
+          if (parsedRecords.length) {
+            foundSelectors.push(sel);
+            totalDkimRecordsFound += parsedRecords.length;
+            parsedRecords.forEach((rec, idx) => renderDKIM(sel, rec, fqdn, idx, parsedRecords.length));
           }
-        } catch { /* skip */ }
+        } catch { }
       }
 
       if (selectors.size > 0) {
-        if (found.length === 0) {
+        if (foundSelectors.length === 0) {
           $("dkimNotes").innerHTML = `No DKIM records found for selectors: <span class="mono break">${escapeHtml(tried.join(", "))}</span>`;
           setStatus($("dkimStatus"), "err", "No DKIM records found", "fa-solid fa-circle-xmark");
+          dkimFoundAny = false;
+          dkimScore = 0;
+          dkimState = "err";
+          setTileSubState("tileSubDkim", "err", "Not Found");
         } else {
-          $("dkimNotes").innerHTML = `Found selectors: <span class="mono">${escapeHtml(found.join(", "))}</span>`;
+          $("dkimNotes").innerHTML =
+            `Found selectors: <span class="mono">${escapeHtml([...new Set(foundSelectors)].join(", "))}</span>`;
           setStatus($("dkimStatus"), "ok", "DKIM record(s) found", "fa-solid fa-circle-check");
+          dkimFoundAny = true;
+          dkimScore = 3;
+          dkimState = "ok";
+          setTileSubState("tileSubDkim", "ok", `Found (${totalDkimRecordsFound})`);
         }
       }
 
-      btn.disabled = false; card.classList.remove("calculating");
+      // TOTAL (your rule)
+      let totalScore = spfScore + dmarcScore + dkimScore;
+
+      // Perfect rule:
+      // If spf=-all AND dmarc p=reject AND (sp missing or sp=reject) AND dkim found -> total = 10
+      const dmarcSpOk = (!dmarcSpRaw) || (dmarcSpRaw === "reject");
+      if ((spfAllPolicy === "-all") && (dmarcPRaw === "reject") && dmarcSpOk && dkimFoundAny) {
+        totalScore = 10;
+      }
+
+      totalScore = Math.max(0, Math.min(10, totalScore));
+      renderDonut(totalScore);
+
+      setTileDots("tileDotsSpf", spfState);
+      setTileDots("tileDotsDmarc", dmarcState);
+      setTileDots("tileDotsDkim", dkimState);
+
+      btn.disabled = false;
+      card.classList.remove("calculating");
     }
 
-    // wiring
     $("checkBtn").addEventListener("click", checkRecords);
     $("domain").addEventListener("keydown", e => { if (e.key === "Enter") checkRecords(); });
     $("selector").addEventListener("keydown", e => { if (e.key === "Enter") checkRecords(); });
@@ -883,6 +1235,10 @@
       el.classList.toggle("dim", n > 6);
       selCount.textContent = n ? `${n} selected` : "";
     });
+
+    (function initSummary() {
+      setSummaryIdle();
+    })();
   </script>
 </body>
 
