@@ -36,7 +36,7 @@
       background: var(--bg-dark);
       color: var(--text-primary);
       overflow-x: hidden;
-      padding: 2rem 1.5rem;
+      padding: 1rem 1.5rem 2rem;
       min-height: 100vh;
     }
 
@@ -52,7 +52,7 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.1rem;
       text-align: center;
       letter-spacing: -0.02em;
     }
@@ -67,9 +67,9 @@
 
     .card {
       background: var(--bg-card);
-      padding: 2.5rem;
+      padding: 1.5rem;
       border-radius: 16px;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
       border: 1px solid rgba(255, 255, 255, 0.06);
       transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
         box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
@@ -234,6 +234,65 @@
       margin-bottom: 2rem;
     }
 
+    .cidr-reference-wrapper {
+      margin-top: -0.5rem;
+      width: 100%;
+      overflow: hidden;
+      border-radius: 12px;
+    }
+
+    .cidr-reference-table {
+      width: 100%;
+      table-layout: fixed;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin-top: 0;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+    }
+
+    .cidr-reference-table td {
+      width: 12.5%;
+      text-align: center;
+      vertical-align: middle;
+      padding: 0.7rem 0.3rem;
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      font-weight: 600;
+      white-space: normal;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      line-height: 1.25;
+    }
+
+    .cidr-reference-table tr td:last-child {
+      border-right: none;
+    }
+
+    .cidr-reference-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .cidr-reference-table .row-top td {
+      background: rgba(0, 212, 170, 0.10);
+      color: var(--text-primary);
+      font-size: clamp(0.85rem, 1vw, 1.05rem);
+    }
+
+    .cidr-reference-table .row-middle td {
+      background: rgba(0, 102, 255, 0.10);
+      color: var(--text-primary);
+      font-size: clamp(0.85rem, 1vw, 1.05rem);
+    }
+
+    .cidr-reference-table .row-bottom td {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-secondary);
+      font-size: clamp(0.72rem, 0.88vw, 0.92rem);
+      font-weight: 700;
+    }
+
     @media (max-width: 1024px) {
       .card-container {
         grid-template-columns: 1fr;
@@ -269,6 +328,20 @@
       .bits {
         font-size: 0.8rem;
         letter-spacing: 0.25rem;
+      }
+
+      .cidr-reference-table td {
+        padding: 0.55rem 0.2rem;
+        line-height: 1.2;
+      }
+
+      .cidr-reference-table .row-top td,
+      .cidr-reference-table .row-middle td {
+        font-size: 0.85rem;
+      }
+
+      .cidr-reference-table .row-bottom td {
+        font-size: 0.68rem;
       }
     }
   </style>
@@ -350,6 +423,43 @@
             <input type="text" id="cidrNotation" readonly value="10.0.0.0/8" />
           </div>
         </div>
+
+        <div class="cidr-reference-wrapper">
+          <table class="cidr-reference-table" aria-label="Subnet mask quick reference">
+            <tbody>
+              <tr class="row-top">
+                <td>128</td>
+                <td>192</td>
+                <td>224</td>
+                <td>240</td>
+                <td>248</td>
+                <td>252</td>
+                <td>254</td>
+                <td>255</td>
+              </tr>
+              <tr class="row-middle">
+                <td>128</td>
+                <td>64</td>
+                <td>32</td>
+                <td>16</td>
+                <td>8</td>
+                <td>4</td>
+                <td>2</td>
+                <td>1</td>
+              </tr>
+              <tr class="row-bottom">
+                <td>/9 /17 /25</td>
+                <td>/10 /18 /26</td>
+                <td>/11 /19 /27</td>
+                <td>/12 /20 /28</td>
+                <td>/13 /21 /29</td>
+                <td>/14 /22 /30</td>
+                <td>/15 /23 /31</td>
+                <td>/8 /16 /24 /32</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <!-- Binary Card -->
@@ -412,7 +522,7 @@
   </div>
 
   <script>
-    /* ---------- Helper functions ---------- */
+        /* ---------- Helper functions ---------- */
     function toBinaryOctets(num) {
       return ("00000000" + (num >>> 0).toString(2)).slice(-8);
     }
@@ -428,7 +538,7 @@
         const bit = bits[i];
         const cls = i < prefix ? "net" : "host";
         if (dimMode) {
-          // dimMode: dim host bits, keep network bits emphasized
+                    // dimMode: dim host bits, keep network bits emphasized
           parts.push(`<span class="bit ${i < prefix ? "net" : "dim"}">${bit}</span>`);
         } else {
           parts.push(`<span class="bit ${cls}">${bit}</span>`);
@@ -454,7 +564,7 @@
       ].join(".");
     }
 
-    /* ---------- Debounce for performance ---------- */
+        /* ---------- Debounce for performance ---------- */
     function debounce(func, wait) {
       let timeout;
       return function executedFunction(...args) {
@@ -467,7 +577,7 @@
       };
     }
 
-    /* ---------- Main calculation ---------- */
+        /* ---------- Main calculation ---------- */
     function calculateSubnet() {
       const networkInput = document.getElementById("networkAddress").value.trim();
       const cidrMatch = networkInput.match(/^(\d+\.\d+\.\d+\.\d+)(?:\/(\d+))?$/);
@@ -476,7 +586,7 @@
       const networkIp = cidrMatch[1];
       const originalPrefix = cidrMatch[2] ? parseInt(cidrMatch[2], 10) : null;
 
-      // Determine base (classful) prefix if not provided
+            // Determine base (classful) prefix if not provided
       let basePrefix;
       if (originalPrefix !== null) {
         basePrefix = originalPrefix;
@@ -487,14 +597,14 @@
         else if (firstOctet >= 192) basePrefix = 24;
       }
 
-      // Selected CIDR from UI, clamped to not be less specific than the base prefix
+            // Selected CIDR from UI, clamped to not be less specific than the base prefix
       let selectedCidr = parseInt(document.getElementById("subnetMask").value, 10) || basePrefix;
       if (selectedCidr < basePrefix) selectedCidr = basePrefix;
       document.getElementById("subnetMask").value = selectedCidr;
 
       const networkNum = ipToNumber(networkIp);
 
-      // Masks and addresses
+            // Masks and addresses
       const baseMask = (0xffffffff << (32 - basePrefix)) >>> 0;
       const baseNetworkAddress = (networkNum & baseMask) >>> 0;
 
@@ -513,7 +623,7 @@
       const subnetBits = selectedCidr - basePrefix;
       const numberOfSubnets = subnetBits > 0 ? Math.pow(2, subnetBits) : 1;
 
-      // Batch DOM updates
+            // Batch DOM updates
       requestAnimationFrame(() => {
         document.getElementById("hostsPerSubnet").value = maxHosts > 0 ? maxHosts.toLocaleString() : "0";
         document.getElementById("numberOfSubnets").value = numberOfSubnets.toLocaleString();
@@ -536,7 +646,7 @@
         document.getElementById("binaryLastHost").innerHTML = bitsHtmlFromOctets(lastHostOctets, selectedCidr, false);
         document.getElementById("binaryBroadcast").innerHTML = bitsHtmlFromOctets(broadcastOctets, selectedCidr, false);
 
-        // For "Host Portion": dim network bits, emphasize host bits
+                // For "Host Portion": dim network bits, emphasize host bits
         const bits = networkOctets.join("");
         const parts = [];
         for (let i = 0; i < bits.length; i++) {
@@ -549,7 +659,7 @@
         document.getElementById("binaryHost").innerHTML = parts.join("");
       });
 
-      // Build (or rebuild) the subnet table for the base block at the chosen CIDR
+            // Build (or rebuild) the subnet table for the base block at the chosen CIDR
       generateSubnetTable(baseNetworkAddress, selectedCidr, numberOfSubnets);
     }
 
@@ -593,7 +703,7 @@
       });
     }
 
-    /* ---------- Mouse wheel subnet cycling ---------- */
+        /* ---------- Mouse wheel subnet cycling ---------- */
     (function enableSubnetMaskScroll() {
       const select = document.getElementById("subnetMask");
       const MIN_CIDR = 8;
@@ -614,12 +724,12 @@
       select.addEventListener("wheel", onWheel, { passive: false });
     })();
 
-    /* ---------- Event listeners with debouncing ---------- */
+        /* ---------- Event listeners with debouncing ---------- */
     const debouncedCalculate = debounce(calculateSubnet, 150);
     document.getElementById("networkAddress").addEventListener("input", debouncedCalculate);
     document.getElementById("subnetMask").addEventListener("change", calculateSubnet);
 
-    // Initial calculation
+        // Initial calculation
     calculateSubnet();
   </script>
 </body>
