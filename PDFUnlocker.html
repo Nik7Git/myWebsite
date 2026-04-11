@@ -523,6 +523,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 (function () {
   'use strict';
@@ -536,7 +537,7 @@
     check();
   }
 
-  waitFor(['pdfjsLib', 'PDFLib'], function () {
+  waitFor(['pdfjsLib', 'PDFLib', 'JSZip'], function () {
     pdfjsLib.GlobalWorkerOptions.workerSrc =
       'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     document.getElementById('loading-overlay').style.display = 'none';
@@ -601,7 +602,7 @@
     const total  = files.length;
     const done   = files.filter(f => f.status === 'done').length;
     const errs   = files.filter(f => f.status === 'error').length;
-    const hasPending = files.some(f => f.status === 'wait');
+    const hasPending = files.some(f => f.status === 'wait' || f.status === 'error');
 
     if (total) {
       statusBar.style.display = 'flex';
@@ -677,14 +678,32 @@
   // ── Clear ─────────────────────────────────────────────────────────────────
   clearBtn.addEventListener('click', () => { files = []; render(); });
 
-  // ── Download All ──────────────────────────────────────────────────────────
+  // ── Download All as ZIP ───────────────────────────────────────────────────
   dlAllBtn.addEventListener('click', async () => {
-    const done = files.filter(f => f.status === 'done');
-    for (let i = 0; i < done.length; i++) {
-      const idx = files.indexOf(done[i]);
-      triggerDownload(idx);
-      if (i < done.length - 1) await new Promise(r => setTimeout(r, 300));
+    const done = files.filter(f => f.status === 'done' && f.blob);
+    if (!done.length) return;
+
+    dlAllBtn.disabled = true;
+    dlAllBtn.textContent = '⏳ Zipping…';
+
+    const zip = new JSZip();
+    for (const f of done) {
+      const arrayBuffer = await f.blob.arrayBuffer();
+      zip.file(f.file.name.replace(/\.pdf$/i, '_unlocked.pdf'), arrayBuffer);
     }
+
+    const zipBlob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 6 } });
+    const url = URL.createObjectURL(zipBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'unlocked_pdfs.zip';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+
+    dlAllBtn.textContent = '↓ Download all';
+    render();
   });
 
   // ── Unlock ────────────────────────────────────────────────────────────────
@@ -699,7 +718,9 @@
     running = true;
     render();
 
-    const pending = files.filter(f => f.status === 'wait');
+    const pending = files.filter(f => f.status === 'wait' || f.status === 'error');
+    pending.forEach(f => { f.status = 'wait'; f.error = null; f.prog = 0; });
+    render();
 
     for (const f of pending) {
       f.status = 'processing';
