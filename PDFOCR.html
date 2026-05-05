@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Single File PDF OCR</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%2338bdf8'/%3E%3Cstop offset='1' stop-color='%23a78bfa'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%230f172a'/%3E%3Cpath d='M18 10h21l9 9v35H18z' fill='url(%23g)'/%3E%3Cpath d='M39 10v10h9' fill='%23e0f2fe' opacity='.75'/%3E%3Crect x='23' y='29' width='18' height='4' rx='2' fill='%23fff'/%3E%3Crect x='23' y='37' width='14' height='4' rx='2' fill='%23fff' opacity='.85'/%3E%3Ccircle cx='45' cy='45' r='7' fill='none' stroke='%23fff' stroke-width='4'/%3E%3Cpath d='M50 50l5 5' stroke='%23fff' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E" />
+
+  <!--
+    Single-file PDF OCR web app.
+
+    Libraries loaded from CDN:
+      - PDF.js renders PDF pages to canvas
+      - Tesseract.js performs OCR
+      - jsPDF exports a searchable PDF that visually matches the original page images
+
+    Important:
+      - The selected PDF is processed locally in the browser.
+      - Internet access is required for the CDN libraries and OCR language data.
+      - Open this file in Chrome or Edge for best results.
+  -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: rgba(15, 23, 42, 0.78);
+      --panel-strong: rgba(30, 41, 59, 0.92);
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --line: rgba(148, 163, 184, 0.22);
+      --accent: #38bdf8;
+      --accent-2: #a78bfa;
+      --danger: #ef4444;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.38);
+      --radius: 22px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(56, 189, 248, 0.28), transparent 32rem),
+        radial-gradient(circle at top right, rgba(167, 139, 250, 0.22), transparent 30rem),
+        linear-gradient(135deg, #020617, #111827 45%, #0f172a);
+      padding: 28px;
+    }
+
+    .app {
+      max-width: 1220px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 22px;
+      align-items: stretch;
+      margin-bottom: 22px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      overflow: hidden;
+    }
+
+    .intro {
+      padding: 30px;
+      position: relative;
+    }
+
+    .badge {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      color: #bae6fd;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      background: rgba(56, 189, 248, 0.08);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 0.96;
+      letter-spacing: -0.055em;
+    }
+
+    .gradient-text {
+      background: linear-gradient(90deg, #7dd3fc, #c4b5fd, #f0abfc);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .subtitle {
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    .settings {
+      padding: 24px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .setting-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      color: #cbd5e1;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    input[type="file"],
+    input[type="number"],
+    select {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: rgba(2, 6, 23, 0.55);
+      color: var(--text);
+      border-radius: 14px;
+      padding: 12px 14px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    input[type="file"]::file-selector-button {
+      border: 0;
+      border-radius: 12px;
+      background: rgba(56, 189, 248, 0.18);
+      color: #e0f2fe;
+      padding: 9px 12px;
+      margin-right: 12px;
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 14px;
+      padding: 12px 16px;
+      cursor: pointer;
+      color: #03111f;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--accent), #818cf8);
+      box-shadow: 0 14px 30px rgba(56, 189, 248, 0.22);
+      transition: transform 0.16s ease, opacity 0.16s ease, filter 0.16s ease;
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+      box-shadow: none;
+    }
+
+    .secondary {
+      color: var(--text);
+      background: rgba(148, 163, 184, 0.14);
+      box-shadow: none;
+      border: 1px solid var(--line);
+    }
+
+    .danger {
+      color: #fee2e2;
+      background: rgba(239, 68, 68, 0.16);
+      box-shadow: none;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .status-card {
+      padding: 22px;
+      margin-bottom: 22px;
+    }
+
+    .progress-wrap {
+      display: grid;
+      gap: 10px;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      color: #cbd5e1;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .progress-bar {
+      height: 14px;
+      border-radius: 999px;
+      background: rgba(2, 6, 23, 0.55);
+      overflow: hidden;
+      border: 1px solid var(--line);
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      border-radius: inherit;
+      transition: width 0.25s ease;
+    }
+
+    .status-line {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 22px;
+    }
+
+    .side-panel,
+    .results-panel {
+      min-height: 520px;
+    }
+
+    .panel-header {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(15, 23, 42, 0.4);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .panel-title {
+      margin: 0;
+      font-size: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .small-pill {
+      font-size: 12px;
+      color: #bae6fd;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.24);
+      padding: 6px 9px;
+      border-radius: 999px;
+      white-space: nowrap;
+      font-weight: 800;
+    }
+
+    .preview-box {
+      padding: 18px;
+    }
+
+    canvas {
+      max-width: 100%;
+      background: white;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.28);
+    }
+
+    .preview-placeholder {
+      display: grid;
+      place-items: center;
+      min-height: 360px;
+      border: 1px dashed rgba(148, 163, 184, 0.35);
+      border-radius: 18px;
+      color: var(--muted);
+      text-align: center;
+      padding: 24px;
+      line-height: 1.6;
+    }
+
+    .results-tools {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    textarea {
+      display: block;
+      width: 100%;
+      min-height: 520px;
+      resize: vertical;
+      border: 0;
+      outline: none;
+      color: #dbeafe;
+      background: rgba(2, 6, 23, 0.42);
+      padding: 20px;
+      font: 14px/1.7 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
+
+    .log {
+      padding: 14px 18px 18px;
+      display: grid;
+      gap: 8px;
+      max-height: 170px;
+      overflow: auto;
+      border-top: 1px solid var(--line);
+      background: rgba(2, 6, 23, 0.26);
+    }
+
+    .log-line {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .toast {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      max-width: 380px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      color: var(--text);
+      background: var(--panel-strong);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      transform: translateY(20px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      font-size: 14px;
+      line-height: 1.5;
+      z-index: 10;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    @media (max-width: 980px) {
+      body {
+        padding: 18px;
+      }
+
+      .hero,
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .setting-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section class="hero">
+      <div class="card intro">
+        <div class="badge">📄 Browser PDF OCR</div>
+        <h1>Extract text from scanned <span class="gradient-text">PDF files</span>.</h1>
+        <p class="subtitle">
+          Upload a PDF, run OCR, then download a searchable PDF that keeps the original page appearance while adding an invisible OCR text layer.
+        </p>
+      </div>
+
+      <div class="card settings">
+        <div>
+          <label for="pdfFile">PDF file</label>
+          <input id="pdfFile" type="file" accept="application/pdf,.pdf" />
+        </div>
+
+        <div class="setting-grid">
+          <div>
+            <label for="language">OCR language</label>
+            <select id="language">
+              <option value="eng">English</option>
+              <option value="eng+fra">English + French</option>
+              <option value="eng+deu">English + German</option>
+              <option value="eng+spa">English + Spanish</option>
+              <option value="eng+ita">English + Italian</option>
+              <option value="eng+por">English + Portuguese</option>
+              <option value="eng+nld">English + Dutch</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="scale">Render quality</label>
+            <select id="scale">
+              <option value="1.5">Fast</option>
+              <option value="2" selected>Balanced</option>
+              <option value="3">High accuracy</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="setting-grid">
+          <div>
+            <label for="startPage">Start page</label>
+            <input id="startPage" type="number" min="1" value="1" />
+          </div>
+
+          <div>
+            <label for="endPage">End page</label>
+            <input id="endPage" type="number" min="1" value="1" />
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="startBtn" disabled>Start OCR</button>
+          <button id="stopBtn" class="danger" disabled>Stop</button>
+          <button id="clearBtn" class="secondary">Clear</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card status-card">
+      <div class="progress-wrap">
+        <div class="progress-header">
+          <span id="statusText">Checking app libraries...</span>
+          <span id="progressPercent">0%</span>
+        </div>
+        <div class="progress-bar" aria-label="OCR progress">
+          <div id="progressFill" class="progress-fill"></div>
+        </div>
+        <div id="statusLine" class="status-line">Please wait.</div>
+      </div>
+    </section>
+
+    <section class="main-grid">
+      <aside class="card side-panel">
+        <div class="panel-header">
+          <h2 class="panel-title">Page preview</h2>
+          <span id="pageCount" class="small-pill">No PDF</span>
+        </div>
+        <div class="preview-box">
+          <div id="previewPlaceholder" class="preview-placeholder">
+            <div>
+              <div style="font-size: 42px; margin-bottom: 8px;">🔍</div>
+              Select a PDF to preview page 1 before running OCR.
+            </div>
+          </div>
+          <canvas id="previewCanvas" class="hidden"></canvas>
+        </div>
+      </aside>
+
+      <main class="card results-panel">
+        <div class="panel-header">
+          <h2 class="panel-title">OCR output</h2>
+          <div class="results-tools">
+            <button id="copyBtn" class="secondary" disabled>Copy text</button>
+            <button id="downloadBtn" class="secondary" disabled>Download .txt</button>
+            <button id="downloadPdfBtn" class="secondary" disabled>Download OCR PDF</button>
+          </div>
+        </div>
+        <textarea id="output" placeholder="OCR text will appear here..." spellcheck="false"></textarea>
+        <div id="log" class="log"></div>
+      </main>
+    </section>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    const pdfFileInput = document.getElementById('pdfFile');
+    const languageInput = document.getElementById('language');
+    const scaleInput = document.getElementById('scale');
+    const startPageInput = document.getElementById('startPage');
+    const endPageInput = document.getElementById('endPage');
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const copyBtn = document.getElementById('copyBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const downloadPdfBtn = document.getElementById('downloadPdfBtn');
+    const output = document.getElementById('output');
+    const log = document.getElementById('log');
+    const pageCount = document.getElementById('pageCount');
+    const statusText = document.getElementById('statusText');
+    const statusLine = document.getElementById('statusLine');
+    const progressPercent = document.getElementById('progressPercent');
+    const progressFill = document.getElementById('progressFill');
+    const previewCanvas = document.getElementById('previewCanvas');
+    const previewPlaceholder = document.getElementById('previewPlaceholder');
+    const toast = document.getElementById('toast');
+
+    let appReady = false;
+    let pdfDocument = null;
+    let pdfFileName = 'ocr-output';
+    let stopRequested = false;
+    let worker = null;
+    let ocrPages = [];
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3200);
+    }
+
+    function addLog(message) {
+      const line = document.createElement('div');
+      line.className = 'log-line';
+      line.textContent = `${new Date().toLocaleTimeString()} — ${message}`;
+      log.prepend(line);
+    }
+
+    function setProgress(percent, label, detail) {
+      const safePercent = Math.max(0, Math.min(100, Math.round(percent)));
+      progressFill.style.width = `${safePercent}%`;
+      progressPercent.textContent = `${safePercent}%`;
+      if (label) statusText.textContent = label;
+      if (detail) statusLine.textContent = detail;
+    }
+
+    function setBusy(isBusy) {
+      startBtn.disabled = isBusy || !pdfDocument || !appReady;
+      stopBtn.disabled = !isBusy;
+      pdfFileInput.disabled = isBusy;
+      languageInput.disabled = isBusy;
+      scaleInput.disabled = isBusy;
+      startPageInput.disabled = isBusy;
+      endPageInput.disabled = isBusy;
+    }
+
+    function setExportButtons() {
+      const hasText = output.value.trim().length > 0;
+      const hasOcrPageData = ocrPages.length > 0;
+      copyBtn.disabled = !hasText;
+      downloadBtn.disabled = !hasText;
+      downloadPdfBtn.disabled = !hasOcrPageData;
+    }
+
+    function resetPdfState() {
+      pdfDocument = null;
+      pdfFileName = 'ocr-output';
+      stopRequested = false;
+      worker = null;
+      ocrPages = [];
+      output.value = '';
+      log.innerHTML = '';
+      pageCount.textContent = 'No PDF';
+      startPageInput.value = 1;
+      endPageInput.value = 1;
+      startBtn.disabled = true;
+      stopBtn.disabled = true;
+      copyBtn.disabled = true;
+      downloadBtn.disabled = true;
+      downloadPdfBtn.disabled = true;
+      previewCanvas.classList.add('hidden');
+      previewPlaceholder.classList.remove('hidden');
+    }
+
+    function resetAll() {
+      resetPdfState();
+      pdfFileInput.value = '';
+      if (appReady) {
+        setProgress(0, 'Choose a PDF to begin.', 'Your document is not uploaded anywhere by this app.');
+      } else {
+        setProgress(0, 'App libraries are not ready.', 'Check your internet connection or CDN access.');
+      }
+    }
+
+    function checkLibraries() {
+      const missing = [];
+
+      if (!window.pdfjsLib) missing.push('PDF.js');
+      if (!window.Tesseract) missing.push('Tesseract.js');
+      if (!window.jspdf) missing.push('jsPDF');
+
+      if (missing.length > 0) {
+        appReady = false;
+        startBtn.disabled = true;
+        setProgress(0, 'App libraries failed to load.', `Missing: ${missing.join(', ')}. Check internet/CDN access, then reload the page.`);
+        addLog(`Missing libraries: ${missing.join(', ')}.`);
+        showToast('Some app libraries failed to load.');
+        return;
+      }
+
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      appReady = true;
+      setProgress(0, 'Choose a PDF to begin.', 'Your document is not uploaded anywhere by this app. The first OCR run may take longer while language data downloads.');
+      addLog('App libraries loaded successfully.');
+    }
+
+    async function loadPdf(file) {
+      resetPdfState();
+      setProgress(0, 'Loading PDF...', 'Reading the selected file.');
+
+      const arrayBuffer = await file.arrayBuffer();
+      const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+      pdfDocument = await loadingTask.promise;
+      pdfFileName = file.name.replace(/\.pdf$/i, '') || 'ocr-output';
+
+      pageCount.textContent = `${pdfDocument.numPages} page${pdfDocument.numPages === 1 ? '' : 's'}`;
+      startPageInput.max = pdfDocument.numPages;
+      endPageInput.max = pdfDocument.numPages;
+      startPageInput.value = 1;
+      endPageInput.value = pdfDocument.numPages;
+      startBtn.disabled = false;
+
+      addLog(`Loaded ${file.name} with ${pdfDocument.numPages} page(s).`);
+      setProgress(0, 'PDF loaded.', 'Previewing page 1. Choose a page range, then start OCR.');
+      await renderPreviewPage(1);
+    }
+
+    async function renderPreviewPage(pageNumber) {
+      if (!pdfDocument) return;
+
+      const page = await pdfDocument.getPage(pageNumber);
+      const viewport = page.getViewport({ scale: 0.7 });
+      const context = previewCanvas.getContext('2d', { willReadFrequently: true });
+
+      previewCanvas.width = Math.floor(viewport.width);
+      previewCanvas.height = Math.floor(viewport.height);
+      previewCanvas.classList.remove('hidden');
+      previewPlaceholder.classList.add('hidden');
+
+      await page.render({ canvasContext: context, viewport }).promise;
+    }
+
+    async function renderPageToCanvas(pageNumber, scale) {
+      const page = await pdfDocument.getPage(pageNumber);
+      const viewport = page.getViewport({ scale });
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d', { willReadFrequently: true });
+
+      canvas.width = Math.floor(viewport.width);
+      canvas.height = Math.floor(viewport.height);
+
+      await page.render({ canvasContext: context, viewport }).promise;
+      return canvas;
+    }
+
+    async function getPdfPageSize(pageNumber) {
+      const page = await pdfDocument.getPage(pageNumber);
+      const viewport = page.getViewport({ scale: 1 });
+      return {
+        width: viewport.width,
+        height: viewport.height
+      };
+    }
+
+    async function createOcrWorker(language) {
+      const createdWorker = await Tesseract.createWorker(language, 1, {
+        logger: message => {
+          if (message.status && typeof message.progress === 'number') {
+            const percentWithinStep = Math.round(message.progress * 100);
+            statusLine.textContent = `${message.status} (${percentWithinStep}%)`;
+          }
+        }
+      });
+
+      await createdWorker.setParameters({
+        tessedit_pageseg_mode: '3'
+      });
+
+      return createdWorker;
+    }
+
+    function validatePageRange() {
+      const start = Number(startPageInput.value);
+      const end = Number(endPageInput.value);
+
+      if (!appReady) {
+        throw new Error('The app libraries are not ready. Reload the page and check your internet connection.');
+      }
+
+      if (!pdfDocument) {
+        throw new Error('Please choose a PDF first and wait for it to finish loading.');
+      }
+
+      if (!Number.isInteger(start) || !Number.isInteger(end)) {
+        throw new Error('Page numbers must be whole numbers.');
+      }
+
+      if (start < 1 || end < 1 || start > pdfDocument.numPages || end > pdfDocument.numPages) {
+        throw new Error(`Page range must be between 1 and ${pdfDocument.numPages}.`);
+      }
+
+      if (start > end) {
+        throw new Error('Start page must be lower than or equal to end page.');
+      }
+
+      return { start, end };
+    }
+
+    function extractWordsFromOcrResult(result) {
+      if (!result || !result.data) return [];
+
+      if (Array.isArray(result.data.words) && result.data.words.length > 0) {
+        return result.data.words
+          .filter(word => word.text && word.text.trim())
+          .map(word => ({
+            text: word.text.trim(),
+            confidence: typeof word.confidence === 'number' ? word.confidence : 100,
+            bbox: word.bbox
+          }))
+          .filter(word => word.bbox && Number.isFinite(word.bbox.x0) && Number.isFinite(word.bbox.y0) && Number.isFinite(word.bbox.x1) && Number.isFinite(word.bbox.y1));
+      }
+
+      return [];
+    }
+
+    async function runOcr() {
+      let pageRange;
+
+      try {
+        pageRange = validatePageRange();
+      } catch (error) {
+        showToast(error.message);
+        addLog(`Cannot start OCR: ${error.message}`);
+        return;
+      }
+
+      const start = pageRange.start;
+      const end = pageRange.end;
+      const totalPages = end - start + 1;
+      const scale = Number(scaleInput.value);
+      const language = languageInput.value;
+
+      stopRequested = false;
+      ocrPages = [];
+      output.value = '';
+      setExportButtons();
+      setBusy(true);
+      setProgress(0, 'Preparing OCR...', 'Loading OCR engine and language data. This can take a little while the first time.');
+      addLog(`Starting OCR from page ${start} to ${end}.`);
+
+      try {
+        worker = await createOcrWorker(language);
+        addLog('OCR worker ready.');
+
+        for (let pageNumber = start; pageNumber <= end; pageNumber++) {
+          if (stopRequested) {
+            addLog('OCR stopped by user.');
+            setProgress(0, 'OCR stopped.', 'The partial result is still available in the output box.');
+            break;
+          }
+
+          const pageIndex = pageNumber - start;
+          const baseProgress = (pageIndex / totalPages) * 100;
+          setProgress(baseProgress, `OCR page ${pageNumber} of ${end}...`, 'Rendering page image.');
+          addLog(`Rendering page ${pageNumber}.`);
+
+          const canvas = await renderPageToCanvas(pageNumber, scale);
+          const pageSize = await getPdfPageSize(pageNumber);
+          const previewContext = previewCanvas.getContext('2d', { willReadFrequently: true });
+          previewCanvas.width = canvas.width;
+          previewCanvas.height = canvas.height;
+          previewCanvas.classList.remove('hidden');
+          previewPlaceholder.classList.add('hidden');
+          previewContext.drawImage(canvas, 0, 0);
+
+          setProgress(baseProgress, `OCR page ${pageNumber} of ${end}...`, 'Recognising text and word positions.');
+          const result = await worker.recognize(canvas);
+          const pageText = result.data.text.trim();
+          const words = extractWordsFromOcrResult(result);
+          const imageData = canvas.toDataURL('image/jpeg', 0.95);
+
+          ocrPages.push({
+            pageNumber,
+            pageSize,
+            canvasWidth: canvas.width,
+            canvasHeight: canvas.height,
+            imageData,
+            text: pageText,
+            words
+          });
+
+          const separator = `
+
+--- Page ${pageNumber} ---
+
+`;
+          output.value += separator + (pageText || '[No text detected]');
+          output.scrollTop = output.scrollHeight;
+
+          const completedProgress = ((pageIndex + 1) / totalPages) * 100;
+          setProgress(completedProgress, `Completed page ${pageNumber} of ${end}.`, `${Math.round(completedProgress)}% complete. ${words.length} OCR words positioned.`);
+          addLog(`Finished page ${pageNumber}. Found ${words.length} positioned words.`);
+        }
+
+        if (!stopRequested) {
+          setProgress(100, 'OCR complete.', 'You can now copy text, download text, or download an OCR PDF that looks like the original.');
+          addLog('OCR complete.');
+          showToast('OCR complete.');
+        }
+      } catch (error) {
+        console.error(error);
+        setProgress(0, 'OCR failed.', error.message || 'Something went wrong while processing the PDF.');
+        addLog(`Error: ${error.message || error}`);
+        showToast(error.message || 'OCR failed.');
+      } finally {
+        if (worker) {
+          await worker.terminate();
+          worker = null;
+        }
+        setBusy(false);
+        setExportButtons();
+      }
+    }
+
+    function applyInvisibleTextSettings(doc) {
+      doc.setTextColor(0, 0, 0);
+
+      try {
+        const invisibleState = new doc.GState({ opacity: 0 });
+        doc.setGState(invisibleState);
+        return true;
+      } catch (error) {
+        doc.setTextColor(255, 255, 255);
+        return false;
+      }
+    }
+
+    function resetVisibleTextSettings(doc) {
+      try {
+        const visibleState = new doc.GState({ opacity: 1 });
+        doc.setGState(visibleState);
+      } catch (error) {
+        // Older jsPDF builds may not support GState. White text fallback is used instead.
+      }
+      doc.setTextColor(0, 0, 0);
+    }
+
+    function addInvisibleOcrLayer(doc, pageData) {
+      const scaleX = pageData.pageSize.width / pageData.canvasWidth;
+      const scaleY = pageData.pageSize.height / pageData.canvasHeight;
+      const minimumConfidence = 25;
+
+      doc.setFont('helvetica', 'normal');
+      applyInvisibleTextSettings(doc);
+
+      pageData.words.forEach(word => {
+        if (!word.text || word.confidence < minimumConfidence) return;
+
+        const x = word.bbox.x0 * scaleX;
+        const yTop = word.bbox.y0 * scaleY;
+        const wordWidth = Math.max((word.bbox.x1 - word.bbox.x0) * scaleX, 1);
+        const wordHeight = Math.max((word.bbox.y1 - word.bbox.y0) * scaleY, 6);
+        const fontSize = Math.max(Math.min(wordHeight * 0.8, 18), 4);
+        const baselineY = yTop + wordHeight * 0.82;
+
+        doc.setFontSize(fontSize);
+
+        try {
+          const measuredWidth = doc.getTextWidth(word.text);
+          const horizontalScale = measuredWidth > 0 ? Math.max(Math.min(wordWidth / measuredWidth, 1.4), 0.4) : 1;
+          doc.text(word.text, x, baselineY, {
+            baseline: 'alphabetic',
+            horizontalScale
+          });
+        } catch (error) {
+          doc.text(word.text, x, baselineY);
+        }
+      });
+
+      resetVisibleTextSettings(doc);
+    }
+
+    async function downloadOcrPdf() {
+      if (ocrPages.length === 0) {
+        showToast('Run OCR first, then download the OCR PDF.');
+        return;
+      }
+
+      downloadPdfBtn.disabled = true;
+      startBtn.disabled = true;
+      statusText.textContent = 'Creating OCR PDF...';
+      statusLine.textContent = 'Building pages with the original appearance and invisible text layer.';
+      addLog('Creating OCR PDF.');
+
+      const { jsPDF } = window.jspdf;
+      const firstPage = ocrPages[0];
+      const doc = new jsPDF({
+        orientation: firstPage.pageSize.width > firstPage.pageSize.height ? 'landscape' : 'portrait',
+        unit: 'pt',
+        format: [firstPage.pageSize.width, firstPage.pageSize.height],
+        compress: true
+      });
+
+      doc.setProperties({
+        title: `${pdfFileName} OCR`,
+        subject: 'Searchable OCR copy of the original PDF',
+        creator: 'Single File PDF OCR App'
+      });
+
+      for (let index = 0; index < ocrPages.length; index++) {
+        const pageData = ocrPages[index];
+
+        if (index > 0) {
+          doc.addPage(
+            [pageData.pageSize.width, pageData.pageSize.height],
+            pageData.pageSize.width > pageData.pageSize.height ? 'landscape' : 'portrait'
+          );
+        }
+
+        setProgress((index / ocrPages.length) * 100, 'Creating OCR PDF...', `Adding page ${index + 1} of ${ocrPages.length}.`);
+
+        doc.addImage(
+          pageData.imageData,
+          'JPEG',
+          0,
+          0,
+          pageData.pageSize.width,
+          pageData.pageSize.height,
+          undefined,
+          'FAST'
+        );
+
+        addInvisibleOcrLayer(doc, pageData);
+      }
+
+      setProgress(100, 'OCR PDF ready.', 'Downloading searchable PDF that keeps the original visual layout.');
+      doc.save(`${pdfFileName}-searchable-ocr.pdf`);
+      addLog('OCR PDF downloaded.');
+      showToast('OCR PDF downloaded.');
+      setExportButtons();
+      startBtn.disabled = !pdfDocument || !appReady;
+    }
+
+    pdfFileInput.addEventListener('change', async event => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      if (!appReady) {
+        showToast('App libraries are not ready. Reload the page and check internet/CDN access.');
+        return;
+      }
+
+      if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+        showToast('Please choose a PDF file.');
+        return;
+      }
+
+      try {
+        await loadPdf(file);
+      } catch (error) {
+        console.error(error);
+        resetPdfState();
+        setProgress(0, 'PDF failed to load.', error.message || 'The file could not be opened.');
+        addLog(`Error loading PDF: ${error.message || error}`);
+        showToast('Could not load that PDF.');
+      }
+    });
+
+    startPageInput.addEventListener('change', () => {
+      const page = Number(startPageInput.value);
+      if (pdfDocument && page >= 1 && page <= pdfDocument.numPages) {
+        renderPreviewPage(page);
+      }
+    });
+
+    startBtn.addEventListener('click', runOcr);
+
+    stopBtn.addEventListener('click', () => {
+      stopRequested = true;
+      stopBtn.disabled = true;
+      statusLine.textContent = 'Stopping after the current OCR step finishes...';
+    });
+
+    clearBtn.addEventListener('click', resetAll);
+
+    copyBtn.addEventListener('click', async () => {
+      if (!output.value.trim()) return;
+
+      try {
+        await navigator.clipboard.writeText(output.value);
+        showToast('OCR text copied to clipboard.');
+      } catch (error) {
+        output.focus();
+        output.select();
+        showToast('Clipboard blocked. The text has been selected, press Ctrl+C to copy.');
+      }
+    });
+
+    downloadBtn.addEventListener('click', () => {
+      if (!output.value.trim()) return;
+
+      const blob = new Blob([output.value], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+
+      link.href = url;
+      link.download = `${pdfFileName}-ocr.txt`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      showToast('Text file downloaded.');
+    });
+
+    downloadPdfBtn.addEventListener('click', downloadOcrPdf);
+
+    window.addEventListener('load', checkLibraries);
+  </script>
+</body>
+</html>
