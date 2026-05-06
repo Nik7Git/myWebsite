@@ -301,7 +301,6 @@
 
         .card:hover {
             transform: translateY(-5px);
-            background: var(--bg-card-hover);
             box-shadow: 0 20px 40px rgba(0, 212, 170, .1)
         }
 
@@ -438,6 +437,73 @@
         .cert-details {
             color: var(--text-secondary);
             font-size: .9rem
+        }
+
+        /* ---------- Tools Section ---------- */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .tool-card {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, .05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--accent-gradient);
+            transform: scaleX(0);
+            transition: transform .3s ease;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 212, 170, .1);
+        }
+
+        .tool-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .tool-card i {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .tool-card h3 {
+            color: var(--text-primary);
+            margin-bottom: .5rem;
+        }
+
+        .tool-card p {
+            color: var(--text-secondary);
+            font-size: .95rem;
+            margin-bottom: 1rem;
+        }
+
+        .tool-card a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        .tool-card a i {
+            font-size: .9rem;
+            margin-bottom: 0;
         }
 
         /* ---------- Contact Section ---------- */
@@ -711,7 +777,7 @@
                     <li><a href="#experience">Experience</a></li>
                     <li><a href="#education">Certifications</a></li>
                     <li class="dropdown">
-                        <a href="#">Tools <i class="fas fa-chevron-down"></i></a>
+                        <a href="#tools">Tools <i class="fas fa-chevron-down"></i></a>
                         <div class="dropdown-content">
                             <a href="https://Nik7git.github.io/myWebsite/PassGen.html">
                                 <i class="fas fa-key"></i> Password Generator
@@ -760,6 +826,12 @@
                             </a>
                             <a href="https://Nik7git.github.io/myWebsite/DelivTrackerCloud.html">
                                 <i class="fa-solid fa-truck"></i> Delivery Tracker Cloud DB
+                            </a>
+                            <a href="https://Nik7git.github.io/myWebsite/PDFOCR.html">
+                                <i class="fa-solid fa-file-pdf"></i> PDF OCR
+                            </a>
+                            <a href="https://Nik7git.github.io/myWebsite/PDFOCR.html">
+                                <i class="fa-solid fa-unlock"></i> PDF Unlocker
                             </a>
                         </div>
                     </li>
@@ -1080,6 +1152,179 @@
         </div>
     </section>
 
+    <!-- ---------- Tools Section ---------- -->
+    <section id="tools">
+        <div class="container">
+            <div class="section-header">
+                <h2>My Tools</h2>
+            </div>
+
+            <div class="tools-grid animate-on-scroll">
+                <div class="tool-card">
+                    <i class="fas fa-key"></i>
+                    <h3>Password Generator</h3>
+                    <p>Create strong random passwords quickly.</p>
+                    <a href="https://Nik7git.github.io/myWebsite/PassGen.html">
+                        Open Tool <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                </div>
+
+                <div class="tool-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Password Strength</h3>
+                    <p>Check how strong a password is.</p>
+                    <a href="https://Nik7git.github.io/myWebsite/PWStrength">
+                        Open Tool <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                </div>
+
+                <div class="tool-card">
+                    <i class="fas fa-hashtag"></i>
+                    <h3>Text Hashing</h3>
+                    <p>Generate hashes from plain text.</p>
+                    <a href="https://Nik7git.github.io/myWebsite/HashConverter.html">
+                        Open Tool <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                </div>
+
+                <div class="tool-card">
+                    <i class="fas fa-qrcode"></i>
+                    <h3>QR Generator</h3>
+                    <p>Create QR codes for links and text.</p>
+                    <a href="https://Nik7git.github.io/myWebsite/QRGenerator.html">
+                        Open Tool <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                </div>
+
+                <div class="tool-card">
+                    <i class="fas fa-calculator"></i>
+                    <h3>Subnet Calculator</h3>
+                    <p>Calculate subnet ranges and network details.</p>
+                    <a href="https://Nik7git.github.io/myWebsite/SubCalculator.html">
+                        Open Tool <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                </div>
+
+                <div class="tool-card">
+                    <i class="fa-solid fa-clipboard-list"></i>
+                    <h3>Paste Bin</h3>
+                    <p>Store and manage quick text snippets locally.</p>
+                    <a href="https://Nik7git.github.io/myWebsite/PasteBin.html">
+                        Open Tool <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                </div>
+
+                <div class="tool-card">
+                    <i class="fa-solid fa-vault"></i>
+                    <h3>Encrypt & Decrypt</h3>
+                    <p>Encrypt and decrypt text securely.</p>
+                    <a href="https://Nik7git.github.io/myWebsite/Encrypt.html">
+                        Open Tool <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                </div>
+
+                <div class="tool-card">
+                    <i class="fa-solid fa-percent"></i>
+                    <h3>Percentage Calculator</h3>
+                    <p>Quickly calculate percentages and changes.</p>
+                    <a href="https://Nik7git.github.io/myWebsite/PercentageCalc.html">
+                        Open Tool <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                </div>
+
+                <div class="tool-card">
+                    <i class="fa-solid fa-gauge"></i>
+                    <h3>Bandwidth & Data Calculator</h3>
+                    <p>Convert bandwidth, transfer time, and data usage.</p>
+                    <a href="https://Nik7git.github.io/myWebsite/BandDataCalc.html">
+                        Open Tool <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                </div>
+
+                <div class="tool-card">
+                    <i class="fa-solid fa-code"></i>
+                    <h3>Base64 Encoder / Decoder</h3>
+                    <p>Encode and decode Base64 text.</p>
+                    <a href="https://Nik7git.github.io/myWebsite/Base64EncDec.html">
+                        Open Tool <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                </div>
+
+                <div class="tool-card">
+                    <i class="fa-solid fa-user-secret"></i>
+                    <h3>Steganography</h3>
+                    <p>Hide and extract messages from images.</p>
+                    <a href="https://Nik7git.github.io/myWebsite/Steganography.html">
+                        Open Tool <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                </div>
+
+                <div class="tool-card">
+                    <i class="fa-solid fa-envelope"></i>
+                    <h3>SPF / DMARC / DKIM Checker</h3>
+                    <p>Check email authentication DNS records.</p>
+                    <a href="https://Nik7git.github.io/myWebsite/spfdkimdmarc.html">
+                        Open Tool <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                </div>
+
+                <div class="tool-card">
+                    <i class="fa-solid fa-globe"></i>
+                    <h3>DNS Lookup</h3>
+                    <p>Look up common DNS record types.</p>
+                    <a href="https://Nik7git.github.io/myWebsite/DNSLookup.html">
+                        Open Tool <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                </div>
+
+                <div class="tool-card">
+                    <i class="fa-solid fa-code-compare"></i>
+                    <h3>Binary / Decimal / Hex Converter</h3>
+                    <p>Convert values between binary, decimal, and hex.</p>
+                    <a href="https://Nik7git.github.io/myWebsite/BinDecHexConverter.html">
+                        Open Tool <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                </div>
+
+                <div class="tool-card">
+                    <i class="fa-solid fa-truck"></i>
+                    <h3>Delivery Tracker Local DB</h3>
+                    <p>Track deliveries using local browser storage.</p>
+                    <a href="https://Nik7git.github.io/myWebsite/DelivTracker.html">
+                        Open Tool <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                </div>
+
+                <div class="tool-card">
+                    <i class="fa-solid fa-cloud"></i>
+                    <h3>Delivery Tracker Cloud DB</h3>
+                    <p>Track deliveries using a cloud-backed database.</p>
+                    <a href="https://Nik7git.github.io/myWebsite/DelivTrackerCloud.html">
+                        Open Tool <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                </div>
+
+                <div class="tool-card">
+                    <i class="fa-solid fa-file-pdf"></i>
+                    <h3>PDF OCR</h3>
+                    <p>Track deliveries using a cloud-backed database.</p>
+                    <a href="https://Nik7git.github.io/myWebsite/DelivTrackerCloud.html">
+                        Open Tool <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                </div>
+
+                <div class="tool-card">
+                    <i class="fa-solid fa-unlock"></i>
+                    <h3>PDF Unlocker</h3>
+                    <p>Track deliveries using a cloud-backed database.</p>
+                    <a href="https://Nik7git.github.io/myWebsite/DelivTrackerCloud.html">
+                        Open Tool <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- ---------- Contact ---------- -->
     <section id="contact" aria-label="Contact">
         <div class="container">
@@ -1262,22 +1507,22 @@
            NEW: Skill modal logic
         ======================================================================= */
 
-      // Placeholders for EVERY skill-tag on your page
-      // Tip: The key MUST match the exact text inside <span class="skill-tag">...</span>
-      const skillDetails = {
-        "Microsoft Intune": {
-          icon: "fa-brands fa-microsoft",
-          summary: "End-to-end Microsoft Intune delivery, rollout, and ongoing management.",
-          bullets: [
-            "Singlehandedly deployed Intune from scratch for 2 companies (tenant setup, enrollment strategy, baselines).",
-            "Migrated legacy GPOs into Intune configuration profiles and standardised policy across device fleets.",
-            "Deployed custom PowerShell scripts (device configuration, remediation, reporting) through Intune.",
-            "Implemented Autopilot-driven provisioning and streamlined new device onboarding.",
-          ],
-          tags: ["Autopilot", "GPO → Intune", "Remediations", "Compliance"],
-        },
+        // Placeholders for EVERY skill-tag on your page
+        // Tip: The key MUST match the exact text inside <span class="skill-tag">...</span>
+        const skillDetails = {
+            "Microsoft Intune": {
+                icon: "fa-brands fa-microsoft",
+                summary: "End-to-end Microsoft Intune delivery, rollout, and ongoing management.",
+                bullets: [
+                    "Singlehandedly deployed Intune from scratch for 2 companies (tenant setup, enrollment strategy, baselines).",
+                    "Migrated legacy GPOs into Intune configuration profiles and standardised policy across device fleets.",
+                    "Deployed custom PowerShell scripts (device configuration, remediation, reporting) through Intune.",
+                    "Implemented Autopilot-driven provisioning and streamlined new device onboarding.",
+                ],
+                tags: ["Autopilot", "GPO → Intune", "Remediations", "Compliance"],
+            },
 
-        "Azure AD": {
+            "Azure AD": {
                 icon: "fa-solid fa-id-card",
                 summary: "Identity and access management across cloud and hybrid environments.",
                 bullets: [
@@ -1287,7 +1532,7 @@
                 ],
                 tags: ["Conditional Access", "Groups", "Identity"]
             },
-        "Exchange Online": {
+            "Exchange Online": {
                 icon: "fa-solid fa-envelope",
                 summary: "Email platform administration, security hardening, and migrations.",
                 bullets: [
@@ -1297,712 +1542,712 @@
                 ],
                 tags: ["Mail Flow", "Security", "DNS"]
             },
-        "Microsoft Teams": {
-          icon: "fa-solid fa-handshake",
-          summary: "PLACEHOLDER: Describe what you did with Microsoft Teams.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        SharePoint: {
-          icon: "fa-solid fa-folder-open",
-          summary: "PLACEHOLDER: Describe what you did with SharePoint.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        Defender: {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with Defender.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        Purview: {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with Purview.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "Dynamics CRM": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with Dynamics CRM.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "EC2,VPC": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with EC2,VPC.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "Azure Virtual Desktop/Application": {
-          icon: "fa-solid fa-wrench",
-          summary:
-            "PLACEHOLDER: Describe what you did with Azure Virtual Desktop/Application.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "Azure Networking": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with Azure Networking.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "Azure Virtual Machines": {
-          icon: "fa-solid fa-wrench",
-          summary:
-            "PLACEHOLDER: Describe what you did with Azure Virtual Machines.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
+            "Microsoft Teams": {
+                icon: "fa-solid fa-handshake",
+                summary: "PLACEHOLDER: Describe what you did with Microsoft Teams.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            SharePoint: {
+                icon: "fa-solid fa-folder-open",
+                summary: "PLACEHOLDER: Describe what you did with SharePoint.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            Defender: {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with Defender.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            Purview: {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with Purview.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "Dynamics CRM": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with Dynamics CRM.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "EC2,VPC": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with EC2,VPC.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "Azure Virtual Desktop/Application": {
+                icon: "fa-solid fa-wrench",
+                summary:
+                    "PLACEHOLDER: Describe what you did with Azure Virtual Desktop/Application.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "Azure Networking": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with Azure Networking.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "Azure Virtual Machines": {
+                icon: "fa-solid fa-wrench",
+                summary:
+                    "PLACEHOLDER: Describe what you did with Azure Virtual Machines.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
 
-        CISCO: {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with CISCO.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "VLAN Management": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with VLAN Management.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        HSRP: {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with HSRP.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "OSPF/EIGRP/Static": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with OSPF/EIGRP/Static.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "ACL Configuration": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with ACL Configuration.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        EtherChannel: {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with EtherChannel.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "Ubiquiti UniFi": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with Ubiquiti UniFi.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        STP: {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with STP.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "VPN Setup": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with VPN Setup.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "Firewall Rules": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with Firewall Rules.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        Meraki: {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with Meraki.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "AAA (Tacacs+, Radius)": {
-          icon: "fa-solid fa-wrench",
-          summary:
-            "PLACEHOLDER: Describe what you did with AAA (Tacacs+, Radius).",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "Wi-Fi optimize": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with Wi-Fi optimize.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "Site to site VPN": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with Site to site VPN.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        Aruba: {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with Aruba.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        Huawei: {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with Huawei.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "ComLaude/Cloudflare/Route53": {
-          icon: "fa-solid fa-wrench",
-          summary:
-            "PLACEHOLDER: Describe what you did with ComLaude/Cloudflare/Route53.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
+            CISCO: {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with CISCO.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "VLAN Management": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with VLAN Management.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            HSRP: {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with HSRP.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "OSPF/EIGRP/Static": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with OSPF/EIGRP/Static.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "ACL Configuration": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with ACL Configuration.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            EtherChannel: {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with EtherChannel.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "Ubiquiti UniFi": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with Ubiquiti UniFi.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            STP: {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with STP.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "VPN Setup": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with VPN Setup.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "Firewall Rules": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with Firewall Rules.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            Meraki: {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with Meraki.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "AAA (Tacacs+, Radius)": {
+                icon: "fa-solid fa-wrench",
+                summary:
+                    "PLACEHOLDER: Describe what you did with AAA (Tacacs+, Radius).",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "Wi-Fi optimize": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with Wi-Fi optimize.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "Site to site VPN": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with Site to site VPN.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            Aruba: {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with Aruba.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            Huawei: {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with Huawei.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "ComLaude/Cloudflare/Route53": {
+                icon: "fa-solid fa-wrench",
+                summary:
+                    "PLACEHOLDER: Describe what you did with ComLaude/Cloudflare/Route53.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
 
-        "Windows Server 2022": {
-          icon: "fa-solid fa-wrench",
-          summary:
-            "PLACEHOLDER: Describe what you did with Windows Server 2022.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "Active Directory": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with Active Directory.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "Group Policy": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with Group Policy.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        MDT: {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with MDT.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        WSUS: {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with WSUS.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "DHCP/DNS": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with DHCP/DNS.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        DFS: {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with DFS.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "RRAS VPN": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with RRAS VPN.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        IIS: {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with IIS.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "File Server": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with File Server.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "Print Server": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with Print Server.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        WebDAV: {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with WebDAV.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "Windows Admin Center": {
-          icon: "fa-solid fa-wrench",
-          summary:
-            "PLACEHOLDER: Describe what you did with Windows Admin Center.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
+            "Windows Server 2022": {
+                icon: "fa-solid fa-wrench",
+                summary:
+                    "PLACEHOLDER: Describe what you did with Windows Server 2022.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "Active Directory": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with Active Directory.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "Group Policy": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with Group Policy.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            MDT: {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with MDT.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            WSUS: {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with WSUS.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "DHCP/DNS": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with DHCP/DNS.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            DFS: {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with DFS.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "RRAS VPN": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with RRAS VPN.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            IIS: {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with IIS.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "File Server": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with File Server.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "Print Server": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with Print Server.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            WebDAV: {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with WebDAV.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "Windows Admin Center": {
+                icon: "fa-solid fa-wrench",
+                summary:
+                    "PLACEHOLDER: Describe what you did with Windows Admin Center.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
 
-        PowerShell: {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with PowerShell.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "Command Line": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with Command Line.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "HTML/CSS": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with HTML/CSS.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "Automation Scripts": {
-          icon: "fa-solid fa-wrench",
-          summary:
-            "PLACEHOLDER: Describe what you did with Automation Scripts.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "Batch Processing": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with Batch Processing.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
+            PowerShell: {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with PowerShell.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "Command Line": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with Command Line.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "HTML/CSS": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with HTML/CSS.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "Automation Scripts": {
+                icon: "fa-solid fa-wrench",
+                summary:
+                    "PLACEHOLDER: Describe what you did with Automation Scripts.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "Batch Processing": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with Batch Processing.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
 
-        "Windows 11/10": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with Windows 11/10.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "VMware vSphere": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with VMware vSphere.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "Hyper-V": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with Hyper-V.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        VirtualBox: {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with VirtualBox.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "Office 365": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with Office 365.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "Remote Desktop": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with Remote Desktop.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        Mimecast: {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with Mimecast.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "8x8": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with 8x8.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        Veeam: {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with Veeam.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "Jamf Pro": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with Jamf Pro.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        Sophos: {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with Sophos.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "Net2 Door Access": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with Net2 Door Access.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        PaperCut: {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with PaperCut.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        Setyl: {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with Setyl.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "Evoko Room Booking": {
-          icon: "fa-solid fa-wrench",
-          summary:
-            "PLACEHOLDER: Describe what you did with Evoko Room Booking.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "Polycom/Yealink": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with Polycom/Yealink.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "HIKVision CCTV": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with HIKVision CCTV.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "SignIn App": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with SignIn App.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        LiquidFiles: {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with LiquidFiles.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "Adyen Payment System": {
-          icon: "fa-solid fa-wrench",
-          summary:
-            "PLACEHOLDER: Describe what you did with Adyen Payment System.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
+            "Windows 11/10": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with Windows 11/10.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "VMware vSphere": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with VMware vSphere.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "Hyper-V": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with Hyper-V.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            VirtualBox: {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with VirtualBox.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "Office 365": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with Office 365.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "Remote Desktop": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with Remote Desktop.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            Mimecast: {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with Mimecast.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "8x8": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with 8x8.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            Veeam: {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with Veeam.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "Jamf Pro": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with Jamf Pro.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            Sophos: {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with Sophos.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "Net2 Door Access": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with Net2 Door Access.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            PaperCut: {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with PaperCut.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            Setyl: {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with Setyl.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "Evoko Room Booking": {
+                icon: "fa-solid fa-wrench",
+                summary:
+                    "PLACEHOLDER: Describe what you did with Evoko Room Booking.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "Polycom/Yealink": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with Polycom/Yealink.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "HIKVision CCTV": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with HIKVision CCTV.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "SignIn App": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with SignIn App.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            LiquidFiles: {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with LiquidFiles.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "Adyen Payment System": {
+                icon: "fa-solid fa-wrench",
+                summary:
+                    "PLACEHOLDER: Describe what you did with Adyen Payment System.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
 
-        "Email Security": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with Email Security.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "SPF/DKIM/DMARC": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with SPF/DKIM/DMARC.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "Defender Configuration": {
-          icon: "fa-solid fa-wrench",
-          summary:
-            "PLACEHOLDER: Describe what you did with Defender Configuration.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "Access Control": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with Access Control.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-        "Security Policies": {
-          icon: "fa-solid fa-wrench",
-          summary: "PLACEHOLDER: Describe what you did with Security Policies.",
-          bullets: [
-            "PLACEHOLDER bullet 1",
-            "PLACEHOLDER bullet 2",
-            "PLACEHOLDER bullet 3",
-          ],
-          tags: ["PLACEHOLDER tag"],
-        },
-      };
+            "Email Security": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with Email Security.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "SPF/DKIM/DMARC": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with SPF/DKIM/DMARC.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "Defender Configuration": {
+                icon: "fa-solid fa-wrench",
+                summary:
+                    "PLACEHOLDER: Describe what you did with Defender Configuration.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "Access Control": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with Access Control.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+            "Security Policies": {
+                icon: "fa-solid fa-wrench",
+                summary: "PLACEHOLDER: Describe what you did with Security Policies.",
+                bullets: [
+                    "PLACEHOLDER bullet 1",
+                    "PLACEHOLDER bullet 2",
+                    "PLACEHOLDER bullet 3",
+                ],
+                tags: ["PLACEHOLDER tag"],
+            },
+        };
 
         // Modal elements
         const skillModalOverlay = document.getElementById('skillModalOverlay');
