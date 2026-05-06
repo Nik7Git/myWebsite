@@ -29,8 +29,16 @@
       --donut-empty: rgba(255, 255, 255, .10);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0 }
-    html, body { height: 100% }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
 
     body {
       font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
@@ -40,7 +48,10 @@
       padding: 2rem 1.25rem;
     }
 
-    .container { max-width: 1200px; margin: 0 auto }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
 
     h1 {
       font-size: 2.25rem;
@@ -51,10 +62,14 @@
       background: var(--grad);
       -webkit-background-clip: text;
       background-clip: text;
-      -webkit-text-fill-color: transparent
+      -webkit-text-fill-color: transparent;
     }
 
-    .tagline { color: var(--muted); text-align: center; margin-bottom: 2rem }
+    .tagline {
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
 
     .card {
       background: var(--card);
@@ -63,18 +78,38 @@
       padding: 1.75rem;
       transition: background .2s ease, transform .2s ease;
       box-shadow: 0 2px 10px rgba(0, 0, 0, .25);
-      margin-bottom: 1.25rem
+      margin-bottom: 1.25rem;
     }
 
-    .card h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem }
+    .card h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
 
-    .grid { display: grid; gap: 1rem }
-    .grid-2 { grid-template-columns: repeat(2, 1fr) }
-    @media (max-width:900px) { .grid-2 { grid-template-columns: 1fr } }
+    .grid {
+      display: grid;
+      gap: 1rem;
+    }
 
-    label { font-weight: 600; font-size: .9rem; color: var(--primary) }
+    .grid-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
 
-    input, select {
+    @media (max-width:900px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    label {
+      font-weight: 600;
+      font-size: .9rem;
+      color: var(--primary);
+    }
+
+    input,
+    select {
       width: 100%;
       margin-top: .35rem;
       background: rgba(255, 255, 255, .04);
@@ -86,17 +121,23 @@
       transition: border-color .15s, box-shadow .15s;
     }
 
-    input:focus, select:focus {
+    input:focus,
+    select:focus {
       outline: none;
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(0, 212, 170, .12)
+      box-shadow: 0 0 0 3px rgba(0, 212, 170, .12);
     }
 
-    .helper { color: var(--muted); font-size: .9rem; margin-top: .35rem }
+    .helper {
+      color: var(--muted);
+      font-size: .9rem;
+      margin-top: .35rem;
+    }
 
     button {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: .5rem;
       cursor: pointer;
       background: var(--grad);
@@ -107,11 +148,61 @@
       font-weight: 700;
       letter-spacing: .01em;
       box-shadow: 0 8px 24px rgba(0, 212, 170, .15);
-      transition: transform .12s ease, box-shadow .12s ease;
+      transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
     }
 
-    button:hover { transform: translateY(-1px) }
-    button:disabled { opacity: .6; cursor: not-allowed }
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    button:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    .button-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: .75rem;
+      flex-wrap: wrap;
+    }
+
+    #checkBtn,
+    #copyLinkBtn {
+      width: auto;
+      min-width: 150px;
+      white-space: nowrap;
+    }
+
+    .copy-link-btn {
+      background: rgba(255, 255, 255, .06);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, .12);
+      box-shadow: none;
+    }
+
+    .copy-link-btn:hover {
+      background: rgba(255, 255, 255, .10);
+      border-color: rgba(0, 212, 170, .35);
+    }
+
+    .copy-link-btn.copied {
+      color: #00e29b;
+      border-color: rgba(0, 226, 155, .35);
+      background: rgba(0, 226, 155, .09);
+    }
+
+    @media (max-width: 700px) {
+      .button-row {
+        align-items: stretch;
+      }
+
+      #checkBtn,
+      #copyLinkBtn {
+        width: 100%;
+      }
+    }
 
     .badge {
       display: inline-flex;
@@ -121,75 +212,123 @@
       padding: .35rem .6rem;
       border-radius: 999px;
       background: rgba(255, 255, 255, .06);
-      border: 1px solid var(--border)
+      border: 1px solid var(--border);
     }
 
     .ok {
       color: #00e29b;
       border-color: rgba(0, 226, 155, .35);
-      background: rgba(0, 226, 155, .09)
+      background: rgba(0, 226, 155, .09);
     }
 
     .warn {
       color: #ffd166;
       border-color: rgba(255, 209, 102, .35);
-      background: rgba(255, 209, 102, .1)
+      background: rgba(255, 209, 102, .1);
     }
 
     .err {
       color: #ff6b6b;
       border-color: rgba(255, 107, 107, .35);
-      background: rgba(255, 107, 107, .1)
+      background: rgba(255, 107, 107, .1);
     }
 
     .info {
       color: #00e5ff;
       border-color: rgba(0, 229, 255, .45);
-      background: rgba(0, 229, 255, .08)
+      background: rgba(0, 229, 255, .08);
     }
 
-    .muted { color: var(--muted) }
-    .mono { font-family: ui-monospace, Menlo, Consolas, monospace }
-    .break { word-break: break-word; overflow-wrap: anywhere; white-space: normal }
+    .muted {
+      color: var(--muted);
+    }
 
-    table { width: 100%; border-collapse: collapse; margin-top: .5rem }
-    th, td { padding: .8rem .5rem; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, .06) }
+    .mono {
+      font-family: ui-monospace, Menlo, Consolas, monospace;
+    }
+
+    .break {
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      white-space: normal;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: .5rem;
+    }
+
+    th,
+    td {
+      padding: .8rem .5rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
+    }
+
     th {
       font-size: .8rem;
       text-transform: uppercase;
       letter-spacing: .05em;
       color: var(--primary);
-      background: rgba(0, 212, 170, .08)
+      background: rgba(0, 212, 170, .08);
     }
-    tbody tr:hover { background: rgba(255, 255, 255, .03) }
 
-    .list { display: grid; gap: .75rem; margin-top: .5rem }
+    tbody tr:hover {
+      background: rgba(255, 255, 255, .03);
+    }
+
+    .list {
+      display: grid;
+      gap: .75rem;
+      margin-top: .5rem;
+    }
 
     .muteborder {
       border: 1px dashed var(--border);
       border-radius: 12px;
-      padding: .9rem 1rem
+      padding: .9rem 1rem;
     }
 
     .cards-split {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1.25rem
+      gap: 1.25rem;
     }
-    @media (max-width:1024px) { .cards-split { grid-template-columns: 1fr } }
 
-    [aria-live] { min-height: 1.75rem }
-    .calculating { opacity: .6; pointer-events: none }
+    @media (max-width:1024px) {
+      .cards-split {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    [aria-live] {
+      min-height: 1.75rem;
+    }
+
+    .calculating {
+      opacity: .6;
+      pointer-events: none;
+    }
 
     .dkim-row-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: .75rem;
-      flex-wrap: nowrap
+      flex-wrap: nowrap;
     }
-    .dkim-row-title { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
-    .dkim-body { margin-top: .5rem }
+
+    .dkim-row-title {
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .dkim-body {
+      margin-top: .5rem;
+    }
 
     select[multiple] {
       --opt-bg: rgba(255, 255, 255, .02);
@@ -201,9 +340,19 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    select[multiple] option { padding: .35rem .5rem; background: var(--opt-bg) }
-    select[multiple] option:checked { background: var(--opt-checked) !important; color: var(--opt-checked-text) }
-    select[multiple]:hover option:not(:checked) { background: rgba(255, 255, 255, .025) }
+    select[multiple] option {
+      padding: .35rem .5rem;
+      background: var(--opt-bg);
+    }
+
+    select[multiple] option:checked {
+      background: var(--opt-checked) !important;
+      color: var(--opt-checked-text);
+    }
+
+    select[multiple]:hover option:not(:checked) {
+      background: rgba(255, 255, 255, .025);
+    }
 
     select[multiple].dim {
       --opt-checked: rgba(0, 0, 0, .55);
@@ -223,7 +372,9 @@
       color: var(--muted);
     }
 
-    .summary { padding: 1.35rem 1.5rem }
+    .summary {
+      padding: 1.35rem 1.5rem;
+    }
 
     .summary-content {
       display: grid;
@@ -232,7 +383,11 @@
       align-items: stretch;
     }
 
-    @media (max-width: 980px) { .summary-content { grid-template-columns: 1fr } }
+    @media (max-width: 980px) {
+      .summary-content {
+        grid-template-columns: 1fr;
+      }
+    }
 
     .summary-donut {
       display: grid;
@@ -295,7 +450,11 @@
       align-items: stretch;
     }
 
-    @media (max-width: 980px) { .summary-tiles { grid-template-columns: 1fr } }
+    @media (max-width: 980px) {
+      .summary-tiles {
+        grid-template-columns: 1fr;
+      }
+    }
 
     .summary-tile {
       border: 1px solid rgba(0, 102, 255, .25);
@@ -324,12 +483,35 @@
       border: 1px solid rgba(255, 255, 255, .08);
     }
 
-    .tile-dot.ok { background: rgba(0, 226, 155, .90); border-color: rgba(0, 226, 155, .20) }
-    .tile-dot.oksoft { background: rgba(0, 226, 155, .18); border-color: rgba(0, 226, 155, .18) }
-    .tile-dot.warn { background: rgba(255, 209, 102, .92); border-color: rgba(255, 209, 102, .20) }
-    .tile-dot.warnsoft { background: rgba(255, 209, 102, .18); border-color: rgba(255, 209, 102, .18) }
-    .tile-dot.err { background: rgba(255, 107, 107, .92); border-color: rgba(255, 107, 107, .20) }
-    .tile-dot.errsoft { background: rgba(255, 107, 107, .18); border-color: rgba(255, 107, 107, .18) }
+    .tile-dot.ok {
+      background: rgba(0, 226, 155, .90);
+      border-color: rgba(0, 226, 155, .20);
+    }
+
+    .tile-dot.oksoft {
+      background: rgba(0, 226, 155, .18);
+      border-color: rgba(0, 226, 155, .18);
+    }
+
+    .tile-dot.warn {
+      background: rgba(255, 209, 102, .92);
+      border-color: rgba(255, 209, 102, .20);
+    }
+
+    .tile-dot.warnsoft {
+      background: rgba(255, 209, 102, .18);
+      border-color: rgba(255, 209, 102, .18);
+    }
+
+    .tile-dot.err {
+      background: rgba(255, 107, 107, .92);
+      border-color: rgba(255, 107, 107, .20);
+    }
+
+    .tile-dot.errsoft {
+      background: rgba(255, 107, 107, .18);
+      border-color: rgba(255, 107, 107, .18);
+    }
 
     .summary-tile h4 {
       margin: 2px 0 10px;
@@ -358,10 +540,25 @@
       line-height: 1.2;
     }
 
-    .summary-tile .tile-sub.ok { color: #00e29b; }
-    .summary-tile .tile-sub.warn { color: #ffd166; }
-    .summary-tile .tile-sub.err { color: #ff6b6b; }
-    .summary-tile .tile-sub + .tile-sub { margin-top: .35rem; }
+    .summary-tile .tile-sub.ok {
+      color: #00e29b;
+    }
+
+    .summary-tile .tile-sub.warn {
+      color: #ffd166;
+    }
+
+    .summary-tile .tile-sub.err {
+      color: #ff6b6b;
+    }
+
+    .summary-tile .tile-sub+.tile-sub {
+      margin-top: .35rem;
+    }
+
+    #tileSubSpfLookups {
+      margin-top: 2rem;
+    }
   </style>
 </head>
 
@@ -398,6 +595,7 @@
             <h4>SPF</h4>
             <p>Sender Policy Framework</p>
             <div id="tileSubSpf" class="tile-sub">Awaiting input</div>
+            <div id="tileSubSpfLookups" class="tile-sub" style="display:none;"></div>
           </div>
 
           <div class="summary-tile" aria-label="DMARC summary tile">
@@ -468,6 +666,7 @@
               <option value="kl" selected>kl</option>
               <option value="kl1" selected>kl1</option>
               <option value="kl2" selected>kl2</option>
+              <option value="amazonses" selected>amazonses</option>
             </select>
             <div id="selHelp" class="helper">
               Hold <span class="mono">Ctrl</span>/<span class="mono">⌘</span> to toggle selections.
@@ -475,9 +674,12 @@
             </div>
           </div>
 
-          <div style="align-self:end">
+          <div class="button-row" style="align-self:end">
             <button id="checkBtn" type="button">
               <i class="fa-solid fa-wand-magic-sparkles"></i> Check Records
+            </button>
+            <button id="copyLinkBtn" class="copy-link-btn" type="button">
+              <i class="fa-solid fa-link"></i> Copy Link
             </button>
           </div>
         </div>
@@ -487,13 +689,15 @@
     <section class="cards-split">
       <article class="card" aria-labelledby="spfHeading">
         <h3 id="spfHeading"><i class="fa-solid fa-shield-halved"></i> SPF</h3>
-        <div id="spfStatus" class="badge muted" aria-live="polite"><i class="fa-regular fa-circle"></i> Awaiting input</div>
+        <div id="spfStatus" class="badge muted" aria-live="polite"><i class="fa-regular fa-circle"></i> Awaiting input
+        </div>
         <div id="spfContent" class="list"></div>
       </article>
 
       <article class="card" aria-labelledby="dmarcHeading">
         <h3 id="dmarcHeading"><i class="fa-solid fa-envelope-circle-check"></i> DMARC</h3>
-        <div id="dmarcStatus" class="badge muted" aria-live="polite"><i class="fa-regular fa-circle"></i> Awaiting input</div>
+        <div id="dmarcStatus" class="badge muted" aria-live="polite"><i class="fa-regular fa-circle"></i> Awaiting input
+        </div>
         <table>
           <tbody id="dmarcTable"></tbody>
         </table>
@@ -514,16 +718,23 @@
   <script defer>
     // ---------- Helpers ----------
     const $ = id => document.getElementById(id);
+
     const setStatus = (node, type, text, icon) => {
       node.className = `badge ${type}`;
       node.innerHTML = `<i class="${icon}"></i> ${text}`;
     };
+
     const escapeHtml = s => String(s)
-      .replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;").replaceAll("'", "&#039;");
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+
     const parseTagList = txt => Object.fromEntries(
       txt.split(";").map(s => s.trim()).filter(Boolean).map(kv => {
-        const i = kv.indexOf("="); return i === -1 ? [kv.toLowerCase(), ""] : [kv.slice(0, i).toLowerCase(), kv.slice(i + 1)];
+        const i = kv.indexOf("=");
+        return i === -1 ? [kv.toLowerCase(), ""] : [kv.slice(0, i).toLowerCase(), kv.slice(i + 1)];
       })
     );
 
@@ -535,22 +746,14 @@
       return "warn";
     }
 
-    // ---------- DMARC scoring helpers ----------
     function dmarcStrength(policy) {
       const v = (policy || "").trim().toLowerCase();
       if (v === "none") return 0;
       if (v === "quarantine") return 1;
       if (v === "reject") return 2;
-      return null; // invalid/unknown
+      return null;
     }
 
-    // Implements your rules:
-    // - missing DMARC => 0 handled by caller
-    // - missing/invalid p => 0
-    // - base p score: none=1, quarantine=2, reject=3
-    // - sp inherits p if not present => no penalty
-    // - if sp present and weaker than p => subtract step diff
-    // - clamp min 0
     function computeDmarcScore(tags) {
       const pRaw = (tags?.p || "").trim().toLowerCase();
       const pStr = dmarcStrength(pRaw);
@@ -564,17 +767,16 @@
       const spStr = hasSp ? dmarcStrength(spRaw) : null;
 
       if (hasSp && spStr !== null) {
-        const diff = pStr - spStr; // >0 means sp weaker
-        if (diff > 0) score -= diff; // -1 or -2
+        const diff = pStr - spStr;
+        if (diff > 0) score -= diff;
       }
 
       score = Math.max(0, score);
-      const effSub = (hasSp && spStr !== null && spRaw) ? spRaw : pRaw; // for UI pill/state
+      const effSub = (hasSp && spStr !== null && spRaw) ? spRaw : pRaw;
 
       return { score, p: pRaw, sp: spRaw, effSub, hasSp };
     }
 
-    // ---------- DNS over HTTPS (Google) ----------
     async function resolveDNS(name, type) {
       const res = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(name)}&type=${encodeURIComponent(type)}`,
         { headers: { Accept: "application/dns-json" } });
@@ -590,7 +792,6 @@
         .map(txt => txt.replace(/" "/g, ""));
     }
 
-    // ---------- Summary Panel ----------
     const DONUT = { centerX: 110, centerY: 110, radius: 86, strokeWidth: 18, segments: 10, gapRatio: 0.22 };
 
     function scoreToDonutColor(score) {
@@ -649,7 +850,6 @@
 
       const r = DONUT.radius;
       const circumference = 2 * Math.PI * r;
-
       const segSize = circumference / DONUT.segments;
       const gap = segSize * DONUT.gapRatio;
       const dash = segSize - gap;
@@ -681,12 +881,12 @@
       setTileDots("tileDotsDkim", "idle");
 
       setTileSubState("tileSubSpf", "", "Awaiting input");
+      setTileSubState("tileSubSpfLookups", "", "");
       setTileSubState("tileSubDmarcP", "", "Awaiting input");
       setTileSubState("tileSubDmarcSp", "", "");
       setTileSubState("tileSubDkim", "", "Awaiting input");
     }
 
-    // ---------- SPF ----------
     function parseSPF(records) {
       const spf = records.find(r => /^v=spf1\s/i.test(r));
       if (!spf) return { found: false };
@@ -710,34 +910,43 @@
       const MAX_DEPTH = 10;
       if (!spfObj.found || depth > MAX_DEPTH) return { total: 0, breakdown: [] };
 
-      let total = 0; const breakdown = [];
+      let total = 0;
+      const breakdown = [];
       const add = (type, detail, count = 1) => { total += count; breakdown.push({ type, detail, count }); };
       const domOf = (token, def = domain) => (token.includes(":") ? token.split(":")[1] : def).split("/")[0];
 
       for (const raw of spfObj.parts) {
         const token = raw.replace(/^[+\-~\?]/, "");
         if (token.startsWith("include:")) {
-          const d = token.slice(8); add("include", d);
+          const d = token.slice(8);
+          add("include", d);
           if (!seen.has(`include:${d}`)) {
             seen.add(`include:${d}`);
             try {
               const recs = await resolveTXT(d);
               const child = await computeSpfLookups(d, parseSPF(recs), seen, depth + 1);
-              total += child.total; breakdown.push(...child.breakdown);
+              total += child.total;
+              breakdown.push(...child.breakdown);
             } catch { }
           }
-        } else if (/^a(:|$)/i.test(token)) { add("a", domOf(token)); }
-        else if (/^mx(:|$)/i.test(token)) { add("mx", domOf(token)); }
-        else if (/^exists:/i.test(token)) { add("exists", domOf(token)); }
-        else if (/^ptr(:|$)/i.test(token)) { add("ptr", domOf(token)); }
-        else if (/^redirect=/i.test(token)) {
-          const d = token.split("=")[1]; add("redirect", d);
+        } else if (/^a(:|$)/i.test(token)) {
+          add("a", domOf(token));
+        } else if (/^mx(:|$)/i.test(token)) {
+          add("mx", domOf(token));
+        } else if (/^exists:/i.test(token)) {
+          add("exists", domOf(token));
+        } else if (/^ptr(:|$)/i.test(token)) {
+          add("ptr", domOf(token));
+        } else if (/^redirect=/i.test(token)) {
+          const d = token.split("=")[1];
+          add("redirect", d);
           if (!seen.has(`redirect:${d}`)) {
             seen.add(`redirect:${d}`);
             try {
               const recs = await resolveTXT(d);
               const child = await computeSpfLookups(d, parseSPF(recs), seen, depth + 1);
-              total += child.total; breakdown.push(...child.breakdown);
+              total += child.total;
+              breakdown.push(...child.breakdown);
             } catch { }
           }
         }
@@ -746,7 +955,8 @@
     }
 
     function renderSPF(spfObj, lookup) {
-      const status = $("spfStatus"), content = $("spfContent");
+      const status = $("spfStatus");
+      const content = $("spfContent");
       content.innerHTML = "";
 
       if (!spfObj.found) {
@@ -757,66 +967,23 @@
 
       const rows = [];
       rows.push(["Raw", `<span class="mono break">${escapeHtml(spfObj.raw)}</span>`, true]);
-
-      rows.push([
-        "Includes",
-        spfObj.includes.length
-          ? spfObj.includes.map(i => `<span class="badge">${escapeHtml(i)}</span>`).join(" ")
-          : "<span class='muted'>None</span>",
-        true
-      ]);
+      rows.push(["Includes", spfObj.includes.length ? spfObj.includes.map(i => `<span class="badge">${escapeHtml(i)}</span>`).join(" ") : "<span class='muted'>None</span>", true]);
 
       const amxTokens = [];
       if (spfObj.a) amxTokens.push("a");
       if (spfObj.mx) amxTokens.push("mx");
       if (spfObj.ptrs && spfObj.ptrs.length) amxTokens.push("ptr");
 
-      rows.push([
-        "A / MX",
-        amxTokens.length
-          ? `<span class="mono">${escapeHtml(amxTokens.join(" "))}</span>`
-          : "<span class='muted'>None</span>",
-        true
-      ]);
-
-      rows.push([
-        "IPs",
-        spfObj.ips.length
-          ? spfObj.ips.map(i => `<span class="badge">${escapeHtml(i)}</span>`).join(" ")
-          : "<span class='muted'>None</span>",
-        true
-      ]);
-
-      rows.push([
-        "Redirect",
-        spfObj.redirects.length
-          ? spfObj.redirects.map(r => `<span class="badge">${escapeHtml(r)}</span>`).join(" ")
-          : "<span class='muted'>None</span>",
-        true
-      ]);
-
-      rows.push([
-        "Exists",
-        spfObj.exists.length
-          ? spfObj.exists.map(r => `<span class="badge">${escapeHtml(r)}</span>`).join(" ")
-          : "<span class='muted'>None</span>",
-        true
-      ]);
-
-      rows.push([
-        "All Policy",
-        spfObj.all
-          ? `<span class="badge ${/^-all$/i.test(spfObj.all) ? "ok" : /~all/i.test(spfObj.all) ? "warn" : "muted"}">${escapeHtml(spfObj.all)}</span>`
-          : "<span class='muted'>Not set</span>",
-        true
-      ]);
+      rows.push(["A / MX", amxTokens.length ? `<span class="mono">${escapeHtml(amxTokens.join(" "))}</span>` : "<span class='muted'>None</span>", true]);
+      rows.push(["IPs", spfObj.ips.length ? spfObj.ips.map(i => `<span class="badge">${escapeHtml(i)}</span>`).join(" ") : "<span class='muted'>None</span>", true]);
+      rows.push(["Redirect", spfObj.redirects.length ? spfObj.redirects.map(r => `<span class="badge">${escapeHtml(r)}</span>`).join(" ") : "<span class='muted'>None</span>", true]);
+      rows.push(["Exists", spfObj.exists.length ? spfObj.exists.map(r => `<span class="badge">${escapeHtml(r)}</span>`).join(" ") : "<span class='muted'>None</span>", true]);
+      rows.push(["All Policy", spfObj.all ? `<span class="badge ${/^-all$/i.test(spfObj.all) ? "ok" : /~all/i.test(spfObj.all) ? "warn" : "muted"}">${escapeHtml(spfObj.all)}</span>` : "<span class='muted'>Not set</span>", true]);
 
       const frag = document.createDocumentFragment();
       rows.forEach(([k, v, isHtml]) => {
         const div = document.createElement("div");
-        div.innerHTML = isHtml
-          ? `<strong>${k}:</strong> ${v}`
-          : `<strong>${k}:</strong> <span class="mono break">${escapeHtml(v || "")}</span>`;
+        div.innerHTML = isHtml ? `<strong>${k}:</strong> ${v}` : `<strong>${k}:</strong> <span class="mono break">${escapeHtml(v || "")}</span>`;
         frag.appendChild(div);
       });
 
@@ -844,7 +1011,6 @@
       if (lookup && lookup.total > 10) setStatus(status, "err", "SPF exceeds 10-DNS-lookup limit", "fa-solid fa-circle-xmark");
     }
 
-    // ---------- DMARC ----------
     function parseDMARC(records) {
       const r = records.find(s => /^v=DMARC1;?/i.test(s));
       return r ? { found: true, raw: r, tags: parseTagList(r) } : { found: false };
@@ -867,8 +1033,11 @@
     }
 
     function renderDMARC(dm) {
-      const status = $("dmarcStatus"), table = $("dmarcTable"), notes = $("dmarcNotes");
-      table.innerHTML = ""; notes.textContent = "";
+      const status = $("dmarcStatus");
+      const table = $("dmarcTable");
+      const notes = $("dmarcNotes");
+      table.innerHTML = "";
+      notes.textContent = "";
 
       if (!dm.found) {
         setStatus(status, "err", "No DMARC record found", "fa-solid fa-circle-xmark");
@@ -878,9 +1047,7 @@
 
       const addRow = (k, v, asHtml = false) => {
         const tr = document.createElement("tr");
-        tr.innerHTML = asHtml
-          ? `<th style="width:210px">${k}</th><td>${v || "<span class='muted'>—</span>"}</td>`
-          : `<th style="width:210px">${k}</th><td class="mono break">${v || "<span class='muted'>—</span>"}</td>`;
+        tr.innerHTML = asHtml ? `<th style="width:210px">${k}</th><td>${v || "<span class='muted'>—</span>"}</td>` : `<th style="width:210px">${k}</th><td class="mono break">${v || "<span class='muted'>—</span>"}</td>`;
         table.appendChild(tr);
       };
 
@@ -896,18 +1063,12 @@
       if (spRaw) {
         spDisplay = badgeForPolicy(spRaw);
       } else {
-        const policyLabel =
-          policy === "reject" ? "Reject" :
-          policy === "quarantine" ? "Quarantine" :
-          policy === "none" ? "None" :
-          (policy || "Policy");
-
+        const policyLabel = policy === "reject" ? "Reject" : policy === "quarantine" ? "Quarantine" : policy === "none" ? "None" : (policy || "Policy");
         const inheritedText = `${policyLabel} (inherited)`;
         let cls = "muted";
         if (policy === "reject") cls = "ok";
         else if (policy === "quarantine") cls = "info";
         else if (policy === "none") cls = "err";
-
         spDisplay = `<span class="badge ${cls}">${escapeHtml(inheritedText)}</span>`;
       }
 
@@ -915,17 +1076,13 @@
 
       const hasAdkim = Object.prototype.hasOwnProperty.call(dm.tags, "adkim");
       const hasAspf = Object.prototype.hasOwnProperty.call(dm.tags, "aspf");
-
       const adkimDisplay = hasAdkim ? badgeForAlignment(dm.tags.adkim) : `<span class="mono">-</span>`;
       const aspfDisplay = hasAspf ? badgeForAlignment(dm.tags.aspf) : `<span class="mono">-</span>`;
-      addRow("adkim / aspf", `${adkimDisplay} / ${aspfDisplay}`, true);
 
+      addRow("adkim / aspf", `${adkimDisplay} / ${aspfDisplay}`, true);
       addRow("rua (Aggregate reports)", dm.tags.rua || "");
       addRow("ruf (Forensic reports)", dm.tags.ruf || "");
-
-      const pctValue = dm.tags.pct ? dm.tags.pct : "100 (default)";
-      addRow("pct (Percent)", pctValue);
-
+      addRow("pct (Percent)", dm.tags.pct ? dm.tags.pct : "100 (default)");
       addRow("fo (Failure options)", dm.tags.fo || "");
       addRow("ri (Reporting interval)", dm.tags.ri);
 
@@ -941,7 +1098,6 @@
       notes.innerHTML = tips.length ? "• " + tips.join("<br>• ") : "";
     }
 
-    // ---------- DKIM ----------
     function extractDkimCandidates(txtRecords) {
       return (txtRecords || [])
         .map(r => (r || "").trim())
@@ -975,7 +1131,6 @@
       const t = dk.tags;
       const keyBits = dk.bits ? `${dk.bits} bits (approx)` : "<span class='muted'>n/a</span>";
       const badge = `<span class="badge ok"><i class="fa-solid fa-circle-check"></i> Found</span>`;
-
       const which = total > 1 ? ` <span class="muted">(record ${idx + 1} of ${total})</span>` : "";
 
       wrap.innerHTML = `
@@ -996,7 +1151,53 @@
       rows.appendChild(wrap);
     }
 
-    // ---------- Main ----------
+    function buildCopyLink() {
+      const domain = $("domain").value.trim().toLowerCase();
+      const url = new URL(window.location.href);
+      url.searchParams.set("domain", domain);
+      return url.toString();
+    }
+
+    async function copyCurrentLink() {
+      const btn = $("copyLinkBtn");
+      const originalHtml = btn.innerHTML;
+      const domain = $("domain").value.trim().toLowerCase();
+
+      if (!domain || !/^[a-z0-9.-]+\.[a-z]{2,}$/i.test(domain)) {
+        btn.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> Enter Domain`;
+        btn.classList.add("copied");
+        setTimeout(() => {
+          btn.innerHTML = originalHtml;
+          btn.classList.remove("copied");
+        }, 1400);
+        return;
+      }
+
+      const link = buildCopyLink();
+
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(link);
+      } else {
+        const temp = document.createElement("textarea");
+        temp.value = link;
+        temp.setAttribute("readonly", "");
+        temp.style.position = "fixed";
+        temp.style.left = "-9999px";
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand("copy");
+        document.body.removeChild(temp);
+      }
+
+      btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> Copied!`;
+      btn.classList.add("copied");
+
+      setTimeout(() => {
+        btn.innerHTML = originalHtml;
+        btn.classList.remove("copied");
+      }, 1400);
+    }
+
     async function checkRecords() {
       const btn = $("checkBtn");
       const card = $("inputCard");
@@ -1020,6 +1221,7 @@
       setTileDots("tileDotsDmarc", "warn");
       setTileDots("tileDotsDkim", "warn");
       setTileSubState("tileSubSpf", "warn", "Working…");
+      setTileSubState("tileSubSpfLookups", "", "");
       setTileSubState("tileSubDmarcP", "warn", "Working…");
       setTileSubState("tileSubDmarcSp", "", "");
       setTileSubState("tileSubDkim", "warn", "Working…");
@@ -1038,6 +1240,7 @@
         setTileDots("tileDotsDmarc", "err");
         setTileDots("tileDotsDkim", "err");
         setTileSubState("tileSubSpf", "err", "Invalid domain");
+        setTileSubState("tileSubSpfLookups", "", "");
         setTileSubState("tileSubDmarcP", "err", "Invalid domain");
         setTileSubState("tileSubDmarcSp", "", "");
         setTileSubState("tileSubDkim", "err", "Invalid domain");
@@ -1047,36 +1250,33 @@
         return;
       }
 
-      // Scores per your rules
       let spfScore = 0;
       let dmarcScore = 0;
       let dkimScore = 0;
 
-      // States for the UI tiles
       let spfState = "err";
       let dmarcState = "err";
       let dkimState = "err";
 
-      // For "Perfect rule"
       let spfAllPolicy = "";
       let dmarcPRaw = "";
       let dmarcSpRaw = "";
       let dkimFoundAny = false;
 
-      // For pill/UI
       let dmarcPolicyForPill = "none";
 
-      // SPF
       try {
         const spfTxt = await resolveTXT(domain);
         const spfParsed = parseSPF(spfTxt);
-        let lookup = null; try { lookup = await computeSpfLookups(domain, spfParsed); } catch { }
+        let lookup = null;
+        try { lookup = await computeSpfLookups(domain, spfParsed); } catch { }
         renderSPF(spfParsed, lookup);
 
         if (!spfParsed.found) {
           spfScore = 0;
           spfState = "err";
           setTileSubState("tileSubSpf", "err", "Not Found");
+          setTileSubState("tileSubSpfLookups", "", "");
         } else {
           spfAllPolicy = (spfParsed.all || "").toLowerCase();
 
@@ -1093,6 +1293,13 @@
             spfState = "err";
             setTileSubState("tileSubSpf", "err", "Present (No ~all/-all)");
           }
+
+          if (lookup) {
+            const lookupState = lookup.total > 10 ? "err" : lookup.total === 10 ? "warn" : "ok";
+            setTileSubState("tileSubSpfLookups", lookupState, `Lookups: ${lookup.total} / 10`);
+          } else {
+            setTileSubState("tileSubSpfLookups", "", "");
+          }
         }
       } catch (e) {
         setStatus($("spfStatus"), "err", "Lookup error", "fa-solid fa-circle-xmark");
@@ -1100,9 +1307,9 @@
         spfScore = 0;
         spfState = "err";
         setTileSubState("tileSubSpf", "err", "Lookup error");
+        setTileSubState("tileSubSpfLookups", "", "");
       }
 
-      // DMARC
       try {
         const dmarcTxt = await resolveTXT(`_dmarc.${domain}`);
         const parsed = parseDMARC(dmarcTxt);
@@ -1117,11 +1324,9 @@
         } else {
           const { score, p, sp, effSub, hasSp } = computeDmarcScore(parsed.tags || {});
           dmarcScore = score;
-
           dmarcPRaw = p || "";
           dmarcSpRaw = hasSp ? (sp || "") : "";
 
-          // Tile lines (NO score numbers)
           setTileSubState("tileSubDmarcP", policyToState(p || "none"), `p=${p || "?"}`);
           if (hasSp) {
             const spTxt = sp || "(blank)";
@@ -1143,7 +1348,6 @@
         setTileSubState("tileSubDmarcSp", "", "");
       }
 
-      // DKIM
       const selEl = $("commonSelectors");
       const selectors = new Set();
       if (selector) selectors.add(selector);
@@ -1172,10 +1376,7 @@
         try {
           const txts = await resolveTXT(fqdn);
           const candidates = extractDkimCandidates(txts);
-
-          const parsedRecords = candidates
-            .map(r => parseDKIMRecord(r))
-            .filter(p => p.found);
+          const parsedRecords = candidates.map(r => parseDKIMRecord(r)).filter(p => p.found);
 
           if (parsedRecords.length) {
             foundSelectors.push(sel);
@@ -1194,8 +1395,7 @@
           dkimState = "err";
           setTileSubState("tileSubDkim", "err", "Not Found");
         } else {
-          $("dkimNotes").innerHTML =
-            `Found selectors: <span class="mono">${escapeHtml([...new Set(foundSelectors)].join(", "))}</span>`;
+          $("dkimNotes").innerHTML = `Found selectors: <span class="mono">${escapeHtml([...new Set(foundSelectors)].join(", "))}</span>`;
           setStatus($("dkimStatus"), "ok", "DKIM record(s) found", "fa-solid fa-circle-check");
           dkimFoundAny = true;
           dkimScore = 3;
@@ -1204,11 +1404,8 @@
         }
       }
 
-      // TOTAL (your rule)
       let totalScore = spfScore + dmarcScore + dkimScore;
 
-      // Perfect rule:
-      // If spf=-all AND dmarc p=reject AND (sp missing or sp=reject) AND dkim found -> total = 10
       const dmarcSpOk = (!dmarcSpRaw) || (dmarcSpRaw === "reject");
       if ((spfAllPolicy === "-all") && (dmarcPRaw === "reject") && dmarcSpOk && dkimFoundAny) {
         totalScore = 10;
@@ -1225,7 +1422,18 @@
       card.classList.remove("calculating");
     }
 
+    function loadDomainFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const domain = params.get("domain");
+
+      if (!domain) return false;
+
+      $("domain").value = domain.trim().toLowerCase();
+      return true;
+    }
+
     $("checkBtn").addEventListener("click", checkRecords);
+    $("copyLinkBtn").addEventListener("click", copyCurrentLink);
     $("domain").addEventListener("keydown", e => { if (e.key === "Enter") checkRecords(); });
     $("selector").addEventListener("keydown", e => { if (e.key === "Enter") checkRecords(); });
     $("commonSelectors").addEventListener("change", () => {
@@ -1237,7 +1445,12 @@
     });
 
     (function initSummary() {
+      const hasDomainFromUrl = loadDomainFromUrl();
       setSummaryIdle();
+
+      if (hasDomainFromUrl) {
+        checkRecords();
+      }
     })();
   </script>
 </body>
