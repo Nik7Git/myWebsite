@@ -777,6 +777,73 @@
       return { score, p: pRaw, sp: spRaw, effSub, hasSp };
     }
 
+
+    const COMMON_SECOND_LEVEL_SUFFIXES = new Set([
+      "ac.uk", "co.uk", "gov.uk", "ltd.uk", "me.uk", "net.uk", "nhs.uk", "org.uk", "plc.uk",
+      "com.au", "net.au", "org.au", "edu.au", "gov.au",
+      "co.nz", "net.nz", "org.nz", "govt.nz", "ac.nz",
+      "co.jp", "ne.jp", "or.jp", "ac.jp", "go.jp"
+    ]);
+
+    function getRegistrableDomainLabelCount(domain) {
+      const labels = String(domain || "").toLowerCase().split(".").filter(Boolean);
+      if (labels.length <= 2) return labels.length;
+
+      const lastTwo = labels.slice(-2).join(".");
+      if (COMMON_SECOND_LEVEL_SUFFIXES.has(lastTwo)) return 3;
+
+      return 2;
+    }
+
+    function getDmarcLookupDomains(domain) {
+      const labels = String(domain || "").toLowerCase().split(".").filter(Boolean);
+      const minLabels = getRegistrableDomainLabelCount(domain);
+      const candidates = [];
+
+      for (let i = 0; i <= labels.length - minLabels; i++) {
+        candidates.push(labels.slice(i).join("."));
+      }
+
+      return [...new Set(candidates)];
+    }
+
+    async function lookupDMARCForDomain(domain) {
+      const candidates = getDmarcLookupDomains(domain);
+      const checked = [];
+
+      for (const candidate of candidates) {
+        const lookupName = `_dmarc.${candidate}`;
+        checked.push(lookupName);
+
+        try {
+          const txt = await resolveTXT(lookupName);
+          const parsed = parseDMARC(txt);
+
+          if (parsed.found) {
+            return {
+              found: true,
+              parsed,
+              requestedDomain: domain,
+              recordDomain: candidate,
+              recordName: lookupName,
+              exact: candidate === domain,
+              checked
+            };
+          }
+        } catch { }
+      }
+
+      return {
+        found: false,
+        parsed: { found: false },
+        requestedDomain: domain,
+        recordDomain: "",
+        recordName: "",
+        exact: false,
+        checked
+      };
+    }
+
     async function resolveDNS(name, type) {
       const res = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(name)}&type=${encodeURIComponent(type)}`,
         { headers: { Accept: "application/dns-json" } });
@@ -1032,7 +1099,7 @@
       return `<span class="mono break">${escapeHtml(raw)}</span>`;
     }
 
-    function renderDMARC(dm) {
+    function renderDMARC(dm, lookupInfo = null) {
       const status = $("dmarcStatus");
       const table = $("dmarcTable");
       const notes = $("dmarcNotes");
@@ -1041,7 +1108,10 @@
 
       if (!dm.found) {
         setStatus(status, "err", "No DMARC record found", "fa-solid fa-circle-xmark");
-        notes.innerHTML = `<div class="muteborder helper">Expected TXT at <span class="mono">_dmarc.&lt;domain&gt;</span> like <span class="mono">v=DMARC1; p=reject; rua=mailto:…</span></div>`;
+        const checked = lookupInfo?.checked?.length
+          ? `<div style="margin-top:.35rem">Checked: <span class="mono break">${escapeHtml(lookupInfo.checked.join(", "))}</span></div>`
+          : "";
+        notes.innerHTML = `<div class="muteborder helper">Expected TXT at <span class="mono">_dmarc.&lt;domain&gt;</span> like <span class="mono">v=DMARC1; p=reject; rua=mailto:…</span>${checked}</div>`;
         return;
       }
 
@@ -1050,6 +1120,13 @@
         tr.innerHTML = asHtml ? `<th style="width:210px">${k}</th><td>${v || "<span class='muted'>—</span>"}</td>` : `<th style="width:210px">${k}</th><td class="mono break">${v || "<span class='muted'>—</span>"}</td>`;
         table.appendChild(tr);
       };
+
+      if (lookupInfo?.recordName) {
+        const sourceBadge = lookupInfo.exact
+          ? `<span class="badge ok"><i class="fa-solid fa-circle-check"></i> Exact match</span>`
+          : `<span class="badge info"><i class="fa-solid fa-layer-group"></i> Inherited from parent domain</span>`;
+        addRow("DMARC source", `<span class="mono break">${escapeHtml(lookupInfo.recordName)}</span> ${sourceBadge}`, true);
+      }
 
       addRow("Raw", `<span class="mono break">${escapeHtml(dm.raw)}</span>`, true);
 
@@ -1086,11 +1163,13 @@
       addRow("fo (Failure options)", dm.tags.fo || "");
       addRow("ri (Reporting interval)", dm.tags.ri);
 
-      if (policy === "reject" || policy === "quarantine") setStatus(status, "ok", `DMARC present (${policy})`, "fa-solid fa-circle-check");
-      else if (policy === "none") setStatus(status, "err", "DMARC present (monitoring only)", "fa-solid fa-circle-exclamation");
-      else setStatus(status, "warn", "DMARC present (unknown policy)", "fa-solid fa-triangle-exclamation");
+      const statusPrefix = lookupInfo && !lookupInfo.exact ? "Inherited DMARC" : "DMARC present";
+      if (policy === "reject" || policy === "quarantine") setStatus(status, "ok", `${statusPrefix} (${policy})`, "fa-solid fa-circle-check");
+      else if (policy === "none") setStatus(status, "err", `${statusPrefix} (monitoring only)`, "fa-solid fa-circle-exclamation");
+      else setStatus(status, "warn", `${statusPrefix} (unknown policy)`, "fa-solid fa-triangle-exclamation");
 
       const tips = [];
+      if (lookupInfo && !lookupInfo.exact) tips.push(`No DMARC record was found directly on <span class='mono'>${escapeHtml(lookupInfo.requestedDomain)}</span>, so this result is inherited from <span class='mono'>${escapeHtml(lookupInfo.recordDomain)}</span>.`);
       if (!dm.tags.rua) tips.push(`Consider adding <span class='mono'>rua=mailto:…</span> for aggregate reports.`);
       if (policy === "none") tips.push(`Plan to move to <span class='mono'>p=quarantine</span> or <span class='mono'>p=reject</span> after monitoring.`);
       if (!dm.tags.adkim) tips.push(`Set <span class='mono'>adkim=s</span> for strict DKIM alignment where possible.`);
@@ -1311,9 +1390,9 @@
       }
 
       try {
-        const dmarcTxt = await resolveTXT(`_dmarc.${domain}`);
-        const parsed = parseDMARC(dmarcTxt);
-        renderDMARC(parsed);
+        const dmarcLookup = await lookupDMARCForDomain(domain);
+        const parsed = dmarcLookup.parsed;
+        renderDMARC(parsed, dmarcLookup);
 
         if (!parsed.found) {
           dmarcScore = 0;
@@ -1323,14 +1402,17 @@
           setTileSubState("tileSubDmarcSp", "", "");
         } else {
           const { score, p, sp, effSub, hasSp } = computeDmarcScore(parsed.tags || {});
+          const isInherited = !dmarcLookup.exact;
           dmarcScore = score;
           dmarcPRaw = p || "";
           dmarcSpRaw = hasSp ? (sp || "") : "";
 
-          setTileSubState("tileSubDmarcP", policyToState(p || "none"), `p=${p || "?"}`);
+          setTileSubState("tileSubDmarcP", policyToState(p || "none"), `${isInherited ? "parent " : ""}p=${p || "?"}`);
           if (hasSp) {
             const spTxt = sp || "(blank)";
             setTileSubState("tileSubDmarcSp", policyToState(sp || "none"), `sp=${spTxt}`);
+          } else if (isInherited) {
+            setTileSubState("tileSubDmarcSp", policyToState(p || "none"), `sp=${p || "?"} (inherited)`);
           } else {
             setTileSubState("tileSubDmarcSp", "", "");
           }
