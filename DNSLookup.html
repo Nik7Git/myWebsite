@@ -355,7 +355,7 @@
       <div class="grid grid-2">
         <div>
           <label for="domain">Enter any valid URL or domain</label>
-          <input id="domain" type="text" placeholder="example.com" spellcheck="false" />
+          <input id="domain" type="text" spellcheck="false" />
           <div class="helper">Press <strong>Enter</strong> to search.</div>
         </div>
 
@@ -611,7 +611,7 @@
           const json = await res.json();
           rawByType[t] = json;
 
-          const sets = ['Answer', 'Authority', 'Additional'].flatMap(k => json[k] || []);
+          const sets = json.Answer || [];
           const rows = sets.map(ans => ({
             name: (ans.name || host).replace(/\.$/, ''),
             type: rrTypeToString(ans.type),
@@ -619,7 +619,7 @@
             data: formatData(rrTypeToString(ans.type), ans.data ?? '')
           }));
 
-          const filtered = currentType === 'ALL' ? rows : rows.filter(r => r.type === t);
+          const filtered = rows.filter(r => r.type === t);
 
           // --- MX: "<pref> <host>" then next line "(IPs: ...)" ---
           if (t === 'MX' && filtered.length) {
@@ -671,8 +671,6 @@
       }
     });
 
-    // Prefill for quick test
-    domainInput.value = 'example.com';
   </script>
 </body>
 
